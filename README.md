@@ -70,13 +70,13 @@ The focus on CPU efficiency is motivated by the fact that Spark workloads are in
 Looking at the graph, its obvious that both DISK I/O and Network I/O have improved  10x faster. 
 - Another trend that’s noticed was, in Spark’s shuffle subsystem, serialisation and hashing (which are CPU bound) have been shown to be key bottlenecks, rather than raw network throughput of underlying hardware.  I tried to find a confusing example (shown below) that gives us an overview on expensive shuffles are in a typical spark application.
 
-<TODO: IMAGE PENDING>
+**TODO: IMAGE PENDING**
 
 These two trends mean that Spark today is constrained more by CPU efficiency and memory pressure rather than IO
 
 ### Problem1:
 First things first..We need to understand the problem with old execution engine before we think of solutions to improve efficiency. To better understand this, let’s take a simple task of filtering a stream of integers and see how spark 1.x used to interpret it.
-https://user-images.githubusercontent.com/22542670/26983465-7fd4819a-4d59-11e7-8f4b-4d5ee63b76de.png
+![Image](https://user-images.githubusercontent.com/22542670/26983465-7fd4819a-4d59-11e7-8f4b-4d5ee63b76de.png)
 
 ### What is the problem with this query plan?
 As mentioned in the picture above, Spark doesn't know:
@@ -144,8 +144,10 @@ Following picture illustrates the same with an example. In this example, we took
 
 ### Data Schema Registration
 Following example shows how to register data schema:
-```case class University(name: String, numStudents: Long, yearFounded: Long)
-val schools = spark.read.json(“/schools.json").as[University]```
+```markdown
+case class University(name: String, numStudents: Long, yearFounded: Long)
+val schools = spark.read.json(“/schools.json").as[University]
+```
 **Advantage**
 1. So, our data is directly read as instances of university object
 2. Spark provides Encoder API for DataSet’s which is responsible for converting to and from spark internal Tungsten binary format.
@@ -164,11 +166,13 @@ Let’s see how the same old filter fn behaves now.  Consider the case where we�
 ![Image](https://user-images.githubusercontent.com/22542670/26983617-0eb767e2-4d5a-11e7-8640-7e249e661043.png)
 
 The low-level byte code generated for this query looks something like this as shown in the above figure: 
-```bool filter(Object baseObject) {
+```markdown
+bool filter(Object baseObject) {
 int offset = baseoffset + <..>
 int value = Platform.getInt(baseObject, offset)
 return value > 2015
-}```
+}
+```
 **Interesting things to note here is that:**
 - Filter fn is not anonymous to spark
 - Object wasn't deserialised to find the value of column ‘year’
