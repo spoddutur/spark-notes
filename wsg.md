@@ -5,7 +5,7 @@ Spark 2.x had an aggressive goal to get orders of magnitude faster performance. 
 Its a very straight forward query. Basically, scan the entire sales table and outputs the items where item_id =512. The right hand side shows spark’s query plan for the same. Each of the stages shown in the query plan is an operator which performs a specific operation on the data like Filter, Count, Scan etc
 
 ### How does Spark 1.x evaluate this query plan?
-** Ans: Volcano Iterator Model **
+**Ans: Volcano Iterator Model**
 
 Spark SQL uses the traditional database technique which is called Volcano Iterator Model. 
 This is a standard technique adapted in majority of the database systems for over 30years. As the name suggests `[IteratorModel]`, all the operators like filter, project, scan etc implement a common iterator interface and they all generate output in a common standard output format. Query plan shown on the right side is basically nothing but a list of operators chained together which are processed like this:
@@ -18,16 +18,16 @@ This is a standard technique adapted in majority of the database systems for ove
 - In the example query plan shown on the right, Scan is the parent of the chain. Scan reads input data one-by-one, writes  the output in main memory and hands it over to the next child which is Filter function and so on..
 
 ### Downsides of Volcano Iterator Model:
-- ** Too many virtual function calls **
+- **Too many virtual function calls**
 - - We don’t know where the child is coming from.
 - - Its all dynamic dispatching between parent and child operators at runtime. 
 - - Its agnostic to the operator below it.
-- ** Extensive memory access **
+- **Extensive memory access**
 - - There’s a standard row format that exists between all the operators and this means writes to main memory. Potentially, you read a row in and send a new row to your parent.This suffers from problems in writing intermediate rows to main memory. 
-- ** Unable to leverage lot of modern techniques ** like pipelining, prefetching, branch prediction, SIMD, loop unrolling etc..
-- ** Conclusion: ** With VolcanoIterator Model, its difficult to get order’s of magnitude performance speed ups using the traditional profiling techniques. 
+- **Unable to leverage lot of modern techniques** like pipelining, prefetching, branch prediction, SIMD, loop unrolling etc..
+- **Conclusion:** With VolcanoIterator Model, its difficult to get order’s of magnitude performance speed ups using the traditional profiling techniques. 
 
-** Instead, let’s look bottom up.. **
+**Instead, let’s look bottom up..**
 
 ### What does look bottom-up mean?
 A college freshman would implement the same query using a for-loop and if-condition like the one shown below:
@@ -39,7 +39,7 @@ There’s ~10x speed difference between these 2 models
 
 ### Why is the difference so huge?
 College freshman hand-written code is very simple. It does exactly the work it needs to do. No virtual function calls. Data is in cpu registers and we are able to maximise the benefits of the compiler and hardware. 
-** Key thing is: ** Hand written code is taking advantage of all the information that is known. Its designed specifically to run that query and nothing else VS volcano model is a more generic one
+**Key thing is:** Hand written code is taking advantage of all the information that is known. Its designed specifically to run that query and nothing else VS volcano model is a more generic one
 ![image](https://user-images.githubusercontent.com/22542670/27002155-0ce6a9bc-4df7-11e7-847f-ea26b942743b.png)
 
 ### Key IDEA is to come up with an execution engine which:
@@ -47,7 +47,7 @@ Has the functionality of a general-purpose execution engine like volcano model a
 Perform just like a hand built system that does exactly what user wants to do.
 
 ### Okay! How do we get that? 
-** Answer: ** Whole-Stage Code Generation 
+**Answer:** Whole-Stage Code Generation 
 - This is a new technique now popular in DB literature.
 - Basically, Fuse the operators in the query plan together so the generated code looks like hand optimised code as shown in the below picture:
 ![image](https://user-images.githubusercontent.com/22542670/27002225-b4b421c2-4df9-11e7-9cd5-222139e73e45.png)
@@ -58,18 +58,18 @@ Perform just like a hand built system that does exactly what user wants to do.
 - At runtime generate the byte code that needs to be run
 
 ### Let’s take another example.. 
-** Join with some filters and aggregation. **
-- ** Left hand side: ** shows how the query plans look like in volcano iterator model. There are 9 virtual function calls with 8 intermediate results. 
-- ** Right hand side: ** shows how whole-stage code generation happens for this case. Here, we reduced Number of function calls to 2 and Number of intermediate results to 1. Each of those 2 box’s shown on the right-hand side is going to be converted into a single java function.
+**Join with some filters and aggregation.**
+- **Left hand side:** shows how the query plans look like in volcano iterator model. There are 9 virtual function calls with 8 intermediate results. 
+- **Right hand side:** shows how whole-stage code generation happens for this case. Here, we reduced Number of function calls to 2 and Number of intermediate results to 1. Each of those 2 box’s shown on the right-hand side is going to be converted into a single java function.
 There are different rules as to how we split up those pipelines depending on the usecase. 
 ![image](https://user-images.githubusercontent.com/22542670/27002256-a687774c-4dfa-11e7-84e3-90f187d2e62f.png)
 
 ### Observation:
 Whole-stage Code Generation works particularly well when the operations we want to do are simple. But there are cases where it is infeasible to generate code to fuse the entire query into a single function like the one’s listed below:
-- ** Complicated I/O: **
+- **Complicated I/O:**
 - - Complicated parsing like CSV or parquet. 
 - - We cant have the pipeline extend over the physical machines (Network I/O).
-- ** External Integrations: **
+- **External Integrations:**
 - - With third party components like python, tensor-flow etc,  we cant integrate their code into our code. 
 - - Reading cached-data
 
@@ -82,14 +82,14 @@ Vectorisation is nothing but batching multiple rows together in a columnar forma
 Performance bechmarking: For benchmarking, Parquet which is the most popular columnar-format for hadoop stack was considered. Parquet scan performance in spark 1.6 ran at the rate of 11million/sec. Parquet vectored is basically directly scanning the data and materialising it in the vectorized way. Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. This is promising and clearly shows that this is right thing to do.
 ![image](https://user-images.githubusercontent.com/22542670/27002326-b9833618-4dfc-11e7-9730-81306d0d0a4e.png)
 
-** Downside of Vectorization: ** Like we discussed in VolcanoIteratorModel, all the Intermediate results will be written to main memory. Because of this extensive memory access, where ever possible, Spark does ** WholeStageCodeGeneration first. **
+**Downside of Vectorization:** Like we discussed in VolcanoIteratorModel, all the Intermediate results will be written to main memory. Because of this extensive memory access, where ever possible, Spark does ** WholeStageCodeGeneration first. **
 
 ### Summary: 
-** We’ve explored following in this article:**
+**We’ve explored following in this article:**
 - How VolcanoIteratorModel in spark 1.x interprets and executes a given query
 - Downsides of VolcanoIteratorModel like number of virtual function calls, excessive memory reads and writes happening for intermediate results etc
 - Compared it with hand-written code and noticed easy 10x speedup!! Ola!!
 - Hence came WholeStageCodeGeneration!
 - But, WholeStageCodeGeneration cannot be done for complex operations. To handle these cases faster, Spark came up with Vectorization to better leverage the techniques of Modern CPU’s and hardware.
 - Vectorization speeds up processing by batching multiple rows per instruction together and running them as SIMD instruction.
-- ** Conclusion: ** Whole stage code generation has done decent job in combining the functionality of general-purpose execution engine. Vectorization is a good alternative for  the cases that are not handled by Whole-stage code-generation.
+- **Conclusion:** Whole stage code generation has done decent job in combining the functionality of general-purpose execution engine. Vectorization is a good alternative for  the cases that are not handled by Whole-stage code-generation.
