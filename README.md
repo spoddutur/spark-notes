@@ -42,12 +42,11 @@ Apache Spark has been evolving at a rapid pace, including changes and additions 
 - How did storage format evolve over a period of time?
 
 ### What storage format did Spark use?
-**Spark 1.0 to 1.3:** It started with RDD’s where data is represented as Java Objects.
-**Spark 1.4 to 1.6:** Deprioritised Java objects. DataSet and DataFrame evolved where data is stored in row-based format.
-**Spark 2.x:** Support for Vectorized Parquet which is columnar in-memory data is added.
+- **Spark 1.0 to 1.3:** It started with RDD’s where data is represented as Java Objects.
+- **Spark 1.4 to 1.6:** Deprioritised Java objects. DataSet and DataFrame evolved where data is stored in row-based format.
+- **Spark 2.x:** Support for Vectorized Parquet which is columnar in-memory data is added.
 
-Following graph captures storage-format changes in Spark:
-![Image](https://user-images.githubusercontent.com/22542670/26983233-b424c712-4d58-11e7-8323-4c6b71d2a6af.png)
+![image](https://user-images.githubusercontent.com/22542670/26998244-18ed1b40-4d9f-11e7-897d-5d2b032c3001.png)
 
 
 ### How did storage format evolve over a period of time?
@@ -55,7 +54,7 @@ The answer to this question is not only interesting but also lengthy. Let’s di
 1. Advancement from RDD to Row-based Dataset.
 2. From Row-based Dataset to Column-based Parquet.
 
-## 1. Advancement of RDD to Row-based Dataset.
+## Part1: Evolution of Data Storage Format's - Advancement of RDD to Row-based Dataset.
 
 We cannot find the answer for this question, without diving into Project Tungsten. Just go with the flow and you’ll reason out as to why are we looking into Tungsten soon. Project Tungsten has been the largest change to Spark’s execution engine since its inception. This project has led to some fundamental changes in Spark. One such change gave birth to DataSet. Let’s start by looking at the goal of Project Tungsten.
 ## Objective of Project Tungsten 
@@ -107,7 +106,8 @@ SortMerge Join df1 and df2 by df1[x] == df2[y]!! Runtime reduced to  nlogn!!
 ![Image](https://user-images.githubusercontent.com/22542670/26983488-9872b8b6-4d59-11e7-9562-661f7b9e305e.png)
 
 
-### Action Plan1: Have user register data schema.
+### Action Plan1:
+#### Have user register data schema.
 
 ### Problem2:
 Spark tries to do everything in-memory. So, the next question is to know if there is a way to reduce memory footprint. We need to understand how is data laid out in memory for this.
@@ -119,12 +119,13 @@ With RDD’s data is stored as Java Objects. There’s a whole lot of serialisat
 Ans: Java Objects have large overheads
 Consider a simple string “abcd”. One would think it would take about ~4bytes of memory. But in reality, a java string variable storing the value “abcd” would take 48 bytes. Its breakdown is shown in the picture below. Now, imagine the amount of large overheads a proper JavaObject like a tuple3 of (Int, String, String) shown on the right hand side of the picture below takes.
 ![Image](https://user-images.githubusercontent.com/22542670/26983508-a7bc2d5c-4d59-11e7-8d51-18ae60cd9ef0.png)
-### Action Plan2: Instead of java objects, come up with a data format which is more compact and less overhead
+### Action Plan2: 
+#### Instead of java objects, come up with a data format which is more compact and less overhead
 
 ### Action Plan1 + Action Plan2 together:
 Have user register data schema.
 Create new data layout which is more compact and less overhead
-## This paved way to “Dataframes and Datasets”
+#### This paved way to “Dataframes and Datasets”
 
 ### What is DataSet/DataFrame?
 A Dataset is a strongly-typed, immutable collection of objects with 2 important changes that spark introduced as we discussed in our action plan:
@@ -194,7 +195,7 @@ Atleast for the simple use cases..
 - While DataSet is a strongly typed object, DataFrame is DataSet[GenericRowObject]
 - Now, that we’ve seen in-depth detail of how and why Dataset emerged and it looks so promising, Why did spark moved to column-based Parquet? Let’s find out why..
 
-### From Row-based Dataset to Column-based Parquet:
+## Part2: Evolution of Data Storage Format's - from Row-based Dataset to Column-based Parquet:
 As per our discussions so far, Spark 1.x used row-based storage format for Dataset’s. Spark 2.x added support for column-based format. columnar format is basically transpose of row-based storage. All of the integers are packed together, all the strings are together. Following picture illustrates the memory layout of a row-baed vs column-based storage formats.
 ![Image](https://user-images.githubusercontent.com/22542670/26983627-187e1384-4d5a-11e7-9856-2ae5d20071c6.png)
 
