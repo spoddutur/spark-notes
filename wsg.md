@@ -102,8 +102,7 @@ Two major approaches:
 - Pipelining
 - SIMD (Single Instruction Multiple Data)
 
-### Quick peek on Pipelining and SIMD:
-### Pipelining:
+### Vectorization - Pipelining:
 - Executes multiple different tasks simultaneously. 
 - It uses large vectors 
 - Spans many cycles per instruction.
@@ -111,14 +110,14 @@ Two major approaches:
 An example of how pipelining happens for a simple math operation like (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27023935-5555db38-4f72-11e7-9511-0c4446138c8d.png)
 
-### SIMD:
+### Vectorization - SIMD:
 - Executes several instances of a single task simultaneously
 - It uses small vectors 
 - Spans only few cycles per instruction
 Let's look at how SIMD works on the same example (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27024104-ebb3db8e-4f72-11e7-98ca-1d66b9b2c86e.png)
 
-## What is critical to achieve best efficiency with Vector operations?
+### What is critical to achieve best efficiency with Vector operations?
 For any of the above discussed vector operations (Pipelining and SIMD): 
 - To get best efficiency, we need more parallelism
 - For more parallelism, **Data Availability** is critical
@@ -138,10 +137,10 @@ Following picture depicts an ideal pipeline of 4 instructions where everything i
 **Pipeline with CPU stall:**
 ![image](https://user-images.githubusercontent.com/22542670/27027892-a4a84d8e-4f80-11e7-84e7-1ff446a7643c.png)
 
-Above example clearly illustrates how data availability is very critical for efficient usage of pipeline. 
+Above example clearly illustrates how data availability is very critical for efficient usage of pipeline. Better cache-utilisation, data alignment and memory latency all together contribute to data availability issue that we discussed above.  
 
 ### Action Plan: 
-- Better cache-utilisation, proper data alignment and memory latency contribute to DataAvailability issue we discussed above. - So, in order to have homogenous data architecture, spark moved from row-based storage format to support columnar in-memory data.
+In order to have nice homogenous data architecture, spark moved from row-based storage format to support columnar in-memory data.
 
 ### What is Vectorization in Spark?
 Spark's Vectorisation is vector operation on the data which is represented in columnar format
