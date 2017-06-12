@@ -1,6 +1,11 @@
 ## Whole-Stage Code-Generation
 
-Spark 2.x had an aggressive goal to get orders of magnitude faster performance. For such an aggressive goal, traditional techniques like using a profiler to identify hotspots and shaving those hotspots is not gonna help much. To understand this, as a motivating example, here’s one query:
+Spark 2.x had an aggressive goal to get orders of magnitude faster performance. For such an aggressive goal, traditional techniques like using a profiler to identify hotspots and shaving those hotspots is not gonna help much. For this, two goals were set out focusing on changes in spark’s execution engine:
+1. Optimise query plan
+2. Speed up query execution
+
+## Goal 1 - Optimise query plan:
+To understand what optimising query plan means, let’s take a user query and understand how spark generates query plan for it:
 ![image](https://user-images.githubusercontent.com/22542670/27002100-face1ed2-4df5-11e7-8b23-90a0114ab120.png)
 Its a very straight forward query. Basically, scan the entire sales table and outputs the items where item_id =512. The right hand side shows spark’s query plan for the same. Each of the stages shown in the query plan is an operator which performs a specific operation on the data like Filter, Count, Scan etc
 
@@ -67,58 +72,64 @@ There are different rules as to how we split up those pipelines depending on the
 ### Observation:
 Whole-stage Code Generation works particularly well when the operations we want to do are simple. But there are cases where it is infeasible to generate code to fuse the entire query into a single function like the one’s listed below:
 - **Complicated I/O:**
-- - Complicated parsing like CSV or parquet. 
-- - We cant have the pipeline extend over the physical machines (Network I/O).
+	- Complicated parsing like CSV or parquet. 
+	- We cant have the pipeline extend over the physical machines (Network I/O).
 - **External Integrations:**
-- - With third party components like python, tensor-flow etc,  we cant integrate their code into our code. 
-- - Reading cached-data
+	- With third party components like python, tensor-flow etc,  we cant integrate their code into our code. 
+	- Reading cached-data
 
+## Goal 2 - Speed up query execution:
 ### Is there anything that we can do to above mentioned stuff which can't be fused together in whole-stage code-generation?
 Indeed Yes!!
 
-### What did WSCG give us?
+### What did WholeStageCodeGeneration (WSCG) give us?
 ![image](https://user-images.githubusercontent.com/22542670/27023716-633e04e2-4f71-11e7-9930-539d25742e96.png)
 
 ### What extension can we add to this further?
-**Goal2:** Speed up query execution..
+This is where Goal2 (Speed up query execution) comes into picture..
 
 ### How can we speed up?
-Ans: Vectorization
+Ans: #### Vectorization
 
 ### What is Vectorization?
-As main memory grew, query performance is more and more determined by raw CPU costs of query processing. That’s where vector operations came into picture to allow in-core parallelism for operations on arrays (vectors) of data via specialised instructions, vector registers and more FPU’s per core .
+As main memory grew, query performance is more and more determined by raw CPU costs of query processing. That’s where vector operations evolved to allow in-core parallelism for operations on arrays (vectors) of data via specialised instructions, vector registers and more FPU’s per core .
 
 ### Goal of Vectorization
-Parallelise computations over vector arrays
+Parallelise computations over vector arrays a.k.a. perform vector operations 
 
-### How to parallelise computations i.e., perform vector operations?
+### How to perform vector operations?
 Two major approaches:
-1. Pipelining
-2. SIMD (Single Instruction Multiple Data)
+- Pipelining
+- SIMD (Single Instruction Multiple Data)
 
 ### Quick peek on Pipelining and SIMD:
-1. **Pipelining:** Pipelining execution involves making sure that different pipeline stages can simultaneously work on different instructions keeping dependencies among the instructions in mind to avoid stalls and result in throughput increase. Just like car assembly pipeline, hardware typically works in pipeline with various stages as shown below:
-![image](https://user-images.githubusercontent.com/22542670/27023827-d5a43c40-4f71-11e7-9f96-fecbee92a37d.png)
+- **Pipelining:** 
+	- Executes multiple different tasks simultaneously. 
+	- It uses large vectors 
+	- Spans many cycles per instruction.
 
-So, pipeline basically does the following:
-- Executes multiple different tasks simultaneously. 
-- It uses large vectors 
-- Spans many cycles per instruction.
-
-One more example pipeline for a simple math operation like (x^2 + 8)/2:
+An example of how pipelining happens for a simple math operation like (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27023935-5555db38-4f72-11e7-9511-0c4446138c8d.png)
 
-2. **SIMD:**
-	1. Executes several instances of a single task simultaneously
-	2. It uses small vectors 
-	3. Spans only few cycles per instruction
+- **SIMD:**
+	- Executes several instances of a single task simultaneously
+	- It uses small vectors 
+	- Spans only few cycles per instruction
 Let's look at how SIMD works on the same example (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27024104-ebb3db8e-4f72-11e7-98ca-1d66b9b2c86e.png)
-## What is critical to achieve best efficiency with Vector operations?
-**Data Availability**
 
-### How data availability becomes critical for execution speed?
+## What is critical to achieve best efficiency with Vector operations?
+- For best efficiency, we need more parallelism
+- For more parallelism, **Data Availability** is critical
+
+### How is data availability critical for execution speed?
 To illustrate this better let’s look at an example and compare the same pipeline with and without CPU stall. 
+This picture shows 4 stages of an instruction cycle:
+- F Fetch: read the instruction from the memory. 
+- D Decode: decode the instruction and fetch the source operand(s).
+- E Execute: perform the operation specified by the instruction. 
+- W Write: store the result in the destination location.
+
 **Pipeline without any CPU stall:** 
 Following picture depicts an ideal pipeline of 4 instructions where everything is beautifully falling in-place and CPU is not idled:
 ![image](https://user-images.githubusercontent.com/22542670/27024152-15cced2a-4f73-11e7-963f-f3308af328d0.png)
