@@ -89,13 +89,13 @@ Indeed Yes!!
 This is where Goal2 (Speed up query execution) comes into picture..
 
 ### How can we speed up?
-Ans: #### Vectorization
+Ans: `Vectorization`
 
 ### What is Vectorization?
 As main memory grew, query performance is more and more determined by raw CPU costs of query processing. That’s where vector operations evolved to allow in-core parallelism for operations on arrays (vectors) of data via specialised instructions, vector registers and more FPU’s per core .
 
 ### Goal of Vectorization
-Parallelise computations over vector arrays a.k.a. perform vector operations 
+Parallelise computations over vector arrays a.k.a. **perform vector operations** 
 
 ### How to perform vector operations?
 Two major approaches:
@@ -103,18 +103,18 @@ Two major approaches:
 - SIMD (Single Instruction Multiple Data)
 
 ### Quick peek on Pipelining and SIMD:
-- **Pipelining:** 
-	- Executes multiple different tasks simultaneously. 
-	- It uses large vectors 
-	- Spans many cycles per instruction.
+#### Pipelining:
+- Executes multiple different tasks simultaneously. 
+- It uses large vectors 
+- Spans many cycles per instruction.
 
 An example of how pipelining happens for a simple math operation like (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27023935-5555db38-4f72-11e7-9511-0c4446138c8d.png)
 
-- **SIMD:**
-	- Executes several instances of a single task simultaneously
-	- It uses small vectors 
-	- Spans only few cycles per instruction
+#### SIMD:
+- Executes several instances of a single task simultaneously
+- It uses small vectors 
+- Spans only few cycles per instruction
 Let's look at how SIMD works on the same example (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27024104-ebb3db8e-4f72-11e7-98ca-1d66b9b2c86e.png)
 
@@ -124,7 +124,7 @@ Let's look at how SIMD works on the same example (x^2 + 8)/2:
 
 ### How is data availability critical for execution speed?
 To illustrate this better let’s look at an example and compare the same pipeline with and without CPU stall. 
-This picture shows 4 stages of an instruction cycle:
+Following example shows how pipeline scheduling happens for the following four stages of an instruction cycle:
 - F Fetch: read the instruction from the memory. 
 - D Decode: decode the instruction and fetch the source operand(s).
 - E Execute: perform the operation specified by the instruction. 
@@ -142,8 +142,15 @@ Above example clearly illustrates how data availability is very critical for eff
 ### Action Plan: 
 - Better cache-utilisation, proper data alignment and memory latency contribute to DataAvailability issue we discussed above. - So, in order to have homogenous data architecture, spark moved from row-based storage format to support columnar in-memory data.
 
-### What is Spark's Vectorization?
-Spark's Vectorisation is nothing but batching multiple rows together in a columnar format, and each operator uses simple loops to iterate over data within a batch. Each next() call would thus return a batch of tuples, amortizing the cost of virtual function dispatches.  
+### What is Vectorization in Spark?
+Spark's Vectorisation is vector operation on the data which is represented in columnar format
+
+### How is this implemented?
+- Spark's operators are implemented via VolcanoIteratorModel.
+- Each operator implements next() method of an iterator interface.
+- Instead of returning one tuple, each next() call would now return a batch or `vector` of tuples.
+- Each operator uses simple loops to iterate over this `vector of tuples` within a batch, amortizing the cost of virtual function dispatches.
+
 **Performance bechmarking:** For benchmarking, Parquet which is the most popular columnar-format for hadoop stack was considered. Parquet scan performance in spark 1.6 ran at the rate of 11million/sec. Parquet vectored is basically directly scanning the data and materialising it in the vectorized way. Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. This is promising and clearly shows that this is right thing to do.
 ![image](https://user-images.githubusercontent.com/22542670/27002326-b9833618-4dfc-11e7-9730-81306d0d0a4e.png)
 
