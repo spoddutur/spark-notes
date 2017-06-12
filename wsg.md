@@ -132,10 +132,10 @@ This picture shows 4 stages of an instruction cycle:
 
 **Pipeline without any CPU stall:** 
 Following picture depicts an ideal pipeline of 4 instructions where everything is beautifully falling in-place and CPU is not idled:
-![image](https://user-images.githubusercontent.com/22542670/27024152-15cced2a-4f73-11e7-963f-f3308af328d0.png)
+![image](https://user-images.githubusercontent.com/22542670/27027833-73486d1e-4f80-11e7-84f7-fac0d0541f72.png)
 
 **Pipeline with CPU stall:**
-![image](https://user-images.githubusercontent.com/22542670/27024272-852bc452-4f73-11e7-8163-6c3e7a5c74be.png)
+![image](https://user-images.githubusercontent.com/22542670/27027892-a4a84d8e-4f80-11e7-84e7-1ff446a7643c.png)
 
 Above example clearly illustrates how data availability is very critical for efficient usage of pipeline. 
 
