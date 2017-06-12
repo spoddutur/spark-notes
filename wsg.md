@@ -103,7 +103,7 @@ Two major approaches:
 - SIMD (Single Instruction Multiple Data)
 
 ### Quick peek on Pipelining and SIMD:
-#### Pipelining:
+### Pipelining:
 - Executes multiple different tasks simultaneously. 
 - It uses large vectors 
 - Spans many cycles per instruction.
@@ -111,7 +111,7 @@ Two major approaches:
 An example of how pipelining happens for a simple math operation like (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27023935-5555db38-4f72-11e7-9511-0c4446138c8d.png)
 
-#### SIMD:
+### SIMD:
 - Executes several instances of a single task simultaneously
 - It uses small vectors 
 - Spans only few cycles per instruction
@@ -119,7 +119,8 @@ Let's look at how SIMD works on the same example (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27024104-ebb3db8e-4f72-11e7-98ca-1d66b9b2c86e.png)
 
 ## What is critical to achieve best efficiency with Vector operations?
-- For best efficiency, we need more parallelism
+For any of the above discussed vector operations (Pipelining and SIMD): 
+- To get best efficiency, we need more parallelism
 - For more parallelism, **Data Availability** is critical
 
 ### How is data availability critical for execution speed?
