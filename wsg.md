@@ -82,10 +82,11 @@ Whole-stage Code Generation works particularly well when the operations we want 
 Indeed Yes!!
 
 ## Goal 2 - Speed up query execution:
-Let's start with what did we get out of WholeStageCodeGeneration..
+Let's start with output of Goal1 - WholeStageCodeGeneration..
 
 ### What did WholeStageCodeGeneration (WSCG) give us?
-![image](https://user-images.githubusercontent.com/22542670/27023716-633e04e2-4f71-11e7-9930-539d25742e96.png)
+WSCG is generating an optimized query plan for user:
+![image](https://user-images.githubusercontent.com/22542670/27065590-d5d28802-501b-11e7-9221-ab2509b7043a.png)
 
 ### What extension can we add to this further?
 This is where Goal2 (Speed up query execution) comes into picture..
@@ -105,17 +106,15 @@ Two major approaches:
 - SIMD (Single Instruction Multiple Data)
 
 ### Vectorization - Pipelining:
-- Executes multiple different tasks simultaneously. 
-- It uses large vectors 
-- Spans many cycles per instruction.
+Pipelining execution involves making sure different pipeline stages can simultaneously work on different instructions keeping dependencies among the instructions in mind to avoid stalls and result in throughput increase.
 
 An example of how pipelining happens for a simple math operation like (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27023935-5555db38-4f72-11e7-9511-0c4446138c8d.png)
 
-### Vectorization - SIMD:
-- Executes several instances of a single task simultaneously
-- It uses small vectors 
-- Spans only few cycles per instruction
+### Vectorization - Single Instruction Multiple Data (SIMD):
+Single Instruction Multiple Data (SIMD), as the name suggests, performs the same instruction/operation on multiple data points simultaneously. Following figure depicts how SIMD works:
+![image](https://user-images.githubusercontent.com/22542670/27065826-5e6d8e18-501d-11e7-8bb5-1b4d2e37a892.png)
+
 Let's look at how SIMD works on the same example (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27024104-ebb3db8e-4f72-11e7-98ca-1d66b9b2c86e.png)
 
