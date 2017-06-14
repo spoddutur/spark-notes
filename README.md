@@ -1,41 +1,4 @@
-## Welcome to GitHub Pages
-
-You can use the [editor on GitHub](https://github.com/spoddutur/spark-notes/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/spoddutur/spark-notes/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
-
+## Apache Spark - Deep Dive into Storage Format's
 Apache Spark has been evolving at a rapid pace, including changes and additions to core APIs. Spark being an in-memory big-data processing system, memory is a critical indispensable resource for it. So, efficient usage of memory becomes very vital to it. Let’s try to find answer to following questions in this article:
 
 - What storage format did Spark use?
@@ -63,13 +26,10 @@ We cannot find the answer for this question, without diving into Project Tungste
 
 ### Why this objective?
 The focus on CPU efficiency is motivated by the fact that Spark workloads are increasingly bottlenecked by CPU and memory use rather than IO and network communication. To understand this better:
-- Let’s see the hardware trends over the past 7 years:
+- Let’s see the hardware trends over the past 7 years. Looking at the graph, its obvious that both DISK I/O and Network I/O have improved  10x faster:
 ![Image](https://user-images.githubusercontent.com/22542670/26983390-3aaa2606-4d59-11e7-93e9-a8c4db193964.png)
 
-Looking at the graph, its obvious that both DISK I/O and Network I/O have improved  10x faster. 
-- Another trend that’s noticed was, in Spark’s shuffle subsystem, serialisation and hashing (which are CPU bound) have been shown to be key bottlenecks, rather than raw network throughput of underlying hardware.  I tried to find a confusing example (shown below) that gives us an overview on expensive shuffles are in a typical spark application.
-
-**TODO: IMAGE PENDING**
+- Another trend that’s noticed was, in Spark’s shuffle subsystem, serialisation and hashing (which are CPU bound) have been shown to be key bottlenecks, rather than raw network throughput of underlying hardware.
 
 These two trends mean that Spark today is constrained more by CPU efficiency and memory pressure rather than IO
 
@@ -115,7 +75,7 @@ Spark tries to do everything in-memory. So, the next question is to know if ther
 ### How is data laid out in memory? 
 With RDD’s data is stored as Java Objects. There’s a whole lot of serialisation, deserialisation, hashing and object creation that happens whenever we want to perform an operation on these java objects’s and during shuffles. Apart from this Java objects have large overheads. 
 
-### Should spark shift away from using JavaObjects? Why?
+### Should spark stop relying on JavaObjects? Why?
 Ans: Java Objects have large overheads
 Consider a simple string “abcd”. One would think it would take about ~4bytes of memory. But in reality, a java string variable storing the value “abcd” would take 48 bytes. Its breakdown is shown in the picture below. Now, imagine the amount of large overheads a proper JavaObject like a tuple3 of (Int, String, String) shown on the right hand side of the picture below takes.
 ![Image](https://user-images.githubusercontent.com/22542670/26983508-a7bc2d5c-4d59-11e7-8d51-18ae60cd9ef0.png)
@@ -124,7 +84,7 @@ Consider a simple string “abcd”. One would think it would take about ~4bytes
 
 ### Action Plan1 + Action Plan2 together:
 Have user register data schema.
-Create new data layout which is more compact and less overhead
+Create new data layout which is more compact and less overhead.
 #### This paved way to “Dataframes and Datasets”
 
 ### What is DataSet/DataFrame?
@@ -137,11 +97,11 @@ A Dataset is a strongly-typed, immutable collection of objects with 2 important 
 
 ![Image](https://user-images.githubusercontent.com/22542670/26983544-be7f6cf2-4d59-11e7-9398-47c5b0959b9d.png )
 
-Following picture illustrates the same with an example. In this example, we took a tuple3 object **(123, “data”, “bricks”) and ** and let’s see how its stored in this new row-format.  
+Following picture illustrates the same with an example. In this example, we took a tuple3 object **(123, “data”, “bricks”) and** and let’s see how its stored in this new row-format.  
+![Image](https://user-images.githubusercontent.com/22542670/26983560-cc595054-4d59-11e7-805e-c3526ca4d38e.png)
 - The first field `123` is stored in place as its primitive. 
 - The next 2 fields `data` and `bricks` are strings and are of variable length. So, an offset for these two strings is stored in place [`32L` and `48L` respectively shown in the picture below]. 
 - The data stored in these two offset’s are of format “length + data”. At offset 32L, we store `4 + data` and likewise at offset 48L we store `6 + bricks`.
-![Image](https://user-images.githubusercontent.com/22542670/26983560-cc595054-4d59-11e7-805e-c3526ca4d38e.png)
 
 ### Data Schema Registration
 Following example shows how to register data schema:
@@ -154,8 +114,9 @@ val schools = spark.read.json(“/schools.json").as[University]
 2. Spark provides Encoder API for DataSet’s which is responsible for converting to and from spark internal Tungsten binary format.
 3. Encoders eagerly check that your data matches the expected schema, providing helpful error messages before you attempt to incorrectly process TBs of data
 
-### RDD’s of JavaObjects vs Dataset’s
-![Image](https://user-images.githubusercontent.com/22542670/26983603-fc06c5ac-4d59-11e7-81eb-a1bc8663a679.png)
+### RDD’s of JavaObjects **(vs)** Dataset’s
+![image](https://user-images.githubusercontent.com/22542670/27127383-7fc9470e-5118-11e7-92b7-4eccec0af36d.png)
+![image](https://user-images.githubusercontent.com/22542670/27127469-ce2083fe-5118-11e7-956b-aa852cd6e0eb.png)
 
 ### Benefits of Dataset’s
 - Compact (less overhead)
@@ -164,7 +125,7 @@ val schools = spark.read.json(“/schools.json").as[University]
 
 ### How does in-place transformation happen?
 Let’s see how the same old filter fn behaves now.  Consider the case where we’ve to filter input by `year>2015` condition. Note that the filter condition specified via the data frame code `df.where(df(“year” > 2015))` is not an anonymous function. Spark exactly knows which column it needs for this task and that it needs to do greater than comparison. 
-![Image](https://user-images.githubusercontent.com/22542670/26983617-0eb767e2-4d5a-11e7-8640-7e249e661043.png)
+![image](https://user-images.githubusercontent.com/22542670/27127611-51e2148c-5119-11e7-93cc-7544a8e6cdf0.png)
 
 The low-level byte code generated for this query looks something like this as shown in the above figure: 
 ```markdown
@@ -200,7 +161,7 @@ As per our discussions so far, Spark 1.x used row-based storage format for Datas
 ![Image](https://user-images.githubusercontent.com/22542670/26983627-187e1384-4d5a-11e7-9856-2ae5d20071c6.png)
 
 ### Why columnar?
-Modern compilers and CPUs can apply the standard optimisation techniques like loop unrolling, SIMD, prefetching etc to speed up runtime. All of these optimisation techniques basically process batches of rows together. Spark leveraged this technique to optimise the cases where whole-stage code-generation could not. Hence came another technique called **Vectorization!!** Vectorisation is nothing but batching multiple rows together in a columnar format. Each of these batch of multiple rows is executed as SIMD instruction, amortizing the cost of virtual function dispatches. (Detail on whole stage code generation and vectorization can be found below in the next topic) . For this reason, spark moved from row-based to columnar in-memory data enabling themselves for further SIMD optimisations like data striping.
+Modern compilers and CPUs can apply the standard optimisation techniques like loop unrolling, SIMD, prefetching etc to speed up runtime. All of these optimisation techniques basically process 1-D arrays of data called **vectors** per instruction. Spark leveraged this technique to take TungstenEngine to next level. Hence came another technique called **Vectorization!!** where Spark tweaked its execution engine to perform vector operations to attain data level parallelism at algorithm level. (Detail on whole stage code generation and vectorization can be found below in in my second blog on [WHoleStageCodeGeneration and Vectorization](https://spoddutur.github.io/spark-notes/wsg.html) ).So, Spark moved from row-based to columnar in-memory data enabling themselves for further SIMD optimisations like data striping.
 
 ### What Opportunities does columnar format opened up?
 Following slide lists the advantages that this change paved way to. We’ll discuss details of these points in detail next:
