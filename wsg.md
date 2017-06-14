@@ -116,10 +116,11 @@ This traditional Volcano IteratorModel implementation of operators has been twea
 3. **What is vector register?** 
 Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR four 32-bit integers OR eight 16-bit integers OR sixteen 8-bit integers.
 4. **How are these vector registers used?** 
-- SIMD Instructions operate on vector registers. 
+- SIMD (Single Instruction Multiple Data) Instructions operate on vector registers. 
 - One single SIMD Instruction can process eight 16-bit integers at a time, there by achieving DLP (Data Level Parallelism). Following picture illustrates _computing `Min()` operation on 8-tuples in ONE go compared to EIGHT scalar instructions iterating over 8-tuples_:
 ![image](https://user-images.githubusercontent.com/22542670/27118943-4916d748-50fb-11e7-9e93-f56f2dcc2c45.png)
-
+5. **What other tweaks were made to Spark's execution engine to make use of vector operations?**
+The need to increase performance in modern processors has led to a wide adoption of SIMD (single-instruction multiple-data) vector units( which we discussed above). However writing code to make efficient use of vector processing units is not easy. Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of vectorization algorithms which convert multiple iterations of a loop to a single iteration of vector instructions.(Further details on these are discussed in teh _Appendix _ section at the end of this blog)
 **Now, that we've seen what is Vectorization, its important to understand how to make the most out of it..**
 
 ### What is critical to achieve best efficiency while adapting to vector operations?
@@ -170,6 +171,7 @@ Above example clearly illustrates how data availability is very critical in deci
 - [Spark Summit 2016 Talk on SparkPerformance](https://www.youtube.com/watch?v=RlbBPrWJEEM)
 - [Vectorization](http://www.cac.cornell.edu/education/training/ParallelFall2012/Vectorization.pdf) 
 - [Databricks blog on Apache Spark as a Compiler: Joining a Billion Rows per Second on a Laptop](https://databricks.com/blog/2016/05/23/apache-spark-as-a-compiler-joining-a-billion-rows-per-second-on-a-laptop.html)
+- [Loop Pipelining & Loop Unrolling](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2015_2/sdsoc_doc/topics/calling-coding-guidelines/concept_pipelining_loop_unrolling.html)
 
 
 ## Appendix:
@@ -179,6 +181,8 @@ This is additional content (optional) which complements and adds some more detai
 Two major approaches:
 - Pipelining
 - SIMD (Single Instruction Multiple Data)
+- Loop Pipelining
+- Loop Unrolling
 
 ### Vectorization - Pipelining:
 Pipelining execution involves making sure different pipeline stages can simultaneously work on different instructions keeping dependencies among the instructions in mind to avoid stalls and result in throughput increase.
@@ -190,3 +194,12 @@ An example of how pipelining happens for a simple math operation like (x^2 + 8)/
 Single Instruction Multiple Data (SIMD), as the name suggests, performs the same instruction/operation on multiple data points simultaneously. 
 Let's look at how SIMD works on the same example (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27024104-ebb3db8e-4f72-11e7-98ca-1d66b9b2c86e.png)
+
+### Vectorization - Loop Pipelining:
+ Loop pipelining allows the operations in a loop to be implemented in a concurrent manner as shown in the following figure.
+![image](https://user-images.githubusercontent.com/22542670/27130522-34226fb8-5124-11e7-9eda-269ce341f50e.png)
+
+### Vectorization - Loop Unrolling:
+Loop unrolling is another technique to exploit parallelism between loop iterations. It identifies dependencies within the loop body, adjusts the loop iteration counter and adds multiple copies of the loop body as needed. Following table depicts 2 examples where loop unrolling is done.
+![image](https://user-images.githubusercontent.com/22542670/27130893-e2dfcc84-5125-11e7-93b9-89a94784b245.png)
+
