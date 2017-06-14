@@ -124,10 +124,7 @@ Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR
 Data Availability - All the data needed to perform an instruction should be available readily in cache. Else, it'll lead to CPU stalling (or CPU idling)
 
 ## How is data availability critical for execution speed?
-To illustrate this better let’s look at an example where we see both pipelines: 
-1. Pipeline without any CPU Stall
-2. Pipeline with CPU Stall
-We'll see how pipeline scheduling happens for the following four stages of an instruction cycle:
+To illustrate this better let’s look two pipelines one with and the other without CPU Stall and see how pipeline scheduling happens for the following four stages of an instruction cycle:
 - F Fetch: read the instruction from the memory. 
 - D Decode: decode the instruction and fetch the source operand(s).
 - E Execute: perform the operation specified by the instruction. 
