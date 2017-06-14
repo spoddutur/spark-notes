@@ -111,15 +111,19 @@ Vector Processing is basically single instruction operating on one-dimensional a
 ### How did Spark adapt to Vector Processing:
 1. **Spark 1.x VolcanoIteratorModel performs scalar processing:**
 We’ve seen earlier that in Spark 1.x, using VolcanoIteratorModel, all the operators like filter, project, scan etc were implemented via a common iterator interface where we fetch one tuple per iteration and process it. Its essentially doing Scalar Processing here.
+
 2. **Spark 2.x moved to vector processing:** 
 This traditional Volcano IteratorModel implementation of operators has been tweaked to operate in vectors i.e., instead of one-at-time, Spark changed these operator implementations to fetch a vector array (a batch-of-tuples) per iteration and make use of **vector registers** to process all of them in one go.
+
 3. **What is vector register?** 
 Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR four 32-bit integers OR eight 16-bit integers OR sixteen 8-bit integers.
+
 4. **How are these vector registers used?** 
 - SIMD (Single Instruction Multiple Data) Instructions operate on vector registers. 
 - One single SIMD Instruction can process eight 16-bit integers at a time, there by achieving DLP (Data Level Parallelism). Following picture illustrates _computing `Min()` operation on 8-tuples in ONE go compared to EIGHT scalar instructions iterating over 8-tuples_:
 ![image](https://user-images.githubusercontent.com/22542670/27118943-4916d748-50fb-11e7-9e93-f56f2dcc2c45.png)
-5. **What other tweaks were made to Spark's execution engine to make use of vector operations?**
+
+5. **What other tweaks were made to Spark's execution engine to perform vector processing?**
 The need to increase performance in modern processors has led to a wide adoption of SIMD (single-instruction multiple-data) vector units( which we discussed above). However writing code to make efficient use of vector processing units is not easy. Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of vectorization algorithms which convert multiple iterations of a loop to a single iteration of vector instructions.(Further details on these are discussed in teh _Appendix _ section at the end of this blog)
 **Now, that we've seen what is Vectorization, its important to understand how to make the most out of it..**
 
