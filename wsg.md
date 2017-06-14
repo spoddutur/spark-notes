@@ -106,7 +106,7 @@ Parallelise computations over vector arrays a.k.a. **Adapt vector processing**
 
 ### What is Vector Processing?
 Vector Processing is basically single instruction operating on one-dimensional arrays of data called vectors, compared to scalar processors, whose instructions operate on single data items as shown in the below picture:
-![image](https://user-images.githubusercontent.com/22542670/27125705-c54b096c-5112-11e7-86ff-1e748f9da1a5.png)
+![image](https://user-images.githubusercontent.com/22542670/27125951-93ccfb42-5113-11e7-80ed-ca729b9a72a6.png)
 
 ### How did Spark adapt to Vector Processing:
 1. **Spark 1.x VolcanoIteratorModel performs scalar processing:**
@@ -149,8 +149,10 @@ Above example clearly illustrates how data availability is very critical in deci
 - For this and many more advantages listed in this blog <link>, Spark moved from row-based storage format to **support columnar in-memory data.**
 
 **Performance bechmarking:**
-Let's benchmark _Spark 1.x Columnar data_ (Vs) Spark 2.x Vectorization + in-memory columnar support_ . For this, Parquet which is the most popular columnar-format for hadoop stack was considered. Parquet scan performance in spark 1.6 ran at the rate of 11million/sec. Parquet vectored is basically directly scanning the data and materialising it in the vectorized way. Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. This is promising and clearly shows that this is right thing to do!!
+- Let's benchmark _Spark 1.x Columnar data_ (Vs) Spark 2.x Vectorization + in-memory columnar support_ . For this, Parquet which is the most popular columnar-format for hadoop stack was considered. Parquet scan performance in spark 1.6 ran at the rate of 11million/sec. Parquet vectored is basically directly scanning the data and materialising it in the vectorized way. Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. This is promising and clearly shows that this is right thing to do!!
 ![image](https://user-images.githubusercontent.com/22542670/27002326-b9833618-4dfc-11e7-9730-81306d0d0a4e.png)
+
+- Furthermore [Databricks notebook](https://github.com/spoddutur/spark-notes/edit/master/wsg.md) demonstrates WSCG nicely by performing join & aggregations on one billion records on 2013 Macbook Pro machine which finished **in less than 1sec** .
 
 **Downside of Vectorization:** Like we discussed in VolcanoIteratorModel, all the Intermediate results will be written to main memory. Because of this extensive memory access, where ever possible, Spark does **WholeStageCodeGeneration first.**
 
@@ -164,8 +166,14 @@ Let's benchmark _Spark 1.x Columnar data_ (Vs) Spark 2.x Vectorization + in-memo
 - Vectorization speeds up processing by batching multiple rows per instruction together and running them as SIMD instruction using vector registors.
 - **Conclusion:** Whole stage code generation has done decent job in combining the functionality of general-purpose execution engine. Vectorization is a good alternative for  the cases that are not handled by Whole-stage code-generation.
 
+## References: 
+- [Spark Summit 2016 Talk on SparkPerformance](https://www.youtube.com/watch?v=RlbBPrWJEEM)
+- [Vectorization](http://www.cac.cornell.edu/education/training/ParallelFall2012/Vectorization.pdf) 
+- [Databricks blog on Apache Spark as a Compiler: Joining a Billion Rows per Second on a Laptop](https://databricks.com/blog/2016/05/23/apache-spark-as-a-compiler-joining-a-billion-rows-per-second-on-a-laptop.html)
+
+
 ## Appendix:
-This is additional content (optional) which complements and adds more details on different Vectorization techniques:
+This is additional content (optional) which complements and adds some more details on different Vectorization techniques:
 
 ### How to perform vector operations?
 Two major approaches:
