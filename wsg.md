@@ -99,16 +99,70 @@ As main memory grew, query performance is more and more determined by raw CPU co
 
 To better avail in-core parallelism, Spark has done two changes:
 **Vectorization:** Idea is to take advantage of Data Level Parallelism (DLP) within an algorithm via vector processing i.e., processing batches of rows together.
-**Shift from row-based to column-based memory format:** This is beyond scope of this blog. Please check out this blog where its discussed in detail.
+**Shift from row-based to column-based memory format:** We'll discuss the details on what triggered this shift below.
 
-What is Vector Processing?
-So, let’s start with understanding vector processing
 ### Goal of Vectorization
 Parallelise computations over vector arrays a.k.a. **perform vector operations** 
 
-To better avail in-core parallelism, Spark has done two changes:
-Vectorization: Modern compilers and CPUs can apply the standard optimisation techniques like loop unrolling, using SIMD, prefetching etc to speed up instruction execution. All of these optimisation techniques basically take advantage of Data Level Parallelism (DLP) within an algorithm via vector processing i.e., processing batches of rows together. Spark leveraged this technique to handle the cases where whole-stage code-generation could not. Hence came Vectorization!! We’ll discuss this in detail below.
-Shift from row-based to column-based memory format: This is beyond scope of this blog. Please check out this blog where its discussed in detail.
+### What is Vector Processing?
+So, let’s start with understanding vector processing
+![image](https://user-images.githubusercontent.com/22542670/27118710-2ab2d15e-50fa-11e7-8c6f-455f7c8289e5.png)
+
+### How did Spark adapt to Vector Processing:
+**Move from scalar processing to vector processing:**
+We’ve seen earlier that in Spark 1.x - VolcanoIteratorModel, all the operators like filter, project, scan etc were implemented using a common iterator interface where we fetch one tuple per iteration and process it. Its essentially doing Scalar Processing here.
+**Moved from scalar to vector processing:** 
+This traditional Volcano IteratorModel implementation of operators has been tweaked to operate in vectors i.e., instead of one-at-time, Spark changed these operator implementations to fetch a vector array (a batch-of-tuples) per iteration and make use of **vector registers** to process them all in one go.
+**What is vector register?** 
+Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR four 32-bit integers OR eight 16-bit integers OR sixteen 8-bit integers.
+**How are these vector registers used?** 
+- SIMD Instructions operate on vector registers. 
+- One single SIMD Instruction can process eight 16-bit integers at a time, there by achieving DLP. Following picture illustrates computing Min() operation on 8 tuples in one go compared to 8 scalar instructions iterating over 8 tuples:
+![image](https://user-images.githubusercontent.com/22542670/27118943-4916d748-50fb-11e7-9e93-f56f2dcc2c45.png)
+
+### What is critical to achieve best efficiency while adopting Vector operations?
+Data Availability - All the data needed to perform an instruction should be available readily in cache. Else, it'll lead to CPU stalling (or CPU idling)
+
+## How is data availability critical for execution speed?
+To illustrate this better let’s look at an example where we see both pipelines: 
+1. Pipeline without any CPU Stall
+2. Pipeline with CPU Stall
+We'll see how pipeline scheduling happens for the following four stages of an instruction cycle:
+- F Fetch: read the instruction from the memory. 
+- D Decode: decode the instruction and fetch the source operand(s).
+- E Execute: perform the operation specified by the instruction. 
+- W Write: store the result in the destination location.
+
+**Pipeline without any CPU stall:**
+Following picture depicts an ideal pipeline of 4 instructions where everything is beautifully falling in-place and CPU is not idled:
+![image](https://user-images.githubusercontent.com/22542670/27027833-73486d1e-4f80-11e7-84f7-fac0d0541f72.png)
+
+**Pipeline with CPU stall:**
+Consider the same instruction set used in the above example. What if the second instruction fetch incurs a cache miss requiring this data to be fetched from memory? This will result in quiet some cpu stalling/idling as shown in the figure below.
+![image](https://user-images.githubusercontent.com/22542670/27027892-a4a84d8e-4f80-11e7-84e7-1ff446a7643c.png)
+Above example clearly illustrates how data availability is very critical in deciding runtime of instruction execution.
+
+### Action Plan: Support Vectorized in-memory columnar data
+Any cache operation works best when data you are about to process is next to the data you are processing now. This works against row-based storage because it keeps all the data of the row together immaterial of whether current processing stage needs only small subset of that row. So, CPU is forced to get unneeded data of the row also into the cache just so it gets the needed part of the row. Columnar data on the other hand plays nicely because each stage of processing only needs few columns at a time and hence columnar-storage is cache friendly. One could get order-of-magnitude speed-up by adapting to columnar storage while performing vector operations. For this and many more advantages listed in this blog <link>, Spark moved from row-based storage format to support columnar in-memory data.
+
+**Vectorized in-memory columnar support - Performance bechmarking:**
+For benchmarking, Parquet which is the most popular columnar-format for hadoop stack was considered. Parquet scan performance in spark 1.6 ran at the rate of 11million/sec. Parquet vectored is basically directly scanning the data and materialising it in the vectorized way. Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. This is promising and clearly shows that this is right thing to do.
+![image](https://user-images.githubusercontent.com/22542670/27002326-b9833618-4dfc-11e7-9730-81306d0d0a4e.png)
+
+**Downside of Vectorization:** Like we discussed in VolcanoIteratorModel, all the Intermediate results will be written to main memory. Because of this extensive memory access, where ever possible, Spark does **WholeStageCodeGeneration first.**
+
+### Summary: 
+**We’ve explored following in this article:**
+- How VolcanoIteratorModel in spark 1.x interprets and executes a given query
+- Downsides of VolcanoIteratorModel like number of virtual function calls, excessive memory reads and writes happening for intermediate results etc
+- Compared it with hand-written code and noticed easy 10x speedup!! Ola!!
+- Hence came WholeStageCodeGeneration!
+- But, WholeStageCodeGeneration cannot be done for complex operations. To handle these cases faster, Spark came up with Vectorization to better leverage the techniques of Modern CPU’s and hardware.
+- Vectorization speeds up processing by batching multiple rows per instruction together and running them as SIMD instruction using vector registors.
+- **Conclusion:** Whole stage code generation has done decent job in combining the functionality of general-purpose execution engine. Vectorization is a good alternative for  the cases that are not handled by Whole-stage code-generation.
+
+## Appendix:
+This is an additional content (optional) which complements and adds more details on different Vectorization techniques:
 
 ### How to perform vector operations?
 Two major approaches:
@@ -161,18 +215,3 @@ Its basically enabling spark to perform vector operations on vectors of in-memor
 - Each operator implements next() method of an iterator interface.
 - Instead of returning one tuple, each next() call would now return a batch or `vector` of tuples.
 - Each operator uses simple loops to iterate over this `vector of tuples` within a batch, amortizing the cost of virtual function dispatches.
-
-**Performance bechmarking:** For benchmarking, Parquet which is the most popular columnar-format for hadoop stack was considered. Parquet scan performance in spark 1.6 ran at the rate of 11million/sec. Parquet vectored is basically directly scanning the data and materialising it in the vectorized way. Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. This is promising and clearly shows that this is right thing to do.
-![image](https://user-images.githubusercontent.com/22542670/27002326-b9833618-4dfc-11e7-9730-81306d0d0a4e.png)
-
-**Downside of Vectorization:** Like we discussed in VolcanoIteratorModel, all the Intermediate results will be written to main memory. Because of this extensive memory access, where ever possible, Spark does ** WholeStageCodeGeneration first. **
-
-### Summary: 
-**We’ve explored following in this article:**
-- How VolcanoIteratorModel in spark 1.x interprets and executes a given query
-- Downsides of VolcanoIteratorModel like number of virtual function calls, excessive memory reads and writes happening for intermediate results etc
-- Compared it with hand-written code and noticed easy 10x speedup!! Ola!!
-- Hence came WholeStageCodeGeneration!
-- But, WholeStageCodeGeneration cannot be done for complex operations. To handle these cases faster, Spark came up with Vectorization to better leverage the techniques of Modern CPU’s and hardware.
-- Vectorization speeds up processing by batching multiple rows per instruction together and running them as SIMD instruction.
-- **Conclusion:** Whole stage code generation has done decent job in combining the functionality of general-purpose execution engine. Vectorization is a good alternative for  the cases that are not handled by Whole-stage code-generation.
