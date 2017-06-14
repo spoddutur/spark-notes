@@ -1,8 +1,8 @@
-## Whole-Stage Code-Generation
+## Spark 2.x - 2nd generation Tungsten Engine
 
 Spark 2.x had an aggressive goal to get orders of magnitude faster performance. For such an aggressive goal, traditional techniques like using a profiler to identify hotspots and shaving those hotspots is not gonna help much. For this, two goals were set out focusing on changes in spark’s execution engine:
-1. Optimise query plan
-2. Speed up query execution
+1. Optimise query plan - solved via **Whole-Stage Code-Generation**
+2. Speed up query execution - solved via **Vectorization**
 
 ## Goal 1 - Optimise query plan:
 To understand what optimising query plan means, let’s take a user query and understand how spark generates query plan for it:
