@@ -81,18 +81,19 @@ Whole-stage Code Generation works particularly well when the operations we want 
 ### Is there anything that we can do to above mentioned stuff which can't be fused together in whole-stage code-generation?
 Indeed Yes!!
 
-## Goal 2 - Speed up query execution - via Supporting Vectorized in-memory columnar data:
+## Goal 2 - Speed up query execution
+### via Supporting Vectorized in-memory columnar data:
 Let's start with output of Goal1 - WholeStageCodeGeneration..
 
-### What did WholeStageCodeGeneration (WSCG) give us?
+### Goal1 output - What did WholeStageCodeGeneration (WSCG) give us?
 WSCG is generating an optimized query plan for user:
 ![image](https://user-images.githubusercontent.com/22542670/27065590-d5d28802-501b-11e7-9221-ab2509b7043a.png)
 
 ### What extension can we add to this further?
-This is where Goal2 (Speed up query execution) comes into picture..
+This is where Goal2 comes into picture - **Speed up query execution**
 
 ### How can we speed up?
-Ans: `Vectorization`
+`Vectorization`
 
 ### What is Vectorization?
 As main memory grew, query performance is more and more determined by raw CPU costs of query processing. That’s where vector operations evolved to allow in-core parallelism for operations on arrays (vectors) of data via specialised instructions, vector registers and more FPU’s per core .
