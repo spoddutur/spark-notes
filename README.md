@@ -115,8 +115,7 @@ val schools = spark.read.json(“/schools.json").as[University]
 3. Encoders eagerly check that your data matches the expected schema, providing helpful error messages before you attempt to incorrectly process TBs of data
 
 ### RDD’s of JavaObjects **(vs)** Dataset’s
-![image](https://user-images.githubusercontent.com/22542670/27127383-7fc9470e-5118-11e7-92b7-4eccec0af36d.png)
-![image](https://user-images.githubusercontent.com/22542670/27127469-ce2083fe-5118-11e7-956b-aa852cd6e0eb.png)
+![image](https://user-images.githubusercontent.com/22542670/27128201-351d0b84-511b-11e7-8c08-5f0dd0b4085b.png)
 
 ### Benefits of Dataset’s
 - Compact (less overhead)
