@@ -1,10 +1,10 @@
 ## Spark 2.x - 2nd generation Tungsten Engine
 
-Spark 2.x had an aggressive goal to get orders of magnitude faster performance. For such an aggressive goal, traditional techniques like using a profiler to identify hotspots and shaving those hotspots is not gonna help much. For this, two goals were set out focusing on changes in spark’s execution engine:
+Spark 2.x had an aggressive goal to get orders of magnitude faster performance. For such an aggressive goal, traditional techniques like using a profiler to identify hotspots and shaving those hotspots is not gonna help much. Hence came forth 2nd generation Tungsten Engine with following two goals (focusing on changes in spark’s execution engine):
 1. Optimise query plan - solved via **Whole-Stage Code-Generation**
 2. Speed up query execution - solved via **Vectorization**
 
-## Goal 1 - Optimise query plan:
+## Goal 1 - Whole Stage Code Generation - Optimise query plan:
 To understand what optimising query plan means, let’s take a user query and understand how spark generates query plan for it:
 ![image](https://user-images.githubusercontent.com/22542670/27002100-face1ed2-4df5-11e7-8b23-90a0114ab120.png)
 Its a very straight forward query. Basically, scan the entire sales table and outputs the items where item_id =512. The right hand side shows spark’s query plan for the same. Each of the stages shown in the query plan is an operator which performs a specific operation on the data like Filter, Count, Scan etc
@@ -98,24 +98,24 @@ Ans: `Vectorization`
 As main memory grew, query performance is more and more determined by raw CPU costs of query processing. That’s where vector operations evolved to allow in-core parallelism for operations on arrays (vectors) of data via specialised instructions, vector registers and more FPU’s per core .
 
 To better avail in-core parallelism, Spark has done two changes:
-**Vectorization:** Idea is to take advantage of Data Level Parallelism (DLP) within an algorithm via vector processing i.e., processing batches of rows together.
-**Shift from row-based to column-based memory format:** We'll discuss the details on what triggered this shift below.
+- **Vectorization:** Idea is to take advantage of Data Level Parallelism (DLP) within an algorithm via vector processing i.e., processing batches of rows together.
+- **Shift from row-based to column-based memory format:** We'll discuss the details on what triggered this shift below.
 
 ### Goal of Vectorization
-Parallelise computations over vector arrays a.k.a. **perform vector operations** 
+Parallelise computations over vector arrays a.k.a. **Adopt vector processing** 
 
 ### What is Vector Processing?
 So, let’s start with understanding vector processing
 ![image](https://user-images.githubusercontent.com/22542670/27118710-2ab2d15e-50fa-11e7-8c6f-455f7c8289e5.png)
 
 ### How did Spark adapt to Vector Processing:
-**Move from scalar processing to vector processing:**
+1. **Spark 1.x VolcanoIteratorModel performs scalar processing:**
 We’ve seen earlier that in Spark 1.x - VolcanoIteratorModel, all the operators like filter, project, scan etc were implemented using a common iterator interface where we fetch one tuple per iteration and process it. Its essentially doing Scalar Processing here.
-**Moved from scalar to vector processing:** 
+2. **Spark 2.x moved to vector processing:** 
 This traditional Volcano IteratorModel implementation of operators has been tweaked to operate in vectors i.e., instead of one-at-time, Spark changed these operator implementations to fetch a vector array (a batch-of-tuples) per iteration and make use of **vector registers** to process them all in one go.
-**What is vector register?** 
+3. **What is vector register?** 
 Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR four 32-bit integers OR eight 16-bit integers OR sixteen 8-bit integers.
-**How are these vector registers used?** 
+4. **How are these vector registers used?** 
 - SIMD Instructions operate on vector registers. 
 - One single SIMD Instruction can process eight 16-bit integers at a time, there by achieving DLP. Following picture illustrates computing Min() operation on 8 tuples in one go compared to 8 scalar instructions iterating over 8 tuples:
 ![image](https://user-images.githubusercontent.com/22542670/27118943-4916d748-50fb-11e7-9e93-f56f2dcc2c45.png)
