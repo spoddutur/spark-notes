@@ -110,15 +110,17 @@ So, let’s start with understanding vector processing
 
 ### How did Spark adapt to Vector Processing:
 1. **Spark 1.x VolcanoIteratorModel performs scalar processing:**
-We’ve seen earlier that in Spark 1.x - VolcanoIteratorModel, all the operators like filter, project, scan etc were implemented using a common iterator interface where we fetch one tuple per iteration and process it. Its essentially doing Scalar Processing here.
+We’ve seen earlier that in Spark 1.x, using VolcanoIteratorModel, all the operators like filter, project, scan etc were implemented via a common iterator interface where we fetch one tuple per iteration and process it. Its essentially doing Scalar Processing here.
 2. **Spark 2.x moved to vector processing:** 
 This traditional Volcano IteratorModel implementation of operators has been tweaked to operate in vectors i.e., instead of one-at-time, Spark changed these operator implementations to fetch a vector array (a batch-of-tuples) per iteration and make use of **vector registers** to process them all in one go.
 3. **What is vector register?** 
 Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR four 32-bit integers OR eight 16-bit integers OR sixteen 8-bit integers.
 4. **How are these vector registers used?** 
 - SIMD Instructions operate on vector registers. 
-- One single SIMD Instruction can process eight 16-bit integers at a time, there by achieving DLP. Following picture illustrates computing Min() operation on 8 tuples in one go compared to 8 scalar instructions iterating over 8 tuples:
+- One single SIMD Instruction can process eight 16-bit integers at a time, there by achieving DLP (Data Level Parallelism). Following picture illustrates computing `Min()` operation on `8-tuples in ONE go compared to EIGHT scalar instructions iterating over 8-tuples`:
 ![image](https://user-images.githubusercontent.com/22542670/27118943-4916d748-50fb-11e7-9e93-f56f2dcc2c45.png)
+
+_Now, that we've seen what is Vectorization, its important to understand how to make the most out of it.._
 
 ### What is critical to achieve best efficiency while adopting Vector operations?
 Data Availability - All the data needed to perform an instruction should be available readily in cache. Else, it'll lead to CPU stalling (or CPU idling)
@@ -137,12 +139,16 @@ Following picture depicts an ideal pipeline of 4 instructions where everything i
 **Pipeline with CPU stall:**
 Consider the same instruction set used in the above example. What if the second instruction fetch incurs a cache miss requiring this data to be fetched from memory? This will result in quiet some cpu stalling/idling as shown in the figure below.
 ![image](https://user-images.githubusercontent.com/22542670/27027892-a4a84d8e-4f80-11e7-84e7-1ff446a7643c.png)
+
 Above example clearly illustrates how data availability is very critical in deciding runtime of instruction execution.
 
 ### Action Plan: Support Vectorized in-memory columnar data
-Any cache operation works best when data you are about to process is next to the data you are processing now. This works against row-based storage because it keeps all the data of the row together immaterial of whether current processing stage needs only small subset of that row. So, CPU is forced to get unneeded data of the row also into the cache just so it gets the needed part of the row. Columnar data on the other hand plays nicely because each stage of processing only needs few columns at a time and hence columnar-storage is cache friendly. One could get order-of-magnitude speed-up by adapting to columnar storage while performing vector operations. For this and many more advantages listed in this blog <link>, Spark moved from row-based storage format to support columnar in-memory data.
+- So, we've seen that any operation works best when the data that you are about to process is laid out next to the data you are processing now. 
+- This works against row-based storage because it keeps all the data of the row together immaterial of whether current processing stage needs only small subset of that row. So, CPU is forced to keep un-needed data of the row also in the cache just so it gets the needed part of the row. 
+- Columnar data on the other hand plays nicely because, in general, each stage of processing only needs few columns at a time and hence columnar-storage is more cache friendly. One could possibly get order-of-magnitude speed-up by adapting to columnar storage while performing vector operations. 
+- For this and many more advantages listed in this blog <link>, Spark moved from row-based storage format to **support columnar in-memory data.**
 
-**Vectorized in-memory columnar support - Performance bechmarking:**
+**Vectorization + in-memory columnar support - Performance bechmarking:**
 For benchmarking, Parquet which is the most popular columnar-format for hadoop stack was considered. Parquet scan performance in spark 1.6 ran at the rate of 11million/sec. Parquet vectored is basically directly scanning the data and materialising it in the vectorized way. Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. This is promising and clearly shows that this is right thing to do.
 ![image](https://user-images.githubusercontent.com/22542670/27002326-b9833618-4dfc-11e7-9730-81306d0d0a4e.png)
 
