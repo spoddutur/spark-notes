@@ -105,8 +105,7 @@ To better avail in-core parallelism, Spark has done two changes:
 Parallelise computations over vector arrays a.k.a. **Adapt vector processing** 
 
 ### What is Vector Processing?
-So, let’s start with understanding vector processing
-Vector Processing is basically operating on one-dimensional arrays of data called vectors, compared to scalar processors, whose instructions operate on single data items as shown in the below picture
+Vector Processing is basically single instruction operating on one-dimensional arrays of data called vectors, compared to scalar processors, whose instructions operate on single data items as shown in the below picture:
 ![image](https://user-images.githubusercontent.com/22542670/27125705-c54b096c-5112-11e7-86ff-1e748f9da1a5.png)
 
 ### How did Spark adapt to Vector Processing:
