@@ -117,16 +117,19 @@ We’ve seen earlier that in Spark 1.x, using VolcanoIteratorModel, all the oper
 2. **Spark 2.x moved to vector processing:** 
 This traditional Volcano IteratorModel implementation of operators has been tweaked to operate in vectors i.e., instead of one-at-time, Spark changed these operator implementations to fetch a vector array (a batch-of-tuples) per iteration and make use of **vector registers** to process all of them in one go.
 
-3. **What is vector register?** 
+3. **Ok, Wait..Vector register? What is it!?** 
 Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR four 32-bit integers OR eight 16-bit integers OR sixteen 8-bit integers.
 
-4. **How are these vector registers used?** 
+4. **How are these Vector registers used?** 
 - SIMD (Single Instruction Multiple Data) Instructions operate on vector registers. 
 - One single SIMD Instruction can process eight 16-bit integers at a time, there by achieving DLP (Data Level Parallelism). Following picture illustrates _computing `Min()` operation on 8-tuples in ONE go compared to EIGHT scalar instructions iterating over 8-tuples_:
 ![image](https://user-images.githubusercontent.com/22542670/27118943-4916d748-50fb-11e7-9e93-f56f2dcc2c45.png)
 
-5. **What other tweaks were made to Spark's execution engine to perform vector processing?**
-The need to increase performance in modern processors has led to a wide adoption of SIMD (single-instruction multiple-data) vector units( which we discussed above). However writing code to make efficient use of vector processing units is not easy. Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of vectorization algorithms which convert multiple iterations of a loop to a single iteration of vector instructions.(Further details on these are discussed in the _APPENDIX_ section at the end of this blog)
+5. **So, is it only SIMD instruction performing VectorOperation?**
+The need to increase performance in modern processors has led to a wide adoption of SIMD (single-instruction multiple-data) vector units( which we discussed above). But, there're other kinds of Vectorization algorithms.. :)
+
+6. **Fine.. What're they?**
+Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of vectorization algorithms which convert multiple iterations of a loop to a single iteration of vector instructions. (Further details on these are discussed in the _APPENDIX_ section at the end of this blog)
 
 **Now, that we've seen what is Vectorization, its important to understand how to make the most out of it. This is where we reason out why spark shifted from row-based to columnar format**
 
