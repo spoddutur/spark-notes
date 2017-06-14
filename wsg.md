@@ -124,7 +124,8 @@ Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR
 ![image](https://user-images.githubusercontent.com/22542670/27118943-4916d748-50fb-11e7-9e93-f56f2dcc2c45.png)
 
 5. **What other tweaks were made to Spark's execution engine to perform vector processing?**
-The need to increase performance in modern processors has led to a wide adoption of SIMD (single-instruction multiple-data) vector units( which we discussed above). However writing code to make efficient use of vector processing units is not easy. Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of vectorization algorithms which convert multiple iterations of a loop to a single iteration of vector instructions.(Further details on these are discussed in teh _Appendix _ section at the end of this blog)
+The need to increase performance in modern processors has led to a wide adoption of SIMD (single-instruction multiple-data) vector units( which we discussed above). However writing code to make efficient use of vector processing units is not easy. Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of vectorization algorithms which convert multiple iterations of a loop to a single iteration of vector instructions.(Further details on these are discussed in the _APPENDIX_ section at the end of this blog)
+
 **Now, that we've seen what is Vectorization, its important to understand how to make the most out of it..**
 
 ### What is critical to achieve best efficiency while adapting to vector operations?
