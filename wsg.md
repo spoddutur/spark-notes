@@ -97,8 +97,18 @@ Ans: `Vectorization`
 ### What is Vectorization?
 As main memory grew, query performance is more and more determined by raw CPU costs of query processing. That’s where vector operations evolved to allow in-core parallelism for operations on arrays (vectors) of data via specialised instructions, vector registers and more FPU’s per core .
 
+To better avail in-core parallelism, Spark has done two changes:
+**Vectorization:** Idea is to take advantage of Data Level Parallelism (DLP) within an algorithm via vector processing i.e., processing batches of rows together.
+**Shift from row-based to column-based memory format:** This is beyond scope of this blog. Please check out this blog where its discussed in detail.
+
+What is Vector Processing?
+So, let’s start with understanding vector processing
 ### Goal of Vectorization
 Parallelise computations over vector arrays a.k.a. **perform vector operations** 
+
+To better avail in-core parallelism, Spark has done two changes:
+Vectorization: Modern compilers and CPUs can apply the standard optimisation techniques like loop unrolling, using SIMD, prefetching etc to speed up instruction execution. All of these optimisation techniques basically take advantage of Data Level Parallelism (DLP) within an algorithm via vector processing i.e., processing batches of rows together. Spark leveraged this technique to handle the cases where whole-stage code-generation could not. Hence came Vectorization!! We’ll discuss this in detail below.
+Shift from row-based to column-based memory format: This is beyond scope of this blog. Please check out this blog where its discussed in detail.
 
 ### How to perform vector operations?
 Two major approaches:
