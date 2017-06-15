@@ -202,9 +202,10 @@ Above example clearly illustrates how data availability is very critical to perf
 
 
 ## Appendix:
-This is additional content (optional) which complements and adds some more details on different Optimization techniques:
+This is additional content (optional) which complements and adds some more details on different Optimization techniques which follow this key idea to improve throughput:
+**The key to through put is organizing code to minimize jumps and organizing data to avoid cache misses, essentially avoid stalling or idling in the pipeline and achieve instruction level parallelism (ILP).**
 
-### Few major approaches:
+### Few major approaches which follow above mentioned key note to achieve ILP:
 - Pipelining
 - SIMD (Single Instruction Multiple Data)
 - Loop Pipelining
