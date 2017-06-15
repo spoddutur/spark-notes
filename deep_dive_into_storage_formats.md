@@ -134,14 +134,13 @@ students.join(department, students.col("deptId").equalTo(department.col("id")))
 ```
 Notice that join condition (`students.col("deptId").equalTo(department.col("id"))`) is no more anonymous function again. students[depId] == department[id]
 
-**Some things to note on Dataset's:**
-- So, we registered dataschema with simple one liner: `.as[Student]`. 
-- This is how user is registering schema of the data with Spark.
+**Some more things to note on Dataset's:**
+- So, we registered dataschema with simple one liner: `.as[Student]`.
 - DataSet operations are very explicit. In that, what operation is user performing on which column is evident to Spark.
-- This is how Spark got the transparency on the kind of data user is handling and the kind of operations user is perfoming!!
-- **So, Who converts DataSet to Tungsten Binary format and vice-versa?** 
+- So, Spark got the transparency it wanted.
+- **Who converts DataSet to Tungsten Binary format and vice-versa?** 
 - Ans: Spark provides Encoder API for DataSet’s which is responsible for converting DataSet to spark internal Tungsten binary format and vice-versa.
-- **Encoders eagerly check that your data matches the expected schema**, providing helpful error messages before you attempt to incorrectly process TBs of data
+- **A less obvious advantage with Encoders:** Encoders eagerly check that your data matches the expected schema, providing helpful error messages before you attempt to incorrectly process TBs of data
 
 ### RDD’s of JavaObjects **(vs)** Dataset’s
 ![image](https://user-images.githubusercontent.com/22542670/27128201-351d0b84-511b-11e7-8c08-5f0dd0b4085b.png)
