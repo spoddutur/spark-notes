@@ -170,11 +170,11 @@ Above example clearly illustrates how data availability is very critical to perf
 
 **Performance bechmarking:**
 - **Vectorised in-memory columnar support:** 
-	- Let's benchmark Spark 1.x Columnar data_ (Vs) Spark 2.x Vectorization + in-memory columnar support_ .
+	- Let's benchmark Spark 1.x Columnar data (Vs) Spark 2.x Vectorization + in-memory columnar support.
 	- For this, Parquet which is the most popular columnar-format for hadoop stack was considered. 
 	- Parquet scan performance in spark 1.6 ran at the rate of 11million/sec.
+	- Parquet vectorized in spark 2.x ran at about 90 million rows/sec roughly 9x faster. 
 	- Parquet vectored is basically directly scanning the data and materialising it in the vectorized way.
-	- Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. 
 	- This is promising and clearly shows that this is right thing to do!!
 ![image](https://user-images.githubusercontent.com/22542670/27002326-b9833618-4dfc-11e7-9730-81306d0d0a4e.png)
 
