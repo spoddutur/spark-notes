@@ -93,7 +93,7 @@ Let's start with output of Goal1 (WholeStageCodeGeneration..)
 
 ### Goal1 output - What did WholeStageCodeGeneration (WSCG) give us?
 WSCG is generating an optimized query plan for user:
-![image](https://user-images.githubusercontent.com/22542670/27065590-d5d28802-501b-11e7-9221-ab2509b7043a.png)
+![image](https://user-images.githubusercontent.com/22542670/27175056-a5f0cf1a-51db-11e7-8d8c-78d91060bbb6.png)
 
 ### What extension can we add to this further?
 This is where Goal2 comes into picture - **Speed up query execution**
