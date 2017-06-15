@@ -200,9 +200,9 @@ As per our discussions so far, Spark 1.x used row-based storage format for Datas
 ![Image](https://user-images.githubusercontent.com/22542670/26983627-187e1384-4d5a-11e7-9856-2ae5d20071c6.png)
 
 ### Why columnar?
-2nd Generation Tungsten Engine tried to use some standard optimisation techniques like loop unrolling, SIMD, prefetching etc which modern compilers and CPUs apply to speed up runtime. As part of this, Spark came up with two new optimization techniques called WholeStageCodeGeneration and Vectorization (Detail of these technologies can be found [here](https://spoddutur.github.io/spark-notes/wsg.html)). For this spark did 2 things:
+2nd Generation Tungsten Engine tried to use some standard optimisation techniques like loop unrolling, SIMD, prefetching etc which modern compilers and CPUs apply to speed up runtime. As part of this, Spark came up with two new optimization techniques called WholeStageCodeGeneration and Vectorization (Detail of these technologies can be found [here](https://spoddutur.github.io/spark-notes/second_generation_tungsten_engine)). For this spark did 2 things:
 1. Tweaked its execution engine to perform vector operations and attained data level parallelism at algorithm level
-2. Spark moved from row-based to columnar in-memory data enabling themselves for further SIMD optimisations like data striping. (Details on this shift can be found [here](https://spoddutur.github.io/spark-notes/wsg.html))
+2. Spark moved from row-based to columnar in-memory data enabling themselves for further SIMD optimisations like data striping for better cache and other advantages listed below.
 
 ### What opportunities did columnar format opened up?
 1. **Regular data access vs Complicated off-set computation:** Data access is more regular in columnar format. For example, if we have an integer, we always access them 4 bytes apart. That’s very nice for the cpu. With row-based format there’s complicated offset computation to know where am I. 
