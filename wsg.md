@@ -131,7 +131,7 @@ Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR
 - One single SIMD Instruction can process eight 16-bit integers at a time, there by achieving DLP (Data Level Parallelism). Following picture illustrates _computing `Min()` operation on 8-tuples in ONE go compared to EIGHT scalar instructions iterating over 8-tuples_:
 ![image](https://user-images.githubusercontent.com/22542670/27118943-4916d748-50fb-11e7-9e93-f56f2dcc2c45.png)
 
-5. **So, SIMD instructions perform Vector operations. Are there any other ways to perform vector processing?
+5. **So, we saw how SIMD instructions perform Vector operations. Are there any other ways to perform vector processing?**
 Yes..There're other kinds of Vectorization algorithms.. :)
 
 6. **Fine.. What're they?**
