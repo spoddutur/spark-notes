@@ -87,10 +87,9 @@ Consider a simple string “abcd”. One would think it would take about ~4bytes
 #### Instead of java objects, come up with a data format which is more compact and less overhead
 
 ### Action Plan1 + Action Plan2 together:
-- Spark should get transparency on 2 things:
-  1. What data is it handling
-  2. What operation is user performing on it
-- Create new data layout which is more compact and less overhead.
+1. **Have user register dataschema** - This will spark transparency on what data it is handling
+2. **Make the operations that user want to perform on data transparent to Spark**
+3. Create new data layout which is more compact and less overhead.
 #### This paved way to “Dataframes and Datasets”
 
 ### What is DataSet/DataFrame?
@@ -111,26 +110,35 @@ Following picture illustrates the same with an example. In this example, we took
 
 ### Data Schema Registration
 Following example shows how to register data schema:
+In this example, we're creating "students" Dataset.
+
 ```markdown
-// Here, we are creating "students" Dataset. **.as[Student]** function call is registering schema of input students data with Spark.
 case class Student(id: Long, name: String, yearOfJoining: Long, depId: Long)
 val students = spark.read.json(“/students.json").as[Student]
-
-// Example transformations on dataset:
-// 1. Filter students by YearOfJoining > 2015
-// filter() is no more anonymous function. we're explicitly telling spark now to filter using yearOfJoining > 2015 condition
-students.filter("yearOfJoining".gt(2015))
-
-// 2. Join Student with Department
-// Notice, we are explicitly telling spark that join condition is students[depId] == department[id]
-students.join(department, students.col("deptId").equalTo(department.col("id"))) // 
-students.agg(max(students.col("age")))
 ```
+Note that `**.as[Student]**` function call is registering schema of input students data with Spark.
 
-**Some things to note here:**
-- So, our data is directly read as instances of Student object. This is how user is registering schema of the data with Spark.
+### Let's see how transformations are applied on dataset
+Transformations are nothing but simple operations like filter, join, map etc which take a dataset as input and return new transformed dataset. Please find below two transformations examples:
+1. Filter students by YearOfJoining > 2015
+```markdown
+// syntax: dataset.filter(filter_condition)
+students.filter("yearOfJoining".gt(2015))
+```
+You might have noticed that filter condition is no more anonymous function. we're explicitly telling spark now to filter using `yearOfJoining > 2015` condition
+
+2. Join Student with Department
+```markdown
+// syntax: ds1.join(ds2, join_condition)
+students.join(department, students.col("deptId").equalTo(department.col("id")))
+```
+Notice that join condition (`students.col("deptId").equalTo(department.col("id"))`) is no more anonymous function again. students[depId] == department[id]
+
+**Some things to note on Dataset's:**
+- So, we registered dataschema with simple one liner: `.as[Student]`. 
+- This is how user is registering schema of the data with Spark.
 - DataSet operations are very explicit. In that, what operation is user performing on which column is evident to Spark.
-- This is how Spark got the transparency on kind of data user is handling and kind of operations user is perfoming on it!!
+- This is how Spark got the transparency on the kind of data user is handling and the kind of operations user is perfoming!!
 - **So, Who converts DataSet to Tungsten Binary format and vice-versa?** 
 - Ans: Spark provides Encoder API for DataSet’s which is responsible for converting DataSet to spark internal Tungsten binary format and vice-versa.
 - **Encoders eagerly check that your data matches the expected schema**, providing helpful error messages before you attempt to incorrectly process TBs of data
