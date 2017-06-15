@@ -167,15 +167,15 @@ Above example clearly illustrates how data availability is very critical to perf
 - So, we've seen that any cache operation works best when the data that you are about to process is laid out next to the data you are processing now. 
 - This works against row-based storage because it keeps all the data of the row together immaterial of whether current processing stage needs only small subset of that row. So, CPU is forced to keep un-needed data of the row also in the cache just so it gets the needed part of the row. 
 - Columnar data on the other hand plays nicely because, in general, each stage of processing only needs few columns at a time and hence columnar-storage is more cache friendly. One could possibly get order-of-magnitude speed-up by adapting to columnar storage while performing vector operations. 
-- For this and many more advantages listed in [this](https://spoddutur.github.io/spark-notes/) blog, Spark moved from row-based storage format to **support columnar in-memory data.**
+- For this and many more advantages listed in [this](https://spoddutur.github.io/spark-notes/deep_dive_into_storage_formats) blog, Spark moved from row-based storage format to **support columnar in-memory data.**
 
 ### Performance bechmarking:
 - **WholeStageCodeGeneration(WSCG) Benchmarking:**
 	- Join and Aggregations on 1Billion records on a single 2013 Macbook Pro finished in less than 1 sec.
-	- Please refer to [this](https://github.com/spoddutur/spark-notes/edit/master/wsg.md) databricks notebook where they carried out this experiment to join 1Billion records to evaluate performance of WSCG.
+	- Please refer to [this](https://databricks.com/blog/2016/05/23/apache-spark-as-a-compiler-joining-a-billion-rows-per-second-on-a-laptop.html) databricks notebook where they carried out this experiment to join 1Billion records to evaluate performance of WSCG.
 
 - **Vectorised in-memory columnar support:** 
-	- Let's benchmark Spark 1.x Columnar data (Vs) Spark 2.x Vectorization + in-memory columnar support.
+	- Let's benchmark **Spark 1.x Columnar** data (Vs) **Spark 2.x Vectorized Columnar** data.
 	- For this, Parquet which is the most popular columnar-format for hadoop stack was considered. 
 	- Parquet scan performance in spark 1.6 ran at the rate of 11million/sec.
 	- Parquet vectorized in spark 2.x ran at about 90 million rows/sec roughly 9x faster. 
