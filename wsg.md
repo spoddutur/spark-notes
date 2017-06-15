@@ -146,7 +146,11 @@ Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of ve
 Data Availability - All the data needed to execute an instruction should be available readily in cache. Else, it'll lead to _CPU stalling (or CPU idling)_ 
 
 ### How is data availability critical for execution speed?
-To illustrate this better let’s look at two pipelines one with and the other without CPU Stall and see how pipeline scheduling happens for the following four stages of an instruction cycle:
+To illustrate this better let’s look at two pipelines:
+1. One without any CPU Stall's and
+2. The other with CPU Stall (CPU Idling) 
+
+Following four stages of an instruction cycle are displayed in the pipelining examples shown below:
 - F Fetch: read the instruction from the memory. 
 - D Decode: decode the instruction and fetch the source operand(s).
 - E Execute: perform the operation specified by the instruction. 
@@ -168,7 +172,11 @@ Above example clearly illustrates how data availability is very critical to perf
 - Columnar data on the other hand plays nicely because, in general, each stage of processing only needs few columns at a time and hence columnar-storage is more cache friendly. One could possibly get order-of-magnitude speed-up by adapting to columnar storage while performing vector operations. 
 - For this and many more advantages listed in [this](https://spoddutur.github.io/spark-notes/) blog, Spark moved from row-based storage format to **support columnar in-memory data.**
 
-**Performance bechmarking:**
+### Performance bechmarking:
+- **WholeStageCodeGeneration(WSCG) Benchmarking:**
+	- Join and Aggregations on 1Billion records on a single 2013 Macbook Pro finished in less than 1 sec.
+	- Please refer to [this](https://github.com/spoddutur/spark-notes/edit/master/wsg.md) databricks notebook where they carried out this experiment to join 1Billion records to evaluate performance of WSCG.
+
 - **Vectorised in-memory columnar support:** 
 	- Let's benchmark Spark 1.x Columnar data (Vs) Spark 2.x Vectorization + in-memory columnar support.
 	- For this, Parquet which is the most popular columnar-format for hadoop stack was considered. 
@@ -177,10 +185,6 @@ Above example clearly illustrates how data availability is very critical to perf
 	- Parquet vectored is basically directly scanning the data and materialising it in the vectorized way.
 	- This is promising and clearly shows that this is right thing to do!!
 ![image](https://user-images.githubusercontent.com/22542670/27002326-b9833618-4dfc-11e7-9730-81306d0d0a4e.png)
-
-- **WholeStageCodeGeneration(WSCG) Benchmarking:**
-	- Join and Aggregations on 1Billion records on a single 2013 Macbook Pro finished in less than 1 sec.
-	- Please refer to [this](https://github.com/spoddutur/spark-notes/edit/master/wsg.md) databricks notebook where they carried out this experiment to join 1Billion records to evaluate performance of WSCG.
 
 ### Summary: 
 **We’ve explored following in this article:**
