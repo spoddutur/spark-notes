@@ -41,18 +41,21 @@ First things first..We need to understand the problem with old execution engine 
 As mentioned in the picture above, Spark doesn't know:
 - What operation user is trying to perform on data? and
 - What is the type of data?
+
 Because of the lack of transparency, there’s barely any scope for spark to optimise the query plan.
 
 ### What transparency does spark need?
 Spark needs transparency in 2 aspects:
 1. **Data Schema:**
-- How many and what columns/fields are there in each row?
-- What are the datatypes of each column/field?
-2. **User operation:** Spark should know what kind of operation user is trying to perform on which field of the data.
+- How many and what fields are there in each data record?
+- What are the datatypes of each field?
+2. **User operation:** Spark should know what kind of operation user is trying to perform on which field of the data record.
 
 ### How does this transparency help Spark improve performance?
-Its easier to illustrate it with an example. 
-Consider joining two inputs `df1` and `df2` on column `x of df1` and column `y of df2`. Following figure depicts the join and its query plan that spark generates:
+Its easier to illustrate it with an example. Consider joining two inputs `df1` and `df2`. 
+JoinCondition: ```column x of df1 = column y of df2.```
+
+Following figure depicts the join and its query plan that spark generates:
 ![Image](https://user-images.githubusercontent.com/22542670/26983475-8bf4d308-4d59-11e7-9a53-ffc48f712fa1.png)
 Because the join condition is an anonymous function (`myUDF`), the only way for spark to perform this join is:
 1. Perform cartesian product of df1 with df2.
