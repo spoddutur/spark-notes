@@ -143,7 +143,7 @@ Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of ve
 [Note: Feel free to skip this section if you want to jump to performace section and find out performance benchmark results]
 
 ### What is critical to achieve best efficiency while adapting to vector operations?
-Data Availability - All the data needed to execute an instruction should be available readily in cache. Else, it'll lead to _CPU stalling (or CPU idling)_ 
+**Data Availability** - All the data needed to execute an instruction should be available readily in cache. Else, it'll lead to CPU stalling (or CPU idling).
 
 ### How is data availability critical for execution speed?
 To illustrate this better let’s look at two pipelines:
