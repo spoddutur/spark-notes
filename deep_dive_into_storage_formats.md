@@ -208,7 +208,7 @@ As per our discussions so far, Spark 1.x used row-based storage format for Datas
 1. **Regular data access vs Complicated off-set computation:** Data access is more regular in columnar format. For example, if we have an integer, we always access them 4 bytes apart. That’s very nice for the cpu. With row-based format there’s complicated offset computation to know where am I. 
 2. **Denser storage:** Because the nature of the data is homogeneous, we can apply better compression techniques according to the data type.
 3. **Compatibility and zero serialization:** Columnar format is more compatible because many high performance systems already use columnar like numpy, tensorflow etc. Add on top of it, with spark having them in memory implies zero serialisation and zero copy. For example, most of our spark plan is evaluated in spark and at the end of it we want to call tensor flow and when its done, we want to get back. With spark using columnar in-memory format, that’s compatible with tensorflow. So, its gonna be done without ever having to do serialisation etc. It just works together. 
-4. Having columnar storage is more compatible with spark’s in-memory columnar-cache.
+4. **Compatibility with in-memory cache:** Having columnar storage is more compatible for obvious reasons with spark’s in-memory columnar-cache.
 5. **More Extensions:** Modern day data-intensive machine learning applications through-put is achieved in industry by running on GPUs. GPUs are more powerful than CPUs for homogeneous data crunching. Having homogenous columnar storage paves way for future off-loading the processing to GPU's and TPU's to avail its advanced hardwares. 
 
 **Performance Benchmarking:**
