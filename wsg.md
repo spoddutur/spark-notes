@@ -27,9 +27,12 @@ This is a standard technique adapted in majority of the database systems for ove
 - We don’t know where the child is coming from.
 - Its all dynamic dispatching between parent and child operators at runtime. 
 - Its agnostic to the operator below it.
+
 **Extensive memory access**
 - There’s a standard row format that exists between all the operators and this means writes to main memory. Potentially, you read a row in and send a new row to your parent.This suffers from problems in writing intermediate rows to main memory. 
+
 **Unable to leverage lot of modern techniques** like pipelining, prefetching, branch prediction, SIMD, loop unrolling etc..
+
 **Conclusion:** With VolcanoIterator Model, its difficult to get order’s of magnitude performance speed ups using the traditional profiling techniques. 
 
 **Instead, let’s look bottom up..**
@@ -81,9 +84,8 @@ Whole-stage Code Generation works particularly well when the operations we want 
 ### Is there anything that we can do to above mentioned stuff which can't be fused together in whole-stage code-generation?
 Indeed Yes!!
 
-## Goal 2 - Speed up query execution
-### via Supporting Vectorized in-memory columnar data:
-Let's start with output of Goal1 - WholeStageCodeGeneration..
+### Goal 2 - Speed up query execution via Supporting Vectorized in-memory columnar data:
+Let's start with output of Goal1 (WholeStageCodeGeneration..)
 
 ### Goal1 output - What did WholeStageCodeGeneration (WSCG) give us?
 WSCG is generating an optimized query plan for user:
@@ -136,10 +138,10 @@ Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of ve
 ### Row-based to Column-based storage format:
 [Note: Feel free to skip this section if you want to jump to performace section and find out performance benchmark results]
 
-### Row to Columnar format: What is critical to achieve best efficiency while adapting to vector operations?
+### What is critical to achieve best efficiency while adapting to vector operations?
 Data Availability - All the data needed to execute an instruction should be available readily in cache. Else, it'll lead to _CPU stalling (or CPU idling)_ 
 
-### Row to Columnar format: How is data availability critical for execution speed?
+### How is data availability critical for execution speed?
 To illustrate this better let’s look at two pipelines one with and the other without CPU Stall and see how pipeline scheduling happens for the following four stages of an instruction cycle:
 - F Fetch: read the instruction from the memory. 
 - D Decode: decode the instruction and fetch the source operand(s).
@@ -160,7 +162,7 @@ Above example clearly illustrates how data availability is very critical to perf
 - So, we've seen that any cache operation works best when the data that you are about to process is laid out next to the data you are processing now. 
 - This works against row-based storage because it keeps all the data of the row together immaterial of whether current processing stage needs only small subset of that row. So, CPU is forced to keep un-needed data of the row also in the cache just so it gets the needed part of the row. 
 - Columnar data on the other hand plays nicely because, in general, each stage of processing only needs few columns at a time and hence columnar-storage is more cache friendly. One could possibly get order-of-magnitude speed-up by adapting to columnar storage while performing vector operations. 
-- For this and many more advantages listed in this blog <link>, Spark moved from row-based storage format to **support columnar in-memory data.**
+- For this and many more advantages listed in [this](https://spoddutur.github.io/spark-notes/) blog, Spark moved from row-based storage format to **support columnar in-memory data.**
 
 **Performance bechmarking:**
 - **Vectorised in-memory columnar support:** Let's benchmark _Spark 1.x Columnar data_ (Vs) Spark 2.x Vectorization + in-memory columnar support_ . For this, Parquet which is the most popular columnar-format for hadoop stack was considered. Parquet scan performance in spark 1.6 ran at the rate of 11million/sec. Parquet vectored is basically directly scanning the data and materialising it in the vectorized way. Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. This is promising and clearly shows that this is right thing to do!!
