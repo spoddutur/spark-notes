@@ -208,7 +208,8 @@ As per our discussions so far, Spark 1.x used row-based storage format for Datas
 1. **Regular data access vs Complicated off-set computation:** Data access is more regular in columnar format. For example, if we have an integer, we always access them 4 bytes apart. That’s very nice for the cpu. With row-based format there’s complicated offset computation to know where am I. 
 2. **Denser storage:** Because the nature of the data is homogeneous, we can apply better compression techniques according to the data type.
 3. **Compatibility and zero serialization:** Columnar format is more compatible because many high performance systems already use columnar like numpy, tensorflow etc. Add on top of it, with spark having them in memory implies zero serialisation and zero copy. For example, most of our spark plan is evaluated in spark and at the end of it we want to call tensor flow and when its done, we want to get back. With spark using columnar in-memory format, that’s compatible with tensorflow. So, its gonna be done without ever having to do serialisation etc. It just works together. 
-4. **More Extensions:** Lastly, having columnar format gives us more options to extend the system in future. When the data is homogeneous, its easier to process encoded data in place. It also improves spark’s in-memory columnar-cache. Having homogenous columnar data paves way for future off-loading the processing to GPU's and TPU's to avail its advanced hardwares.
+4. Having columnar storage is more compatible with spark’s in-memory columnar-cache.
+5. **More Extensions:** Modern day data-intensive machine learning applications through-put is achieved in industry by running on GPUs. GPUs are more powerful than CPUs for homogeneous data crunching. Having homogenous columnar storage paves way for future off-loading the processing to GPU's and TPU's to avail its advanced hardwares. 
 
 **Performance Benchmarking:**
 - Let's benchmark **Spark 1.x Columnar** data (Vs) **Spark 2.x Vectorized Columnar** data.
@@ -230,4 +231,21 @@ As per our discussions so far, Spark 1.x used row-based storage format for Datas
 - [Spark Memory Management](https://www.youtube.com/watch?v=dPHrykZL8Cg)
 - [Deep Dive into Project Tungsten](https://www.youtube.com/watch?v=5ajs8EIPWGI)
 
+## Appendix
+### A quick additional note on GPU & TPU's:
+- GPU: 
+  - Modern day GPUs thrive on SIMD architecture. 
+  - GPU is tailored for highly parallel operation while CPU executes and is designed for serial execution.
+  - GPU have significantly faster and more advanced memory interfaces as there is need to shift around a lot more data than CPUs.
+  - GPU are a result of evolution into a highly parallel, multi-threaded cores with independent piplines & stages supported by high memory band width. Modern day cpus are 4-8 cores but GPUs are 1000s of cores.
+![image](https://user-images.githubusercontent.com/22542670/27191344-2037a490-5215-11e7-8f4b-41e1b96a55f6.png)
+
+- TPU: 
+  - Tensor Processing unit (TPU) is an application specific hardware developed by Google for Machine Learning.
+  - Compared to GPU it is designed explicitly for higher volume of reduced precision computation with higher throughput of execution per watt. 
+  - Hardware has been specifically designed for Google’s Tensor Flow framework. 
+
+
+Following graph depicts the performance/watt comparision between CPU, GPU, TPU and TPU' - latestTPU:
+![image](https://user-images.githubusercontent.com/22542670/27191111-68ac4f6a-5214-11e7-93f6-7dcb12338251.png)
 
