@@ -131,11 +131,8 @@ Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR
 - One single SIMD Instruction can process eight 16-bit integers at a time, there by achieving DLP (Data Level Parallelism). Following picture illustrates _computing `Min()` operation on 8-tuples in ONE go compared to EIGHT scalar instructions iterating over 8-tuples_:
 ![image](https://user-images.githubusercontent.com/22542670/27118943-4916d748-50fb-11e7-9e93-f56f2dcc2c45.png)
 
-5. **So, we saw how SIMD instructions perform Vector operations. Are there any other ways to perform vector processing?**
-Yes..There're other kinds of Vectorization algorithms.. :)
-
-6. **Fine.. What're they?**
-Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of vectorization algorithms which convert multiple iterations of a loop to a single iteration of vector instructions. (Further details on these are discussed in the _APPENDIX_ section at the end of this blog)
+5. **So, we saw how SIMD instructions perform Vector operations. Are there any other ways to optimize processing?**
+Yes..There're other kinds of processing techniques like loop unrolling, pipeline scheduling etc ..(Further details on these are discussed in the _APPENDIX_ section at the end of this blog)
 
 **Now, that we've seen what is Vectorization, its important to understand how to make the most out of it. This is where we reason out why spark shifted from row-based to columnar format**
 
@@ -205,10 +202,9 @@ Above example clearly illustrates how data availability is very critical to perf
 
 
 ## Appendix:
-This is additional content (optional) which complements and adds some more details on different Vectorization techniques:
+This is additional content (optional) which complements and adds some more details on different Optimization techniques:
 
-### How to perform vector operations?
-Two major approaches:
+### Few major approaches:
 - Pipelining
 - SIMD (Single Instruction Multiple Data)
 - Loop Pipelining
@@ -225,11 +221,11 @@ Single Instruction Multiple Data (SIMD), as the name suggests, performs the same
 Let's look at how SIMD works on the same example (x^2 + 8)/2:
 ![image](https://user-images.githubusercontent.com/22542670/27024104-ebb3db8e-4f72-11e7-98ca-1d66b9b2c86e.png)
 
-### Vectorization - Loop Pipelining:
+### Loop Pipelining:
  Loop pipelining allows the operations in a loop to be implemented in a concurrent manner as shown in the following figure.
 ![image](https://user-images.githubusercontent.com/22542670/27130522-34226fb8-5124-11e7-9eda-269ce341f50e.png)
 
-### Vectorization - Loop Unrolling:
+### Loop Unrolling:
 Loop unrolling is another technique to exploit parallelism between loop iterations. It identifies dependencies within the loop body, adjusts the loop iteration counter and adds multiple copies of the loop body as needed. Following table depicts 2 examples where loop unrolling is done.
 ![image](https://user-images.githubusercontent.com/22542670/27130893-e2dfcc84-5125-11e7-93b9-89a94784b245.png)
 
