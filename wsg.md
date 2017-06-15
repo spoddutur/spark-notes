@@ -68,8 +68,12 @@ Perform just like a hand built system that does exactly what user wants to do.
 ### Let’s take another example.. 
 **Join with some filters and aggregation.**
 - **Left hand side:** shows how the query plans look like in volcano iterator model. There are 9 virtual function calls with 8 intermediate results. 
-- **Right hand side:** shows how whole-stage code generation happens for this case. Here, we reduced Number of function calls to 2 and Number of intermediate results to 1. Each of those 2 box’s shown on the right-hand side is going to be converted into a single java function.
-There are different rules as to how we split up those pipelines depending on the usecase. 
+- **Right hand side:** shows how whole-stage code generation happens for this case. It has only 2 stages. 
+	- First stage is reading, filtering and projecting input2 
+	- Second stage starts with reading and filtering input1, joining it with input2 and generates the final aggregated result.
+	- Here, we reduced Number of function calls to 2 and Number of intermediate results to 1. 
+	- Each of these 2 stages(or boxes) is going to be converted into a single java function.
+	- There are different rules as to how we split up those pipelines depending on the usecase. We can't possibly fuse everything into one single function.
 ![image](https://user-images.githubusercontent.com/22542670/27002256-a687774c-4dfa-11e7-84e3-90f187d2e62f.png)
 
 ### Observation:
