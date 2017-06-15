@@ -210,7 +210,13 @@ As per our discussions so far, Spark 1.x used row-based storage format for Datas
 3. **Compatibility and zero serialization:** Columnar format is more compatible because many high performance systems already use columnar like numpy, tensorflow etc. Add on top of it, with spark having them in memory implies zero serialisation and zero copy. For example, most of our spark plan is evaluated in spark and at the end of it we want to call tensor flow and when its done, we want to get back. With spark using columnar in-memory format, that’s compatible with tensorflow. So, its gonna be done without ever having to do serialisation etc. It just works together. 
 4. **More Extensions:** Lastly, having columnar format gives us more options to extend the system in future. When the data is homogeneous, its easier to process encoded data in place. It also improves spark’s in-memory columnar-cache. With Columnar + Vectorization, we can leverage GPU’s better i.e., you can offload to GPU better and avail its advanced hardware techniques.
 
-**Performance Benchmarking:** Parquet which is the most popular columnar-format for hadoop stack was considered. Parquet scan performance in spark 1.6 ran at the rate of 11million/sec. Parquet vectored is basically directly scanning the data and materialising it in the vectorized way. Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. This is promising and clearly shows that this is right thing to do.
+**Performance Benchmarking:**
+- Let's benchmark **Spark 1.x Columnar** data (Vs) **Spark 2.x Vectorized Columnar** data.
+- For this, Parquet which is the most popular columnar-format for hadoop stack was considered. 
+- Parquet scan performance in spark 1.6 ran at the rate of 11million/sec.
+- Parquet vectorized in spark 2.x ran at about 90 million rows/sec roughly 9x faster. 
+- Parquet vectored is basically directly scanning the data and materialising it in the vectorized way.
+- This is promising and clearly shows that this is right thing to do!!
 ![Image](https://user-images.githubusercontent.com/22542670/26983657-2e3aaa84-4d5a-11e7-8848-fd84d6ee0612.png)
 ### CONCLUSION - Journey of Data Layout in Spark
 
