@@ -51,9 +51,9 @@ Spark needs transparency in 2 aspects:
 - What are the datatypes of each field?
 2. **User operation:** Spark should know what kind of operation user is trying to perform on which field of the data record.
 
-### How does this transparency help Spark improve performance?
-Its easier to illustrate it with an example. Consider joining two inputs `df1` and `df2`. 
-JoinCondition: ```column x of df1 = column y of df2.```
+### How does this transparency help Spark?
+It helps spark improve performance. Its easier to illustrate it with an example. Consider joining two inputs `df1` and `df2`. 
+```JoinCondition: column x of df1 = column y of df2.```
 
 Following figure depicts the join and its query plan that spark generates:
 ![Image](https://user-images.githubusercontent.com/22542670/26983475-8bf4d308-4d59-11e7-9a53-ffc48f712fa1.png)
@@ -63,14 +63,16 @@ Because the join condition is an anonymous function (`myUDF`), the only way for 
 
 ### How can transparency help spark improve this?
 The problem in the above query was that join condition is an anonymous function. If spark is aware of the join condition and data schema [datatype of x and y columns] then spark would:
-First sort df1 by x 
-Next sort df2 by y
-SortMerge Join df1 and df2 by df1[x] == df2[y]!! Runtime reduced to  nlogn!!
+- First sort df1 by x 
+- Next sort df2 by y
+- SortMerge Join df1 and df2 by df1[x] == df2[y]!! Runtime reduced to  nlogn!!
 ![Image](https://user-images.githubusercontent.com/22542670/26983488-9872b8b6-4d59-11e7-9562-661f7b9e305e.png)
 
 
 ### Action Plan1:
-#### Have user register data schema.
+Spark should get transparency on 2 things:
+1. What data is it handling
+2. What operation is user performing on it
 
 ### Problem2:
 Spark tries to do everything in-memory. So, the next question is to know if there is a way to reduce memory footprint. We need to understand how is data laid out in memory for this.
@@ -86,8 +88,10 @@ Consider a simple string “abcd”. One would think it would take about ~4bytes
 #### Instead of java objects, come up with a data format which is more compact and less overhead
 
 ### Action Plan1 + Action Plan2 together:
-Have user register data schema.
-Create new data layout which is more compact and less overhead.
+- Spark should get transparency on 2 things:
+  1. What data is it handling
+  2. What operation is user performing on it
+- Create new data layout which is more compact and less overhead.
 #### This paved way to “Dataframes and Datasets”
 
 ### What is DataSet/DataFrame?
@@ -109,13 +113,28 @@ Following picture illustrates the same with an example. In this example, we took
 ### Data Schema Registration
 Following example shows how to register data schema:
 ```markdown
-case class University(name: String, numStudents: Long, yearFounded: Long)
-val schools = spark.read.json(“/schools.json").as[University]
+// Here, we are creating "students" Dataset. **.as[Student]** function call is registering schema of input students data with Spark.
+case class Student(id: Long, name: String, yearOfJoining: Long, depId: Long)
+val students = spark.read.json(“/students.json").as[Student]
+
+// Example transformations on dataset:
+// 1. Filter students by YearOfJoining > 2015
+// filter() is no more anonymous function. we're explicitly telling spark now to filter using yearOfJoining > 2015 condition
+students.filter("yearOfJoining".gt(2015))
+
+// 2. Join Student with Department
+// Notice, we are explicitly telling spark that join condition is students[depId] == department[id]
+students.join(department, students.col("deptId").equalTo(department.col("id"))) // 
+students.agg(max(students.col("age")))
 ```
-**Advantage**
-1. So, our data is directly read as instances of university object
-2. Spark provides Encoder API for DataSet’s which is responsible for converting to and from spark internal Tungsten binary format.
-3. Encoders eagerly check that your data matches the expected schema, providing helpful error messages before you attempt to incorrectly process TBs of data
+
+**Some things to note here:**
+- So, our data is directly read as instances of Student object. This is how user is registering schema of the data with Spark.
+- DataSet operations are very explicit. In that, what operation is user performing on which column is evident to Spark.
+- This is how Spark got the transparency on kind of data user is handling and kind of operations user is perfoming on it!!
+- **So, Who converts DataSet to Tungsten Binary format and vice-versa?** 
+- Ans: Spark provides Encoder API for DataSet’s which is responsible for converting DataSet to spark internal Tungsten binary format and vice-versa.
+- **Encoders eagerly check that your data matches the expected schema**, providing helpful error messages before you attempt to incorrectly process TBs of data
 
 ### RDD’s of JavaObjects **(vs)** Dataset’s
 ![image](https://user-images.githubusercontent.com/22542670/27128201-351d0b84-511b-11e7-8c08-5f0dd0b4085b.png)
@@ -123,9 +142,19 @@ val schools = spark.read.json(“/schools.json").as[University]
 ### Benefits of Dataset’s
 - Compact (less overhead)
 - Reduce our memory footprint significantly.
-- Possible in place transformations for simple one’s without the need to deserialise. (Let’s see how this happens in detail below)
+- Spark knows what data is it handling now.
+- Spark also knows the operation that user wants to perform on Dataset
+- Both the above two listed benefits paved way to one more not so obvious advantage which is:
+- Possible in-place transformations for simple one’s without the need to deserialise. (Let’s see how this happens in detail below)
 
-### How does in-place transformation happen?
+### What does in-place transformation mean?
+With RDD's, to apply a transformation operation on data (like `filter, map, groupBy, count etc`), there are 3 steps:
+1. Its first deserialized into java object
+2. We apply the transformation operation on JavaObject and 
+3. Finally serialize javaobject back into bytes.
+In-Place Transformation essentially means that,we need not deserialize a dataset to apply a transformation on it. Let's see how it happens next..
+
+### How does in-place transformation happen in DataSet?
 Let’s see how the same old filter fn behaves now.  Consider the case where we’ve to filter input by `year>2015` condition. Note that the filter condition specified via the data frame code `df.where(df(“year” > 2015))` is not an anonymous function. Spark exactly knows which column it needs for this task and that it needs to do greater than comparison. 
 ![image](https://user-images.githubusercontent.com/22542670/27127611-51e2148c-5119-11e7-93cc-7544a8e6cdf0.png)
 
