@@ -158,6 +158,8 @@ With RDD's, to apply a transformation operation on data (like `filter, map, grou
 1. Its first deserialized into java object
 2. We apply the transformation operation on JavaObject and 
 3. Finally serialize javaobject back into bytes.
+
+
 In-Place Transformation essentially means that,we need not deserialize a dataset to apply a transformation on it. Let's see how it happens next..
 
 ### How does in-place transformation happen in DataSet?
