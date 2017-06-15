@@ -70,9 +70,8 @@ The problem in the above query was that join condition is an anonymous function.
 
 
 ### Action Plan1:
-Spark should get transparency on 2 things:
-1. What data is it handling
-2. What operation is user performing on it
+1. **Have user register dataschema** - This will spark transparency on what data it is handling
+2. **Make the operations that user want to perform on data transparent to Spark**
 
 ### Problem2:
 Spark tries to do everything in-memory. So, the next question is to know if there is a way to reduce memory footprint. We need to understand how is data laid out in memory for this.
