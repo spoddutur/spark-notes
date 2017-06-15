@@ -127,8 +127,8 @@ Typically, each vector registers can hold upto 4 words of data a.k.a 4 floats OR
 - One single SIMD Instruction can process eight 16-bit integers at a time, there by achieving DLP (Data Level Parallelism). Following picture illustrates _computing `Min()` operation on 8-tuples in ONE go compared to EIGHT scalar instructions iterating over 8-tuples_:
 ![image](https://user-images.githubusercontent.com/22542670/27118943-4916d748-50fb-11e7-9e93-f56f2dcc2c45.png)
 
-5. **So, is it only SIMD instruction performing VectorOperation?**
-The need to increase performance in modern processors has led to a wide adoption of SIMD (single-instruction multiple-data) vector units( which we discussed above). But, there're other kinds of Vectorization algorithms.. :)
+5. **So, SIMD instructions perform Vector operations. Are there any other ways to perform vector processing?
+Yes..There're other kinds of Vectorization algorithms.. :)
 
 6. **Fine.. What're they?**
 Loop-based algorithms like Loop Pipelining, Loop Unrolling are other kinds of vectorization algorithms which convert multiple iterations of a loop to a single iteration of vector instructions. (Further details on these are discussed in the _APPENDIX_ section at the end of this blog)
@@ -165,10 +165,18 @@ Above example clearly illustrates how data availability is very critical to perf
 - For this and many more advantages listed in [this](https://spoddutur.github.io/spark-notes/) blog, Spark moved from row-based storage format to **support columnar in-memory data.**
 
 **Performance bechmarking:**
-- **Vectorised in-memory columnar support:** Let's benchmark _Spark 1.x Columnar data_ (Vs) Spark 2.x Vectorization + in-memory columnar support_ . For this, Parquet which is the most popular columnar-format for hadoop stack was considered. Parquet scan performance in spark 1.6 ran at the rate of 11million/sec. Parquet vectored is basically directly scanning the data and materialising it in the vectorized way. Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. This is promising and clearly shows that this is right thing to do!!
+- **Vectorised in-memory columnar support:** 
+	- Let's benchmark Spark 1.x Columnar data_ (Vs) Spark 2.x Vectorization + in-memory columnar support_ .
+	- For this, Parquet which is the most popular columnar-format for hadoop stack was considered. 
+	- Parquet scan performance in spark 1.6 ran at the rate of 11million/sec.
+	- Parquet vectored is basically directly scanning the data and materialising it in the vectorized way.
+	- Parquet vectorized ran at about 90 million rows/sec roughly 9x faster. 
+	- This is promising and clearly shows that this is right thing to do!!
 ![image](https://user-images.githubusercontent.com/22542670/27002326-b9833618-4dfc-11e7-9730-81306d0d0a4e.png)
 
-- **WholeStageCodeGeneration(WSCG) Benchmarking:** [This](https://github.com/spoddutur/spark-notes/edit/master/wsg.md) databricks notebook] benchmarks performance of WSCG nicely by an example where they applied join & aggregation operations on one billion records in a single 2013 Macbook Pro machine which finished **in less than 1sec** .
+- **WholeStageCodeGeneration(WSCG) Benchmarking:**
+	- Join and Aggregations on 1Billion records on a single 2013 Macbook Pro finished in less than 1 sec.
+	- Please refer to [this](https://github.com/spoddutur/spark-notes/edit/master/wsg.md) databricks notebook where they carried out this experiment to join 1Billion records to evaluate performance of WSCG.
 
 ### Summary: 
 **We’ve explored following in this article:**
