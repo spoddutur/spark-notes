@@ -187,6 +187,7 @@ return value > 2015
 - Filter fn is not anonymous to spark
 - Object wasn't deserialised to find the value of column ‘year’
 - The value of ‘year’ is directly fetched from the offset
+- In-place transformation can be done only for simpler operations like this
 
 ### This is great!! Let’s see how does in-place transformation helps in speed?
 Atleast for the simple use cases..
