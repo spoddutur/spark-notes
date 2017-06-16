@@ -27,7 +27,7 @@ We cannot find the answer for this question, without diving into Project Tungste
 ### Why this objective?
 The focus on CPU efficiency is motivated by the fact that Spark workloads are increasingly bottlenecked by CPU and memory use rather than IO and network communication. To understand this better:
 - Let’s see the hardware trends over the past 7 years. Looking at the graph, its obvious that both DISK I/O and Network I/O have improved  10x faster but CPU remained pretty much same:
-![Image](https://user-images.githubusercontent.com/22542670/26983390-3aaa2606-4d59-11e7-93e9-a8c4db193964.png)
+![image](https://user-images.githubusercontent.com/22542670/27210375-b82e0f50-526f-11e7-98b9-37b0cfb00bbb.png)
 
 - Another trend that’s noticed was, in Spark’s shuffle subsystem, serialisation and hashing (which are CPU bound) have been shown to be key bottlenecks, rather than raw network throughput of underlying hardware.
 
