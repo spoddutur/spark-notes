@@ -26,12 +26,12 @@ We cannot find the answer for this question, without diving into Project Tungste
 
 ### Why this objective?
 The focus on CPU efficiency is motivated by the fact that Spark workloads are increasingly bottlenecked by CPU and memory use rather than IO and network communication. To understand this better:
-- Let’s see the hardware trends over the past 7 years. Looking at the graph, its obvious that both DISK I/O and Network I/O have improved  10x faster:
+- Let’s see the hardware trends over the past 7 years. Looking at the graph, its obvious that both DISK I/O and Network I/O have improved  10x faster but CPU remained pretty much same:
 ![Image](https://user-images.githubusercontent.com/22542670/26983390-3aaa2606-4d59-11e7-93e9-a8c4db193964.png)
 
 - Another trend that’s noticed was, in Spark’s shuffle subsystem, serialisation and hashing (which are CPU bound) have been shown to be key bottlenecks, rather than raw network throughput of underlying hardware.
 
-These two trends mean that Spark today is constrained more by CPU efficiency and memory pressure rather than IO
+These two trends mean that Spark today is constrained more by CPU efficiency and memory pressure rather than network or disk IO
 
 ### Problem1:
 First things first..We need to understand the problem with old execution engine before we think of solutions to improve efficiency. To better understand this, let’s take a simple task of filtering a stream of integers and see how spark 1.x used to interpret it.
@@ -125,17 +125,17 @@ Transformations are nothing but simple operations like filter, join, map etc whi
 // syntax: dataset.filter(filter_condition)
 students.filter("yearOfJoining".gt(2015))
 ```
-You might have noticed that filter condition is no more anonymous function. we're explicitly telling spark now to filter using `yearOfJoining > 2015` condition
+You might have noticed that filter condition is not anonymous function anymore. we're explicitly telling spark now to filter using `yearOfJoining > 2015` condition
 
 2. Join Student with Department
 ```markdown
 // syntax: ds1.join(ds2, join_condition)
 students.join(department, students.col("deptId").equalTo(department.col("id")))
 ```
-Notice that join condition (`students.col("deptId").equalTo(department.col("id"))`) is no more anonymous function again. students[depId] == department[id]
+Notice that join condition (`students.col("deptId").equalTo(department.col("id"))`) is also not anonymous function!! We're explicitly telling spark to join on students[depId] == department[id] condition
 
 **Some more things to note on Dataset's:**
-- So, we registered dataschema with simple one liner: `.as[Student]`.
+- So, we registered dataschema with simple one liner code: `.as[Student]`.
 - DataSet operations are very explicit. In that, what operation is user performing on which column is evident to Spark.
 - So, Spark got the transparency it wanted.
 - **Who converts DataSet to Tungsten Binary format and vice-versa?** 
@@ -153,24 +153,33 @@ Notice that join condition (`students.col("deptId").equalTo(department.col("id")
 - Both the above two listed benefits paved way to one more not so obvious advantage which is:
 - Possible in-place transformations for simple one’s without the need to deserialise. (Let’s see how this happens in detail below)
 
-### What does in-place transformation mean?
+### What does in-place transformation with dataset's mean?
 With RDD's, to apply a transformation operation on data (like `filter, map, groupBy, count etc`), there are 3 steps:
 1. Its first deserialized into java object
 2. We apply the transformation operation on JavaObject and 
 3. Finally serialize javaobject back into bytes.
 
 
-In-Place Transformation essentially means that,we need not deserialize a dataset to apply a transformation on it. Let's see how it happens next..
+With Dataset's, in-Place Transformation essentially means that, we need not deserialize a dataset to apply a transformation on it. Let's see how it happens next..
 
-### How does in-place transformation happen in DataSet?
-Let’s see how the same old filter fn behaves now.  Consider the case where we’ve to filter input by `year>2015` condition. Note that the filter condition specified via the data frame code `df.where(df(“year” > 2015))` is not an anonymous function. Spark exactly knows which column it needs for this task and that it needs to do greater than comparison. 
+### How does in-place transformation happen in DataSet/Dataframe?
+Let’s see how the same old filter fn behaves now.  Consider the case where we’ve to filter input by `year>2015` condition in a dataframe. Note that the filter condition specified via the dataframe code `df.where(df(“year” > 2015))` is not an anonymous function. Spark exactly knows which column it needs for this task and that it needs to do greater than comparison. 
 ![image](https://user-images.githubusercontent.com/22542670/27127611-51e2148c-5119-11e7-93cc-7544a8e6cdf0.png)
 
 The low-level byte code generated for this query looks something like this as shown in the above figure: 
 ```markdown
+
+// This filter function is returning boolean on 'year > 2015' condition
 bool filter(Object baseObject) {
+
+// 1. compute offset from where to fetch the column 'year'
 int offset = baseoffset + <..>
+
+// 2. Fetch the value of 'year' column of the given baseObject 
+// directly without deserialing baseObject
 int value = Platform.getInt(baseObject, offset)
+
+// 3. return the boolean
 return value > 2015
 }
 ```
