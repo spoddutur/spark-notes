@@ -27,21 +27,21 @@ So, if we request 20GB per executor, AM will actually get 20GB + memoryOverhead 
 
 ## Enough theory.. Let's go hands-on..
 Now, let’s consider a 10 node cluster with following config and analyse different possibilities of executors-core-memory distribution:
-**Cluster Config:**
 ```markdown
+**Cluster Config:**
 10 Nodes
 16 cores per Node
 64GB RAM per Node
 ```
 ### First solution: Tiny executors [One Executor per core]:  
 Tiny executors essentially means one executor per core. Following will be the config with this approach:
+```markdown
 - `--num-executors = num-cores-per-node * total-nodes-in-cluster` 
                    = 16 x 10 = 160
 - `--executor-cores` = 1 (one executor per core)
 - `--executor-memory = amount of memory per executor = mem-per-node/num-executors-per-node`
-                     
                      = 64GB/16 = 4GB
-
+```
 **Analysis:** With only one executor per core, as we discussed above, we’ll not be able to take advantage of running multiple tasks in the same JVM. Also, shared/cached variables like broadcast variables and accumulators will be replicated in each core of the nodes which is **16 times**. Also, we are not leaving enough memory overhead for Hadoop/Yarn daemon processes and we are not counting in ApplicationManager. **NOT GOOD!**
 ### Fat executors - One Executor per node:
 - Number of executors = 1 x 10 = 10
