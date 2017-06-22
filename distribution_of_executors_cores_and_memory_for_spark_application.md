@@ -67,16 +67,18 @@ Fat executors essentially means one executor per node. Following table depicts t
 
 ### Third Approach: Balance between Fat (vs) Tiny
 **According to the recommendations which we discussed above:**
-- Let's assign 5 core per executors => `--executor-cores = 5` (for good HDFS throughput)
-- Leave 1 core per node for Hadoop/Yarn daemons => Number of cores available per node = 16-1 = 15
+- Based on the recommendations mentioned above, Let's assign 5 core per executors => `--executor-cores = 5` (for good HDFS throughput)
+- Leave 1 core per node for Hadoop/Yarn daemons => Num cores available per node = 16-1 = 15
 - So, Total available of cores in cluster = 15 x 10 = 150
-```Number of available executors = (total cores/num-cores-per-executor) = 150/5 = 30```
+- ```Number of available executors = (total cores/num-cores-per-executor) = 150/5 = 30```
 - Leaving 1 executor for ApplicationManager => `--num-executors` = 29
 - Number of executors per node = 30/10 = 3
 - Memory per executor = 64GB/3 = 21GB
 - Counting off heap overhead = 7% of 21GB = 3GB. So, actual `--executor-memory` = 21 - 3 = 18GB
 
 **So, recommended config is: 29 executors, 18GB memory each and 5 cores each!!**
+
+
 **Analysis:** It is obvious as to how this third approach has found right balance between Fat vs Tiny approaches. Needless to say, it achieved parallelism of a fat executor and best throughputs of a tiny executor!!
 ### Conclusion:
 We've seen:
