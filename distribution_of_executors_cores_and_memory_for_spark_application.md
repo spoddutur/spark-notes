@@ -36,43 +36,48 @@ Now, let’s consider a 10 node cluster with following config and analyse differ
 16 cores per Node
 64GB RAM per Node
 ```
-### First solution: Tiny executors [One Executor per core]:  
-Tiny executors essentially means one executor per core. Following will be the config with this approach:
+### First Approach: Tiny executors [One Executor per core]:  
+Tiny executors essentially means one executor per core. Following table depicts the values of our spar-config params with this approach:
 ```markdown
-- `--num-executors = total number of executors in the cluster
-                   = num-cores-per-node * total-nodes-in-cluster` 
+- `--num-executors` = `In tiny executor approach, we'll assign one executor per core`
+                    = `So, num-executors is euqla to total-cores-in-cluster`
+                   = `num-cores-per-node * total-nodes-in-cluster` 
                    = 16 x 10 = 160
 - `--executor-cores` = 1 (one executor per core)
-- `--executor-memory = amount of memory per executor
-                     = mem-per-node/num-executors-per-node`
+- `--executor-memory` = `amount of memory per executor`
+                     = `mem-per-node/num-executors-per-node`
                      = 64GB/16 = 4GB
 ```
 **Analysis:** With only one executor per core, as we discussed above, we’ll not be able to take advantage of running multiple tasks in the same JVM. Also, shared/cached variables like broadcast variables and accumulators will be replicated in each core of the nodes which is **16 times**. Also, we are not leaving enough memory overhead for Hadoop/Yarn daemon processes and we are not counting in ApplicationManager. **NOT GOOD!**
-### Fat executors - One Executor per node:
-- Number of executors = 1 x 10 = 10
-- Number of cores per executor = 16
-- Memory per executor = 64GB
-
+### Second Approach: Fat executors (One Executor per node):
+Fat executors essentially means one executor per node. Following table depicts the values of our spark-config params with this approach:
+```markdown
+- `--num-executors` = `In Fat executors approach, we'll assign one executor per node`
+                    = `So, num-executors is equal to total-nodes-in-cluster`
+                   = `total-nodes-in-cluster` 
+                   = 10
+- `--executor-cores` = `one executor per node means all the cores of the node are assigned to one executor`
+                     = `So, num-cores-per-executor is equal to number total-cores-in-a-node`
+                     = 16
+- `--executor-memory` = `amount of memory per executor`
+                     = `mem-per-node/num-executors-per-node`
+                     = 64GB/1 = 64GB
+```
 
 **Analysis:** With all 16 cores per executor, apart from ApplicationManager and daemon processes are not counted for, HDFS throughput will hurt and it’ll result in excessive garbage results. Also,**NOT GOOD!**
 
-### What’s right config?
+### Third Approach: What’s right config?
+**According to the recommendations which we discussed above:**
 - Number of core per executors = 5 (for good HDFS throughput)
 - Leave 1 core per node for Hadoop/Yarn daemons => num cores per node=16-1 = 15
 - Total number of cores in cluster 15 x 10 = 150
 ```Number of executors = (total cores/cores per executor) = 150/5 = 30```
-- Leaving 1 executor for AM => #executors = 29
-- Number of # executors per node = 30/10 = 3
+- Leaving 1 executor for ApplicationManager => #executors = 29
+- Number of executors per node = 30/10 = 3
 - Memory per executor = 64GB/3 = 21GB
 - Counting off heap overhead = 7% of 21GB = 3GB. So, actual executor memory = 21 - 3 = 18GB
 
-### Correct Answer: 
-29 executors, 18GB memory each and 5 cores each!!
+### So, recommended config is: 
+#### 29 executors, 18GB memory each and 5 cores each!!
 
-
-In this blog, I'll cover how to size Executors, Cores and Memory while running spark application on Yarn. The three spark config params using which we can configure number of executors, cores and memory are:
-- Number of executors (`--num-executors`)
-- Cores per executor (`--executor-cores`) 
-- Memory per executor (`--executor-memory`)
-
-These three params play a very important role in spark performance as they control the amount of CPU & memory your spark application gets. This makes it very crucial for users to understand the right way to configure them. 
+`--num-executors`, `--executor-cores` and `--executor-memory`.. these three params play a very important role in spark performance as they control the amount of CPU & memory your spark application gets. This makes it very crucial for users to understand the right way to configure them. Hope this blog helped you in getting that perspective...
