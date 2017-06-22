@@ -2,7 +2,7 @@
 ```markdown
 spark-submit --class <CLASS_NAME> --num-executors ? --executor-cores ? ....
 ```
-Ever wondered how to configure `--num-executors` and `--execuor-cores` for your cluster?
+#### Ever wondered how to configure `--num-executors` and `--execuor-cores` for your cluster?
 
 ## Let's find out how..
 In this blog, I'll cover how to size Executors, Cores and Memory while running spark application on Yarn. The three spark config params using which we can configure number of executors, cores and memory are:
@@ -10,7 +10,7 @@ In this blog, I'll cover how to size Executors, Cores and Memory while running s
 - Cores per executor (`--executor-cores`) 
 - Memory per executor (`--executor-memory`)
 
-These three params play a very important role in spark performance as they control the amount of CPU & memory that spark application gets. This makes it very crucial for users to understand the right way to configure them. 
+These three params play a very important role in spark performance as they control the amount of CPU & memory your spark application gets. This makes it very crucial for users to understand the right way to configure them. 
 
 ### Following list captures some recommendations to keep in mind while configuring them:
 - **Hadoop/Yarn/OS Deamons:** When we run spark application using a cluster manager like Yarn,  there’ll be several daemons that’ll run in the background like NameNode, Secondary NameNode, DataNode, JobTracker and TaskTracker. So, while specifying num-executors, we need to make sure that we leave aside enough cores (~1 core per node) for these daemons to run smoothly. 
