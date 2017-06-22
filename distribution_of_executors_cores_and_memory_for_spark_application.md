@@ -1,4 +1,10 @@
 ## Distribution of Executors, Cores and Memory for a Spark Application running in Yarn:
+```markdown
+spark-submit --class <CLASS_NAME> --num-executors ? --executor-cores ? ....
+```
+Ever wondered how to configure `--num-executors` and `--execuor-cores` for your cluster?
+
+## Let's find out how..
 In this blog, I'll cover how to size Executors, Cores and Memory while running spark application on Yarn. The three spark config params using which we can configure number of executors, cores and memory are:
 - Number of executors (`--num-executors`)
 - Cores per executor (`--executor-cores`) 
