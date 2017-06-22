@@ -67,16 +67,28 @@ Fat executors essentially means one executor per node. Following table depicts t
 
 ### Third Approach: What’s right config?
 **According to the recommendations which we discussed above:**
-- Number of core per executors = 5 (for good HDFS throughput)
-- Leave 1 core per node for Hadoop/Yarn daemons => num cores per node=16-1 = 15
-- Total number of cores in cluster 15 x 10 = 150
-```Number of executors = (total cores/cores per executor) = 150/5 = 30```
-- Leaving 1 executor for ApplicationManager => #executors = 29
+- Let's assign 5 core per executors => `--executor-cores = 5` (for good HDFS throughput)
+- Leave 1 core per node for Hadoop/Yarn daemons => Number of cores available per node = 16-1 = 15
+- So, Total available of cores in cluster = 15 x 10 = 150
+```Number of available executors = (total cores/num-cores-per-executor) = 150/5 = 30```
+- Leaving 1 executor for ApplicationManager => `--num-executors` = 29
 - Number of executors per node = 30/10 = 3
 - Memory per executor = 64GB/3 = 21GB
-- Counting off heap overhead = 7% of 21GB = 3GB. So, actual executor memory = 21 - 3 = 18GB
+- Counting off heap overhead = 7% of 21GB = 3GB. So, actual `--executor-memory` = 21 - 3 = 18GB
 
 ### So, recommended config is: 
-#### 29 executors, 18GB memory each and 5 cores each!!
+**29 executors, 18GB memory each and 5 cores each!!**
+
+### Conclusion:
+We've seen:
+- Couple of recommendations to keep in mind which configuring these params for a spark-application like:
+   - Budget in the resources that Yarn's Application Manager would need
+   - How we should spare some cores for Hadoop/Yarn/OS deamon processes 
+   - Learnt about `spark-yarn-memory-usage`
+- Also, checked out and analysed three different approaches to configure these params: 
+   1. Tiny Executors
+   2. Fat Executors and 
+   3. Recommended approach
+
 
 `--num-executors`, `--executor-cores` and `--executor-memory`.. these three params play a very important role in spark performance as they control the amount of CPU & memory your spark application gets. This makes it very crucial for users to understand the right way to configure them. Hope this blog helped you in getting that perspective...
