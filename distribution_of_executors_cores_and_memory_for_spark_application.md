@@ -65,7 +65,7 @@ Fat executors essentially means one executor per node. Following table depicts t
 
 **Analysis:** With all 16 cores per executor, apart from ApplicationManager and daemon processes are not counted for, HDFS throughput will hurt and it’ll result in excessive garbage results. Also,**NOT GOOD!**
 
-### Third Approach: What’s right config?
+### Third Approach: Balance between Fat (vs) Tiny
 **According to the recommendations which we discussed above:**
 - Let's assign 5 core per executors => `--executor-cores = 5` (for good HDFS throughput)
 - Leave 1 core per node for Hadoop/Yarn daemons => Number of cores available per node = 16-1 = 15
@@ -76,9 +76,8 @@ Fat executors essentially means one executor per node. Following table depicts t
 - Memory per executor = 64GB/3 = 21GB
 - Counting off heap overhead = 7% of 21GB = 3GB. So, actual `--executor-memory` = 21 - 3 = 18GB
 
-### So, recommended config is: 
-**29 executors, 18GB memory each and 5 cores each!!**
-
+**So, recommended config is: 29 executors, 18GB memory each and 5 cores each!!**
+**Analysis:** It is obvious as to how this third approach has found right balance between Fat vs Tiny approaches. Needless to say, it achieved parallelism of a fat executor and best throughputs of a tiny executor!!
 ### Conclusion:
 We've seen:
 - Couple of recommendations to keep in mind which configuring these params for a spark-application like:
@@ -86,9 +85,8 @@ We've seen:
    - How we should spare some cores for Hadoop/Yarn/OS deamon processes 
    - Learnt about `spark-yarn-memory-usage`
 - Also, checked out and analysed three different approaches to configure these params: 
-   1. Tiny Executors
-   2. Fat Executors and 
-   3. Recommended approach
-
+   1. Tiny Executors - One Executor per Core
+   2. Fat Executors - One executor per Node
+   3. Recommended approach - Right balance between Tiny _(Vs)_ Fat **coupled** with the recommendations.
 
 `--num-executors`, `--executor-cores` and `--executor-memory`.. these three params play a very important role in spark performance as they control the amount of CPU & memory your spark application gets. This makes it very crucial for users to understand the right way to configure them. Hope this blog helped you in getting that perspective...
