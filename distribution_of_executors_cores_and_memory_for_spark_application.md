@@ -40,7 +40,7 @@ Now, let’s consider a 10 node cluster with following config and analyse differ
 Tiny executors essentially means one executor per core. Following table depicts the values of our spar-config params with this approach:
 ```markdown
 - `--num-executors` = `In tiny executor approach, we'll assign one executor per core`
-                    = `So, num-executors is euqla to total-cores-in-cluster`
+                    = `total-cores-in-cluster`
                    = `num-cores-per-node * total-nodes-in-cluster` 
                    = 16 x 10 = 160
 - `--executor-cores` = 1 (one executor per core)
@@ -53,11 +53,10 @@ Tiny executors essentially means one executor per core. Following table depicts 
 Fat executors essentially means one executor per node. Following table depicts the values of our spark-config params with this approach:
 ```markdown
 - `--num-executors` = `In Fat executors approach, we'll assign one executor per node`
-                    = `So, num-executors is equal to total-nodes-in-cluster`
-                   = `total-nodes-in-cluster` 
+                    = `total-nodes-in-cluster`
                    = 10
 - `--executor-cores` = `one executor per node means all the cores of the node are assigned to one executor`
-                     = `So, num-cores-per-executor is equal to number total-cores-in-a-node`
+                     = `total-cores-in-a-node`
                      = 16
 - `--executor-memory` = `amount of memory per executor`
                      = `mem-per-node/num-executors-per-node`
