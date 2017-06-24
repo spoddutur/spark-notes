@@ -1,8 +1,10 @@
-## Spark Memory Management
-In this blog, we'll address following 2 questions:-
-- **What are the memory needs of a task?**
-- **How does Spark arbitrate memory between Execution and Storage?**
-- **How is memory shared among different tasks running on the same worker node ?**
+## Task Memory Management
+Task is the smallest unit of execution that operates on a partition in our dataset. Its basically the threads that run within the Executor JVM of a Worker node to do the needed computation per partition of our data. Given that Spark is an in-memory processing engine, all of the computation that a task does happens in-memory. So, let's try to understand Task Memory Management...
+
+We'll section Task memory management into 3 parts to understand this topic better:
+- **1. What are the memory needs of a task?**
+- **2. How does spark arbitrate memory within a task?**
+- **3. How is memory shared among different tasks running on the same worker node?**
 
 ### 1.What are the memory needs of a task?
 Task is basically smallest unit of execution that represents a partition in our dataset. Every task needs 2 kinds of memory: 
@@ -20,7 +22,7 @@ Task is basically smallest unit of execution that represents a partition in our 
 
 ![image](https://user-images.githubusercontent.com/22542670/27504472-8269bc82-58a7-11e7-9a40-7e3900055a3f.png)
 
-### 2.How does Spark arbitrate memory between Execution and Storage?
+### 2.How does Spark arbitrate between ExecutionMemory and StorageMemory within a Task?
 Simplest Solution – **Static Assignment**
 - Static Assignment approach basically splits the total available on-heap memory (size of your JVM) into 2 parts one for ExecutionMemory and the other for StorageMemory. 
 - As the name says, this memory split is static and doesn't change dynamically. 
