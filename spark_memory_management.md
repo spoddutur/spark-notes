@@ -28,6 +28,7 @@ Simplest Solution – **Static Assignment**
 ![image](https://user-images.githubusercontent.com/22542670/27504478-dae23b28-58a7-11e7-9750-4aca0a6203a6.png)
 - Likewise, if the Storage memory gets filled, its evicted via LRU
 ![image](https://user-images.githubusercontent.com/22542670/27504731-67d537ec-58ad-11e7-8f61-f24b3dae9f99.png)
+
 **Disadvantage:** Even if the task doesn't have any StorageMemory need, the ExecutionMemory will not be able to use all of the available memory
 ![image](https://user-images.githubusercontent.com/22542670/27504510-8e3ee72a-58a8-11e7-879b-3d615bf9b8ab.png)
 
