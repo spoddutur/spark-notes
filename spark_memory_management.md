@@ -5,10 +5,18 @@ In this blog, we'll address following 2 questions:
 
 ### What are the memory needs of a task?
 Task is basically smallest unit of execution that represents a partition in our dataset. Every task needs 2 kinds of memory: 
-1. **Execution Memory:** Execution Memory is the memory used to buffer Intermediate results. As soon as we are done with the operation, we can go ahead and release it. Its short lived. For example, a task performing Sort operation, would need some sort of collection to store the Intermediate sorted values.
-2. **Storage Memory:** Storage memory is more about reusing the data for future computation. This is where we store cached data and its long-lived. Until the allotted storage gets filled, Storage memory stays in place. LRU eviction is used to spill the storage data when it gets filled.
+1. **Execution Memory:** 
+  - Execution Memory is the memory used to buffer Intermediate results.
+  - As soon as we are done with the operation, we can go ahead and release it. Its short lived.
+  - For example, a task performing Sort operation, would need some sort of collection to store the Intermediate sorted values.
+2. **Storage Memory:** 
+  - Storage memory is more about reusing the data for future computation. 
+  - This is where we store cached data and its long-lived. 
+  - Until the allotted storage gets filled, Storage memory stays in place. 
+  - LRU eviction is used to spill the storage data when it gets filled.
 
-**Let’s illustrate it with an example task of `Sorting a collection of Int’s`**
+**`Let’s illustrate it with an example task of "Sorting a collection of Int’s"`**
+
 ![image](https://user-images.githubusercontent.com/22542670/27504472-8269bc82-58a7-11e7-9a40-7e3900055a3f.png)
 
 ### How does Spark arbitrate memory between Execution and Storage?
@@ -20,6 +28,7 @@ Simplest Solution – **Static Assignment**
 ![image](https://user-images.githubusercontent.com/22542670/27504478-dae23b28-58a7-11e7-9750-4aca0a6203a6.png)
 - Likewise, if the Storage memory gets filled, its evicted via LRU
 ![image](https://user-images.githubusercontent.com/22542670/27504507-7d66e204-58a8-11e7-9d06-f0b9b8cb614e.png)
+![image](https://user-images.githubusercontent.com/22542670/27504731-67d537ec-58ad-11e7-8f61-f24b3dae9f99.png)
 
 **Disadvantage:** Even if the task doesn't have any StorageMemory need, the ExecutionMemory will not be able to use all of the available memory
 ![image](https://user-images.githubusercontent.com/22542670/27504510-8e3ee72a-58a8-11e7-879b-3d615bf9b8ab.png)
