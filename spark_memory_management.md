@@ -1,5 +1,5 @@
 ## Spark Memory Management
-In this blog, we'll address following 2 questions:
+In this blog, we'll address following 2 questions:-
 - **What are the memory needs of a task?**
 - **How does Spark arbitrate memory between Execution and Storage?**
 - **How is memory shared among different tasks running on the same worker node ?**
