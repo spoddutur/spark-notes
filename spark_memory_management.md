@@ -26,6 +26,7 @@ Now that we've seen the memory needs of a task, Let's understand how Spark manag
 
 ### 2. Memory Management within a Task
 **How does Spark arbitrate between ExecutionMemory(EM) and StorageMemory(SM) within a Task?**
+
 Simplest Solution – **Static Assignment**
 - Static Assignment - This approach basically splits the total available on-heap memory (size of your JVM) into 2 parts, one for ExecutionMemory and the other for StorageMemory. 
 - As the name says, this memory split is static and doesn't change dynamically. 
@@ -36,6 +37,7 @@ Simplest Solution – **Static Assignment**
 ![image](https://user-images.githubusercontent.com/22542670/27504731-67d537ec-58ad-11e7-8f61-f24b3dae9f99.png)
 
 **Disadvantage:** Because of the hard split of memory between Execution and Storage, even if the task doesn't need any StorageMemory, ExecutionMemory will still be using only its chunk of the total available free memory..
+
 ![image](https://user-images.githubusercontent.com/22542670/27504510-8e3ee72a-58a8-11e7-879b-3d615bf9b8ab.png)
 
 **How to fix this?**
