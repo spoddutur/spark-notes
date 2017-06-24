@@ -1,5 +1,5 @@
 ## Task Memory Management
-Task is the smallest unit of execution that operates on a partition in our dataset. Its basically the threads that run within the Executor JVM of a Worker node to do the needed computation per partition of our data. Given that Spark is an in-memory processing engine, all of the computation that a task does happens in-memory. So, let's try to understand Task Memory Management...
+Task is the smallest unit of execution that operates on a partition in our dataset. Tasks are the basically the threads that run within the Executor JVM of a Worker node to do the needed computation per partition of our data. Given that Spark is an in-memory processing engine, all of the computation that a task does happens in-memory. So, let's try to understand Task Memory Management...
 
 We'll section Task memory management into 3 parts to understand this topic better:
 - **1. What are the memory needs of a task?**
