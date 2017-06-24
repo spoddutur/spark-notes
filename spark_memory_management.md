@@ -61,6 +61,7 @@ We can't just blow away cached data like that in this case. So, for this usecase
 
 ### 3.Memory Management across the Tasks
 **How is memory shared among different tasks running on the same worker node?**
+
 Ans: **Static Assignment (again!!)** - No matter how many tasks are currently running, if the worker machine has 4 cores, we’ll have 4 fixed slots.
 ![image](https://user-images.githubusercontent.com/22542670/27504541-465957aa-58a9-11e7-9626-9ad4f6b077a3.png)
 
