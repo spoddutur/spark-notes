@@ -2,9 +2,9 @@
 Tasks are the basically the threads that run within the Executor JVM of a Worker node to do the needed computation per partition of our data. Task is the smallest unit of execution that operates on a partition in our dataset. Given that Spark is an in-memory processing engine, all of the computation that a task does happens in-memory. So, let's try to understand Task Memory Management...
 
 To understand this topic better, we'll section `Task Memory Management` into 3 parts:
-1. ** What are the memory needs of a task?**
-2. ** How does spark arbitrate memory within a task?**
-3. ** How is memory shared among different tasks running on the same worker node?**
+1. **What are the memory needs of a task?**
+2. **Memory Management within a Task - How does spark arbitrate memory within a task?**
+3. **Memory Management across the Tasks - How is memory shared among different tasks running on the same worker node?**
 
 ### 1. What are the memory needs of a task?
 Every task needs 2 kinds of memory: 
@@ -25,17 +25,17 @@ Every task needs 2 kinds of memory:
 Now that we've seen the memory needs of a task, Let's understand how Spark manages it..
 
 ### 2. Memory Management within a Task
-**How does Spark arbitrate between ExecutionMemory and StorageMemory within a Task?**
+**How does Spark arbitrate between ExecutionMemory(EM) and StorageMemory(SM) within a Task?**
 Simplest Solution – **Static Assignment**
-- Static Assignment approach basically splits the total available on-heap memory (size of your JVM) into 2 parts one for ExecutionMemory and the other for StorageMemory. 
+- Static Assignment - This approach basically splits the total available on-heap memory (size of your JVM) into 2 parts, one for ExecutionMemory and the other for StorageMemory. 
 - As the name says, this memory split is static and doesn't change dynamically. 
-- This has been the solution since spark 1.0 (May 2014). 
+- This has been the solution since spark 1.0. 
 - While running our task, if the execution memory gets filled, it’ll get spilled to disk as shown below:
 ![image](https://user-images.githubusercontent.com/22542670/27504478-dae23b28-58a7-11e7-9750-4aca0a6203a6.png)
-- Likewise, if the Storage memory gets filled, its evicted via LRU
+- Likewise, if the Storage memory gets filled, its evicted via LRU (Least recently Used)
 ![image](https://user-images.githubusercontent.com/22542670/27504731-67d537ec-58ad-11e7-8f61-f24b3dae9f99.png)
 
-**Disadvantage:** Even if the task doesn't have any StorageMemory need, the ExecutionMemory will not be able to use all of the available memory
+**Disadvantage:** Because of the hard split of memory between Execution and Storage, even if the task doesn't need any StorageMemory, ExecutionMemory will still be using only its chunk of the total available free memory..
 ![image](https://user-images.githubusercontent.com/22542670/27504510-8e3ee72a-58a8-11e7-879b-3d615bf9b8ab.png)
 
 **How to fix this?**
