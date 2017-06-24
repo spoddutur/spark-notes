@@ -3,8 +3,8 @@ Tasks are the basically the threads that run within the Executor JVM of a Worker
 
 To understand this topic better, we'll section `Task Memory Management` into 3 parts:
 1. **What are the memory needs of a task?**
-2. **Memory Management within a Task - How does spark arbitrate memory within a task?**
-3. **Memory Management across the Tasks - How is memory shared among different tasks running on the same worker node?**
+2. **Memory Management within a Task -** How does spark arbitrate memory within a task?
+3. **Memory Management across the Tasks -** How is memory shared among different tasks running on the same worker node?
 
 ### 1. What are the memory needs of a task?
 Every task needs 2 kinds of memory: 
@@ -45,7 +45,7 @@ Simplest Solution – **Static Assignment**
 `UNIFIED MEMORY MANAGEMENT` - This is how Unified Memory Management works:
 - Express execution and storage memory as one single unified region.
 - So, there's no splitting of memory in this approach.
-- Execution and Storage share it combinedly with this agreement: **"Keep acquiring execution memory and evict storage as u need more execution memory".** 
+- Execution and Storage share it combinedly with this agreement: `Keep acquiring execution memory and evict storage as u need more execution memory.` 
 
 Following picture depicts Unified memory management..
 
@@ -53,10 +53,11 @@ Following picture depicts Unified memory management..
 
 **But, why to evict storage than execution memory?**
 
-Spilled execution data is always going to be read back from disk vs cached data may or may not. (User might tend to aggressively cache data at times with/without its need.. )
+Spilled execution data is always going to be read back from disk where as cached data may or may not be read back. (User might tend to aggressively cache data at times with/without its need.. )
 
 **What if application relies on caching like a Machine Learning application?**
-We cant just blow away cached data like that in this case. So, for this usecase, spark allows user to specify minimal unevictable amount of storage a.k.a cache data. Notice this is not a reservation meaning, we don’t pre-allocate a chunk of storage for cache data such that execution cannot borrow from it. Rather, only when there’s cached data this value comes into effect..
+
+We can't just blow away cached data like that in this case. So, for this usecase, spark allows user to specify minimal unevictable amount of storage a.k.a cache data. Notice this is not a reservation meaning, we don’t pre-allocate a chunk of storage for cache data such that execution cannot borrow from it. Rather, only when there’s cached data this value comes into effect..
 
 ### 3.How is memory shared among different tasks running on the same worker node?
 Ans: **Static Assignment (again!!)** - No matter how many tasks are currently running, if the worker machine has 4 cores, we’ll have 4 fixed slots.
