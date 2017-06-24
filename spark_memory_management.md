@@ -41,8 +41,9 @@ Simplest Solution – **Static Assignment**
 **How to fix this?**
 
 `UNIFIED MEMORY MANAGEMENT` - This is how Unified Memory Management works:
-- Express execution and storage memory as one single unified region (i.e., on-heap memory is not split. Its shared between execution and storage memory combinedly)
-- Keep acquiring execution memory and evict storage as u need more execution memory. 
+- Express execution and storage memory as one single unified region.
+- So, there's no splitting of memory in this approach.
+- Execution and Storage shares it combinedly with this agreement: "Keep acquiring execution memory and evict storage as u need more execution memory". 
 
 Following picture depicts Unified memory management..
 
