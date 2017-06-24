@@ -65,14 +65,14 @@ We can't just blow away cached data like that in this case. So, for this usecase
 Ans: **Static Assignment (again!!)** - No matter how many tasks are currently running, if the worker machine has 4 cores, we’ll have 4 fixed slots.
 ![image](https://user-images.githubusercontent.com/22542670/27504541-465957aa-58a9-11e7-9626-9ad4f6b077a3.png)
 
-**Drawback:** Even if there’s only 1 task running, its gonna get only one-quarter of the total memory. 
+**Drawback:** Even if there’s only 1 task running, its going to get only one-quarter of the total memory. 
 
 ### Better Solution – Dynamic Assignment (Again)!!
-More efficient alternative is Dynamic allocation where how much memory a task gets is dependent on total number of tasks running. If am the only task running, I can feel free to acquire all the available memory.
+More efficient alternative is Dynamic allocation where how much memory a task gets is dependent on total number of tasks running. If there is only one task running, it can feel free to acquire all the available memory.
 
 ![image](https://user-images.githubusercontent.com/22542670/27504542-4922ffa4-58a9-11e7-97ff-d10d2d749611.png)
 
-As soon as another task comes in, we’ll have to spill to disk and free space for task2 for fairness. So, number of slots are determined dynamically depending on active running tasks.
+As soon as another task comes in, `task1` will have to spill to disk and free space for `task2` for fairness. So, number of slots are determined dynamically depending on active running tasks.
 ![image](https://user-images.githubusercontent.com/22542670/27504544-4cae9f8e-58a9-11e7-9d6a-adc90fe66dec.png)
 
 **Key Advantage:**
