@@ -1,9 +1,10 @@
 ## Spark Memory Management
 In this blog, we'll address following 2 questions:
 - **What are the memory needs of a task?**
+- **How does Spark arbitrate memory between Execution and Storage?**
 - **How is memory shared among different tasks running on the same worker node ?**
 
-### What are the memory needs of a task?
+### 1.What are the memory needs of a task?
 Task is basically smallest unit of execution that represents a partition in our dataset. Every task needs 2 kinds of memory: 
 1. **Execution Memory:** 
   - Execution Memory is the memory used to buffer Intermediate results.
@@ -19,7 +20,7 @@ Task is basically smallest unit of execution that represents a partition in our 
 
 ![image](https://user-images.githubusercontent.com/22542670/27504472-8269bc82-58a7-11e7-9a40-7e3900055a3f.png)
 
-### How does Spark arbitrate memory between Execution and Storage?
+### 2.How does Spark arbitrate memory between Execution and Storage?
 Simplest Solution – **Static Assignment**
 - Static Assignment approach basically splits the total available on-heap memory (size of your JVM) into 2 parts one for ExecutionMemory and the other for StorageMemory. 
 - As the name says, this memory split is static and doesn't change dynamically. 
@@ -32,7 +33,8 @@ Simplest Solution – **Static Assignment**
 **Disadvantage:** Even if the task doesn't have any StorageMemory need, the ExecutionMemory will not be able to use all of the available memory
 ![image](https://user-images.githubusercontent.com/22542670/27504510-8e3ee72a-58a8-11e7-879b-3d615bf9b8ab.png)
 
-### How to fix this?
+**How to fix this?**
+
 `UNIFIED MEMORY MANAGEMENT` - This is how Unified Memory Management works:
 - Express execution and storage memory as one single unified region (i.e., on-heap memory is not split. Its shared between execution and storage memory combinedly)
 - Keep acquiring execution memory and evict storage as u need more execution memory. 
@@ -41,14 +43,14 @@ Following picture depicts Unified memory management..
 
 ![image](https://user-images.githubusercontent.com/22542670/27504536-2e56d1c8-58a9-11e7-9a51-d8b7120c651a.png)
 
-### But, why to evict storage than execution memory?
+**But, why to evict storage than execution memory?**
 
 Spilled execution data is always going to be read back from disk vs cached data may or may not. (User might tend to aggressively cache data at times with/without its need.. )
 
-### What if application relies on caching like a Machine Learning application?
+**What if application relies on caching like a Machine Learning application?**
 We cant just blow away cached data like that in this case. So, for this usecase, spark allows user to specify minimal unevictable amount of storage a.k.a cache data. Notice this is not a reservation meaning, we don’t pre-allocate a chunk of storage for cache data such that execution cannot borrow from it. Rather, only when there’s cached data this value comes into effect..
 
-### How is memory shared among different tasks running on the same worker node?
+### 3.How is memory shared among different tasks running on the same worker node?
 Ans: **Static Assignment (again!!)** - No matter how many tasks are currently running, if the worker machine has 4 cores, we’ll have 4 fixed slots.
 ![image](https://user-images.githubusercontent.com/22542670/27504541-465957aa-58a9-11e7-9626-9ad4f6b077a3.png)
 
@@ -69,8 +71,8 @@ This has been there since spark 1.0 and its been working fine since then. So, Sp
 ## CONCLUSION - MEMORY Management
 `We understood:`
 - Two kinds of memory needs per task
-- How to arbitrate between execution and storage memory
-- How to arbitrate between multiple tasks
+- How to arbitrate within a task (i.e., between execution and storage memory of a single task)
+- How to arbitrate memory between multiple tasks
 - **Common Solution:** Instead of statically reserving memory, force memory to spill when there’s memory contention. So, essentially, solve memory contention lazily rather than eagerly. 
 - Static assignment is simpler
 - Dynamic allocation handles stragglers better
