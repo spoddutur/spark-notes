@@ -34,19 +34,18 @@ Simplest Solution – **Static Assignment**
 
 ### How to fix this?
 `UNIFIED MEMORY MANAGEMENT` - This is how Unified Memory Management works:
-- Express execution and storage memory as one single unified region. 
+- Express execution and storage memory as one single unified region (i.e., on-heap memory is not split. Its shared between execution and storage memory combinedly)
 - Keep acquiring execution memory and evict storage as u need more execution memory. 
 
 Following picture depicts Unified memory management..
 
 ![image](https://user-images.githubusercontent.com/22542670/27504536-2e56d1c8-58a9-11e7-9a51-d8b7120c651a.png)
 
-**Why to evict storage than execution memory?**
+### But, why to evict storage than execution memory?
 
 Spilled execution data is always going to be read back from disk vs cached data may or may not. (User might tend to aggressively cache data at times with/without its need.. )
 
-**What if application relies on caching like a Machine Learning application?**
-
+### What if application relies on caching like a Machine Learning application?
 We cant just blow away cached data like that in this case. So, for this usecase, spark allows user to specify minimal unevictable amount of storage a.k.a cache data. Notice this is not a reservation meaning, we don’t pre-allocate a chunk of storage for cache data such that execution cannot borrow from it. Rather, only when there’s cached data this value comes into effect..
 
 ### How is memory shared among different tasks running on the same worker node?
