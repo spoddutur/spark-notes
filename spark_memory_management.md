@@ -45,7 +45,7 @@ Simplest Solution – **Static Assignment**
 `UNIFIED MEMORY MANAGEMENT` - This is how Unified Memory Management works:
 - Express execution and storage memory as one single unified region.
 - So, there's no splitting of memory in this approach.
-- Execution and Storage shares it combinedly with this agreement: "Keep acquiring execution memory and evict storage as u need more execution memory". 
+- Execution and Storage share it combinedly with this agreement: **"Keep acquiring execution memory and evict storage as u need more execution memory".** 
 
 Following picture depicts Unified memory management..
 
