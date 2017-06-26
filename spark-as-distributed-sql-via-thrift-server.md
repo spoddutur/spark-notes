@@ -13,8 +13,8 @@ Data from multiple sources can be pushed into Spark and then exposed as a table 
 Spark thrift server is pretty similar to HiveServer2 thrift. But, HiveServer2 submits the sql queries as Hive MapReduce job whereas Spark thrift server will use Spark SQL engine which underline uses full spark capabilities. 
 
 ### Example walkthrough:
-Let’s walk through an example of how to use Spark as a distributed data backend engine in YARN cluster 
-(code written in scala 2.11) I've used Spark 2.1.0 and a EMR cluster with YARN for this:
+Let’s walk through an example of how to use Spark as a distributed data backend engine
+(code written in scala 2.11). I've used Spark 2.1.x and amazon EMR cluster with YARN for this:
 
 1. For this example, am just loading data from a HDFS file and registering it as table with SparkSQL
 
