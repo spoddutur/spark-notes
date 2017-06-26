@@ -56,7 +56,7 @@ spark-submit MainClass --master yarn-cluster <JAR_FILE_NAME>
 2. From a remote machine
 
 ### Accessing the data - Within the Cluster:
-Perhaps the easiest way to test is connect to spark thrift server from one of the nodes in the cluster using a command line tool ![beeline](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–NewCommandLineShell): 
+Perhaps the easiest way to test is connect to spark thrift server from one of the nodes in the cluster using a command line tool [beeline](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–NewCommandLineShell): 
 
 ```markdown
 // connect to beeline
