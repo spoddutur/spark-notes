@@ -114,3 +114,10 @@ Transaction isolation: TRANSACTION_REPEATABLE_READ
 +-------------+
 1 row selected (1.703 seconds)
 
+### References
+[How to run queries on spark sql using JDBC via Thrift Server](https://developer.ibm.com/hadoop/2016/08/22/how-to-run-queries-on-spark-sql-using-jdbc-via-thrift-server/)
+[Apache Spark as a distributed sql engine](https://medium.com/@anicolaspp/apache-spark-as-a-distributed-sql-engine-4373e254e0f9) 
+[Configure custom Thrift Server](https://forums.databricks.com/questions/1464/how-to-configure-thrift-server-to-use-a-custom-spa.html)
+[How to use SparkSession in ApacheSpark](https://databricks.com/blog/2016/08/15/how-to-use-sparksession-in-apache-spark-2-0.html)
+[Use beeline to connect to Spark tables](https://community.hortonworks.com/questions/32810/spark-temporary-table-is-not-shown-in-beeline.html)
+  
