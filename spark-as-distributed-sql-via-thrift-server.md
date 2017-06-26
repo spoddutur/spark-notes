@@ -32,11 +32,11 @@ import spark1.implicits._
 // load data from /beeline/input.json in HDFS
 val records = spark1.read.format(“json").load("beeline/input.json")
 
-// TWO approaches to create table (Use any one):
-// approach1: in-memory temp table:
+// As we discussed above, i'll show both the approaches to expose data with SparkSQL (Use any one of them):
+// APPROACH 1: in-memory temp table:
 records.createOrReplaceTempView(“records")
 
-// approach2: parquet-format physical table in S3
+// APPROACH 2: parquet-format physical table in S3
 spark1.sql("DROP TABLE IF EXISTS records")
 ivNews.write.saveAsTable("records")
 ```
