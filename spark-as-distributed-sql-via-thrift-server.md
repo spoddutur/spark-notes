@@ -2,7 +2,7 @@
 In this blog, You'll get to know how to expose your big-data as a JDBC/ODBC data source via the **Spark thrift server**.
 
 ### Little bit background on other options to do the same before jumping into Spark:
-Traditional relational Database engines like SQL had scalability problems and so evolved couple of SQL-on-Hadoop frameworks like Hive, Cloudier Impala, Presto etc. These frameworks are essentially cloud-based solutions and they all come with their own limitations as listed in the table below
+Traditional relational Database engines like SQL had scalability problems and so evolved couple of SQL-on-Hadoop frameworks like Hive, Cloudier Impala, Presto etc. These frameworks are essentially cloud-based solutions and they all come with their own limitations as listed in the table below. Please refer to Appendix section at the end of this blog if you want to learn more on this
 
 <img width="660" src="https://user-images.githubusercontent.com/22542670/27549999-a03c529a-5abb-11e7-958b-c53f55e162f9.png">
 
@@ -122,10 +122,12 @@ Replace localhost in `!connect jdbc:hive2://localhost:10000` command with spark-
 - [Use beeline to connect to Spark tables](https://community.hortonworks.com/questions/32810/spark-temporary-table-is-not-shown-in-beeline.html)
 
 ### Appendix:
-I ran the example code in amazon EMR cluster. If you are doing this in a stand-alone cluster or local-node managing it manually, this is how you'll start SparkThrift Server:
-- Set SPARK_HOME to point to your spark install directory
-- Start ThriftServer in remote with proper master url "spark://_IPADDRESS_:7077" where 7077 is the default port of spark-master:
+1. I ran the example code in amazon EMR cluster. If you are doing this in a stand-alone cluster or local-node managing it manually, this is how you'll start SparkThrift Server:
+	- Set SPARK_HOME to point to your spark install directory
+	- Start ThriftServer in remote with proper master url "spark://_IPADDRESS_:7077" where 7077 is the default port of spark-master:
 ```markdown
 $SPARK_HOME/sbin/start-thriftserver.sh --master spark://<_IP-ADDRESS_>:7077
 starting org.apache.spark.sql.hive.thriftserver.HiveThriftServer2, logging to /Users/surthi/Downloads/spark-2.1.1-bin-hadoop2.7/logs/spark-surthi-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-1-P-Sruthi.local.out
 ```
+
+2. If you are interested in learning more details about other SQL-on-Hadoop frameworks like Hive, Cloudier Impala, Presto etc.. [this] is a good link to refer to.
