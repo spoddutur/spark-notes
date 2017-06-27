@@ -1,5 +1,5 @@
 ## Task Memory Management
-Tasks are the basically the threads that run within the Executor JVM of a Worker node to do the needed computation per partition of our data. Task is the smallest unit of execution that operates on a partition in our dataset. Given that Spark is an in-memory processing engine, all of the computation that a task does happens in-memory. So, let's try to understand Task Memory Management...
+Tasks are the basically the threads that run within the Executor JVM of a Worker node to do the needed computation. It is the smallest unit of execution that operates on a partition in our dataset. Given that Spark is an in-memory processing engine where all of the computation that a task does happens in-memory, its important to understand `Task Memory Management...`
 
 To understand this topic better, we'll section `Task Memory Management` into 3 parts:
 1. **What are the memory needs of a task?**
@@ -63,6 +63,7 @@ We can't just blow away cached data like that in this case. So, for this usecase
 **How is memory shared among different tasks running on the same worker node?**
 
 Ans: **Static Assignment (again!!)** - No matter how many tasks are currently running, if the worker machine has 4 cores, we’ll have 4 fixed slots.
+
 ![image](https://user-images.githubusercontent.com/22542670/27504541-465957aa-58a9-11e7-9626-9ad4f6b077a3.png)
 
 **Drawback:** Even if there’s only 1 task running, its going to get only one-quarter of the total memory. 
