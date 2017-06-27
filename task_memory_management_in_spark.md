@@ -74,11 +74,13 @@ More efficient alternative is Dynamic allocation where how much memory a task ge
 ![image](https://user-images.githubusercontent.com/22542670/27504542-4922ffa4-58a9-11e7-97ff-d10d2d749611.png)
 
 As soon as another task comes in, `task1` will have to spill to disk and free space for `task2` for fairness. So, number of slots are determined dynamically depending on active running tasks.
+
 ![image](https://user-images.githubusercontent.com/22542670/27504544-4cae9f8e-58a9-11e7-9d6a-adc90fe66dec.png)
 
 **Key Advantage:**
 One notable behaviour here is - What happens to a straggler which is a last remaining task. These straggler tasks are potentially expensive because everybody is already done but then this is the last remaining task. This model allocates all the memory to the straggler because number of actively running tasks is one. 
 This has been there since spark 1.0 and its been working fine since then. So, Spark haven't found a reason to change it.
+
 ![image](https://user-images.githubusercontent.com/22542670/27504547-521bd842-58a9-11e7-96ad-4c08f351f72d.png)
 ## CONCLUSION - TASK MEMORY MANAGEMENT
 `We understood:`
