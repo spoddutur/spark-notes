@@ -92,5 +92,5 @@ This has been there since spark 1.0 and its been working fine since then. So, Sp
 - Dynamic allocation handles stragglers better
 
 ## References:
-[Deep dive Apache Spark Memory Mangement](https://spark-summit.org/2016/events/deep-dive-apache-spark-memory-management/)
-[Spark Memory Management](https://www.youtube.com/watch?v=dPHrykZL8Cg)
+- [Deep dive Apache Spark Memory Mangement](https://spark-summit.org/2016/events/deep-dive-apache-spark-memory-management/)
+- [Spark Memory Management](https://www.youtube.com/watch?v=dPHrykZL8Cg)
