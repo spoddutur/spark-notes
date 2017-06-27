@@ -71,7 +71,7 @@ There are 2 ways to run above code:
 Now, that our data is registered with Spark and exposed as JDBC source via Spark Thrift Server, let's see how to access it..
 
 ### Accesing the data
-Perhaps the easiest way to test is connect to spark thrift server from one of the nodes in the cluster using a command line tool [beeline](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–NewCommandLineShell). I'll show how to access data using beeline from Within the cluster and remote machine:
+Perhaps the easiest way to test is using a command line tool [beeline](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–NewCommandLineShell). I'll show how to access data using beeline from within the cluster and from a remote machine:
 
 ### 1.Accessing the data using beeline - Within the Cluster:
 
@@ -82,6 +82,7 @@ Beeline version 2.1.1-amzn-0 by Apache Hive
 ```
 - Within beeline, connect to spark thrift server @localhost:10000 (default host and port). This is the port we registered above. You can change this setting by tweaking `"hive.server2.thrift.port"="10000"` config.
 ```markdown
+// Connect to spark thrift server..
 `beeline> !connect jdbc:hive2://localhost:10000`
 Connecting to jdbc:hive2://localhost:10000
 Enter username for jdbc:hive2://localhost:10000:
@@ -91,8 +92,9 @@ Driver: Hive JDBC (version 2.1.1-amzn-0)
 17/06/26 08:35:42 [main]: WARN jdbc.HiveConnection: Request to set autoCommit to false; Hive does not support autoCommit=false.
 Transaction isolation: TRANSACTION_REPEATABLE_READ
 ```
-- List all the tables and you should find our table `records` here..Tht's it!!! Your data is available as JDBC source! Run any of the SQL commands you need on top of it..
-`0: jdbc:hive2://localhost:10000> show tables;`
+- Once the connection is established, let's test and see if our table `records` is present..
+```markdown
+`jdbc:hive2://localhost:10000> show tables;`
 INFO  : OK
 +-------------+
 |  tab_name   |
@@ -100,9 +102,13 @@ INFO  : OK
 | records     |
 +——————+------+
 ```
+- Tht's it!!! Your data is available as JDBC source! You can run any of the SQL commands you need on top of it..
 
-### Accessing the data - From a remote machine beeline:
-Replace localhost in `!connect jdbc:hive2://localhost:10000` command with spark-master ip-address `jdbc:hive2://_IP-ADDRESS_:10000`
+### Accessing the data using beeline - From a remote machine beeline:
+This is exactly same as what we did above. Use beeline from any machine but instead of connecting to localhost spark thrift, we connect to remote spark thrift server like this: 
+```markdown
+`beeline> !connect jdbc:hive2://<REMOTE_SPARK_MASTER_IP>:10000`
+```
 
 ### Conclusion:
 `We've looked into:`
