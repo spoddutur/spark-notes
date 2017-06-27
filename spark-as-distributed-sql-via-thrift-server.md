@@ -1,4 +1,9 @@
 ## Spark as a distributed backend:
+
+#### Preface:
+In this blog, You'll get to know how to expose your big-data as a JDBC/ODBC data source via the **Spark thrift server**.
+
+### Little bit background on other options to do the same before jumping into Spark:
 Traditional relational Database engines like SQL had scalability problems and so evolved couple of SQL-on-Hadoop frameworks like Hive, Cloudier Impala, Presto etc. These frameworks are essentially cloud-based solutions and they all come with their own limitations as listed in the table below
 
 <img width="660" src="https://user-images.githubusercontent.com/22542670/27549999-a03c529a-5abb-11e7-958b-c53f55e162f9.png">
@@ -19,7 +24,7 @@ Spark thrift server is pretty similar to HiveServer2 thrift. But, HiveServer2 su
 Let’s walk through an example of how to use Spark as a distributed data backend engine
 Code written in `Scala 2.11` and tested on `Spark 2.1.x and amazon EMR cluster`:
 
-1. For this example, am just loading data from a HDFS file and registering it as table with SparkSQL
+1. For this example, am loading data from a HDFS file and registering it as table with SparkSQL
 
 ```markdown
 // Create SparkSession
