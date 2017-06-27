@@ -3,9 +3,12 @@ Traditional relational Database engines like SQL had scalability problems and so
 
 <img width="660" src="https://user-images.githubusercontent.com/22542670/27549999-a03c529a-5abb-11e7-958b-c53f55e162f9.png">
 
-In this blog, we’ll discuss one more such Cloud-based SQL engine using SPARK which supports both:
-1. **in-memory table** - scoped to the cluster. Data is stored in Hive’s in-memory columnar format
-2. **permanent, physical table** - stored in S3 using the Parquet format for data
+In this blog, we’ll discuss one more such Cloud-based SQL engine using SPARK..
+
+### Cloud-based SQL Engine using SPARK
+Spark as a distributed SQL engine supports following two kinds of tables:
+1. **In-Memory table** - scoped to the cluster. Data is stored in Hive’s in-memory columnar format (HiveContext).
+2. **Permanent, physical table** - stored in S3 using the Parquet format for data
 
 Data from multiple sources can be pushed into Spark and then exposed as a table in one of the two mentioned approaches discussed above. Either ways, these tables are then made accessible as a JDBC/ODBC data source via the **Spark thrift server**.
 
@@ -14,7 +17,7 @@ Spark thrift server is pretty similar to HiveServer2 thrift. But, HiveServer2 su
 
 ### Example walkthrough:
 Let’s walk through an example of how to use Spark as a distributed data backend engine
-(code written in scala 2.11). I've used Spark 2.1.x and amazon EMR cluster with YARN for this:
+Code written in `Scala 2.11` and tested on `Spark 2.1.x and amazon EMR cluster`:
 
 1. For this example, am just loading data from a HDFS file and registering it as table with SparkSQL
 
@@ -115,9 +118,8 @@ Transaction isolation: TRANSACTION_REPEATABLE_READ
 1 row selected (1.703 seconds)
 
 ### References
-[How to run queries on spark sql using JDBC via Thrift Server](https://developer.ibm.com/hadoop/2016/08/22/how-to-run-queries-on-spark-sql-using-jdbc-via-thrift-server/)
-[Apache Spark as a distributed sql engine](https://medium.com/@anicolaspp/apache-spark-as-a-distributed-sql-engine-4373e254e0f9) 
-[Configure custom Thrift Server](https://forums.databricks.com/questions/1464/how-to-configure-thrift-server-to-use-a-custom-spa.html)
-[How to use SparkSession in ApacheSpark](https://databricks.com/blog/2016/08/15/how-to-use-sparksession-in-apache-spark-2-0.html)
-[Use beeline to connect to Spark tables](https://community.hortonworks.com/questions/32810/spark-temporary-table-is-not-shown-in-beeline.html)
-  
+- [How to run queries on spark sql using JDBC via Thrift Server](https://developer.ibm.com/hadoop/2016/08/22/how-to-run-queries-on-spark-sql-using-jdbc-via-thrift-server/)
+- [Apache Spark as a distributed sql engine](https://medium.com/@anicolaspp/apache-spark-as-a-distributed-sql-engine-4373e254e0f9) 
+- [Configure custom Thrift Server](https://forums.databricks.com/questions/1464/how-to-configure-thrift-server-to-use-a-custom-spa.html)
+- [How to use SparkSession in ApacheSpark](https://databricks.com/blog/2016/08/15/how-to-use-sparksession-in-apache-spark-2-0.html)
+- [Use beeline to connect to Spark tables](https://community.hortonworks.com/questions/32810/spark-temporary-table-is-not-shown-in-beeline.html)
