@@ -1,4 +1,4 @@
-## Spark as Cloud-Based SQL Engine for BigData:
+## Spark as cloud-based SQL Engine for BigData via ThriftServer:
 In this blog, You'll get to know how to use SPARK as Cloud-based SQL Engine and expose your big-data as a JDBC/ODBC data source via the **Spark thrift server**.
 
 ### Little bit background on other options to do the same before jumping into Spark:
