@@ -1,6 +1,4 @@
 ## Spark as a distributed backend:
-
-#### Preface:
 In this blog, You'll get to know how to expose your big-data as a JDBC/ODBC data source via the **Spark thrift server**.
 
 ### Little bit background on other options to do the same before jumping into Spark:
@@ -24,8 +22,7 @@ Spark thrift server is pretty similar to HiveServer2 thrift. But, HiveServer2 su
 Let’s walk through an example of how to use Spark as a distributed data backend engine
 Code written in `Scala 2.11` and `Spark 2.1.x`:
 
-1. For this example (to keep things simple), am sourcing input from a HDFS file and registering it as table with SparkSQL.
-But in reality, it can go as complex as streaming your input data from multiple sources in different formats like CSV, JSON, XML etc, doing all sorts of computations/aggregations on top of your data and then register the final data as table with Spark. 
+1. For this example (to keep things simple), am sourcing input from a HDFS file and registering it as "records" table with SparkSQL. But in reality, it can go as complex as streaming your input data from multiple sources in different formats like CSV, JSON, XML etc, doing all sorts of computations/aggregations on top of your data and then register the final data as table with Spark. 
 
 ```markdown
 // Create SparkSession
@@ -42,10 +39,10 @@ import spark1.implicits._
 val records = spark1.read.format(“json").load("beeline/input.json")
 
 // `As we discussed above, i'll show both the approaches to expose data with SparkSQL (Use any one of them):`
-// `APPROACH 1: in-memory temp table:`
+// `APPROACH 1: in-memory temp table names "records":`
 records.createOrReplaceTempView(“records")
 
-// `APPROACH 2: parquet-format physical table in S3`
+// `APPROACH 2: parquet-format physical table named "records" in S3`
 spark1.sql("DROP TABLE IF EXISTS records")
 ivNews.write.saveAsTable("records")
 ```
@@ -70,21 +67,24 @@ There are 2 ways to run above code:
 	spark-submit MainClass --master yarn-cluster <JAR_FILE_NAME>
 	```
 
-Now, that we registered our data
-### Accesing the data
+#### Spark automatically exposes the registered tables as JDBC/ODBC source via Spark thrift server!!
 
+Now, that we registered our data with spark, let's see how to access it..
+### Accesing the data
+There are two ways to do this. Let's see these two approaches in detail below:
 1. Within the cluster
 2. From a remote machine
 
-### Accessing the data - Within the Cluster:
+### 1.Accessing the data - Within the Cluster:
 Perhaps the easiest way to test is connect to spark thrift server from one of the nodes in the cluster using a command line tool [beeline](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–NewCommandLineShell): 
 
+- Connect to beeline
 ```markdown
-// connect to beeline
 `$> beeline`
 Beeline version 2.1.1-amzn-0 by Apache Hive
-
-// within beeline, connect to spark thrift server @localhost:10000 (default host and port)
+```
+- Within beeline, connect to spark thrift server @localhost:10000 (default host and port). This is the port we registered above via "hive.server2.thrift.port"="10000" setting.
+```markdown
 `beeline> !connect jdbc:hive2://localhost:10000`
 Connecting to jdbc:hive2://localhost:10000
 Enter username for jdbc:hive2://localhost:10000:
@@ -93,8 +93,8 @@ Connected to: Apache Hive (version 2.1.1-amzn-0)
 Driver: Hive JDBC (version 2.1.1-amzn-0)
 17/06/26 08:35:42 [main]: WARN jdbc.HiveConnection: Request to set autoCommit to false; Hive does not support autoCommit=false.
 Transaction isolation: TRANSACTION_REPEATABLE_READ
-
-// list all the tables and you should find our table `records` here..YeAHHHH!!!
+```
+- List all the tables and you should find our table `records` here..Tht's it!!! Your data is available as JDBC source! Run any of the SQL commands you need on top of it..
 `0: jdbc:hive2://localhost:10000> show tables;`
 INFO  : OK
 +-------------+
@@ -106,7 +106,7 @@ INFO  : OK
 
 ### Accessing the data - From a remote machine:
 Two things todo for this:
-1. Start ThriftServer in remote with proper master url (spark://<_IP-ADDRESS_>:7077)
+1. Start ThriftServer in remote with proper master url (spark://_IPADDRESS_:7077)
 ```markdown
 $ $SPARK_HOME/sbin/start-thriftserver.sh --master spark://<_IP-ADDRESS_>:7077
 starting org.apache.spark.sql.hive.thriftserver.HiveThriftServer2, logging to /Users/surthi/Downloads/spark-2.1.1-bin-hadoop2.7/logs/spark-surthi-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-1-P-Sruthi.local.out
