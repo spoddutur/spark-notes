@@ -11,9 +11,9 @@ Traditional relational Database engines like SQL had scalability problems and so
 In this blog, we’ll discuss one more such Cloud-based SQL engine using SPARK..
 
 ### Cloud-based SQL Engine using SPARK
-Spark as a distributed SQL engine supports following two kinds of tables:
-1. **In-Memory table** - scoped to the cluster. Data is stored in Hive’s in-memory columnar format (HiveContext).
-2. **Permanent, physical table** - stored in S3 using the Parquet format for data
+Using Spark as a distributed SQL engine, we can expose our data in one of the two forms:
+1. **In-Memory table** - scoped to the cluster. Data is stored in Hive’s in-memory columnar format (HiveContext). For faster access i.e., lower-latency, we can ask Spark to cache it in-memory.
+2. **Permanent, physical table** - Stored in S3 using the Parquet format for data
 
 Data from multiple sources can be pushed into Spark and then exposed as a table in one of the two mentioned approaches discussed above. Either ways, these tables are then made accessible as a JDBC/ODBC data source via the **Spark thrift server**.
 
@@ -22,9 +22,10 @@ Spark thrift server is pretty similar to HiveServer2 thrift. But, HiveServer2 su
 
 ### Example walkthrough:
 Let’s walk through an example of how to use Spark as a distributed data backend engine
-Code written in `Scala 2.11` and tested on `Spark 2.1.x and amazon EMR cluster`:
+Code written in `Scala 2.11` and `Spark 2.1.x`:
 
-1. For this example, am loading data from a HDFS file and registering it as table with SparkSQL
+1. For this example (to keep things simple), am sourcing input from a HDFS file and registering it as table with SparkSQL.
+But in reality, it can go as complex as streaming your input data from multiple sources in different formats like CSV, JSON, XML etc, doing all sorts of computations/aggregations on top of your data and then register the final data as table with Spark. 
 
 ```markdown
 // Create SparkSession
@@ -37,29 +38,41 @@ val spark1 = SparkSession.builder()
 
 import spark1.implicits._
 
-// load data from /beeline/input.json in HDFS
+// load data from '/beeline/input.json' file in HDFS
 val records = spark1.read.format(“json").load("beeline/input.json")
 
-// As we discussed above, i'll show both the approaches to expose data with SparkSQL (Use any one of them):
-// APPROACH 1: in-memory temp table:
+// `As we discussed above, i'll show both the approaches to expose data with SparkSQL (Use any one of them):`
+// `APPROACH 1: in-memory temp table:`
 records.createOrReplaceTempView(“records")
 
-// APPROACH 2: parquet-format physical table in S3
+// `APPROACH 2: parquet-format physical table in S3`
 spark1.sql("DROP TABLE IF EXISTS records")
 ivNews.write.saveAsTable("records")
 ```
 
-### We can run above code in 2 ways to register the table with Spark:
-1. using spark-shell as follows:
-```markdown
-spark-shell --conf spark.sql.hive.thriftServer.singleSession=true
-```
-2. using spark-submit (bundle above code as a mvn project and create jar file out of it)
-```markdown
-spark-submit MainClass --master yarn-cluster <JAR_FILE_NAME>
-```
+### How to execute above code:
+There are 2 ways to run above code:
+1. Using spark-shell:
+    - Start spark-shell using the below command.
+    ```markdown
+	spark-shell --conf spark.sql.hive.thriftServer.singleSession=true
+    ```
+    - This will open an interactive shell where you can run spark commands. 
+    - Now, copy-paste above code line-by-line
+    - That's it.. you just registered ur data with Spark.. Easy right :)
 
+2. Using spark-submit:
+     - Bundle above code as a mvn project and create jar file out of it.
+     - Please refer to this git repository where I've added the needed dependencies and bundled it as a mvn project
+     - Once your mvn project it ready, do 'mvn clean install' and build JAR file
+     - Now run it with following command:
+	```markdown
+	spark-submit MainClass --master yarn-cluster <JAR_FILE_NAME>
+	```
+
+Now, that we registered our data
 ### Accesing the data
+
 1. Within the cluster
 2. From a remote machine
 
