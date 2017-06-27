@@ -124,7 +124,7 @@ Replace localhost in `!connect jdbc:hive2://localhost:10000` command with spark-
 ### Appendix:
 I ran the example code in amazon EMR cluster. If you are doing this in a stand-alone cluster or local-node managing it manually, this is how you'll start SparkThrift Server:
 - Set SPARK_HOME to point to your spark install directory
-- Start ThriftServer in remote with proper master url "spark://_IPADDRESS_:7077" as follows:
+- Start ThriftServer in remote with proper master url "spark://_IPADDRESS_:7077" where 7077 is the default port of spark-master:
 ```markdown
 $SPARK_HOME/sbin/start-thriftserver.sh --master spark://<_IP-ADDRESS_>:7077
 starting org.apache.spark.sql.hive.thriftserver.HiveThriftServer2, logging to /Users/surthi/Downloads/spark-2.1.1-bin-hadoop2.7/logs/spark-surthi-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-1-P-Sruthi.local.out
