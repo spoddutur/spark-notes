@@ -68,21 +68,19 @@ There are 2 ways to run above code:
 
 #### Spark automatically exposes the registered tables as JDBC/ODBC source via Spark thrift server!!
 
-Now, that we registered our data with spark, let's see how to access it..
+Now, that our data is registered with Spark and exposed as JDBC source via Spark Thrift Server, let's see how to access it..
+
 ### Accesing the data
-There are two ways to do this. Let's see these two approaches in detail below:
-1. Within the cluster
-2. From a remote machine
+Perhaps the easiest way to test is connect to spark thrift server from one of the nodes in the cluster using a command line tool [beeline](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–NewCommandLineShell). I'll show how to access data using beeline from Within the cluster and remote machine:
 
-### 1.Accessing the data - Within the Cluster:
-Perhaps the easiest way to test is connect to spark thrift server from one of the nodes in the cluster using a command line tool [beeline](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–NewCommandLineShell): 
+### 1.Accessing the data using beeline - Within the Cluster:
 
-- Connect to beeline
+- Connect to beeline. `beeline` is an executable present in bin folder of `$SPARK_HOME`. We start beeline like this:
 ```markdown
 `$> beeline`
 Beeline version 2.1.1-amzn-0 by Apache Hive
 ```
-- Within beeline, connect to spark thrift server @localhost:10000 (default host and port). This is the port we registered above via "hive.server2.thrift.port"="10000" setting.
+- Within beeline, connect to spark thrift server @localhost:10000 (default host and port). This is the port we registered above. You can change this setting by tweaking `"hive.server2.thrift.port"="10000"` config.
 ```markdown
 `beeline> !connect jdbc:hive2://localhost:10000`
 Connecting to jdbc:hive2://localhost:10000
