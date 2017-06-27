@@ -60,8 +60,7 @@ There are 2 ways to run above code:
 
 2. Using spark-submit:
      - Bundle above code as a mvn project and create jar file out of it.
-     - Please refer to this git repository where I've added the needed dependencies and bundled it as a mvn project
-     - Once your mvn project it ready, do 'mvn clean install' and build JAR file
+     - Once your mvn project it ready, do 'mvn clean install' and build JAR file. (I'll soon share a git repository where I'll add all the needed dependencies and bundle it as a mvn project to download and run directly)
      - Now run it with following command:
 	```markdown
 	spark-submit MainClass --master yarn-cluster <JAR_FILE_NAME>
@@ -104,36 +103,16 @@ INFO  : OK
 +——————+------+
 ```
 
-### Accessing the data - From a remote machine:
-Two things todo for this:
-1. Start ThriftServer in remote with proper master url (spark://_IPADDRESS_:7077)
-```markdown
-$ $SPARK_HOME/sbin/start-thriftserver.sh --master spark://<_IP-ADDRESS_>:7077
-starting org.apache.spark.sql.hive.thriftserver.HiveThriftServer2, logging to /Users/surthi/Downloads/spark-2.1.1-bin-hadoop2.7/logs/spark-surthi-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-1-P-Sruthi.local.out
-```
+### Accessing the data - From a remote machine beeline:
+Replace localhost in `!connect jdbc:hive2://localhost:10000` command with spark-master ip-address `jdbc:hive2://_IP-ADDRESS_:10000`
 
-2. Connect to spark thrift server using beeline (jdbc:hive2://<_IP-ADDRESS_>:10000)
-```markdown
-$ `$SPARK_HOME/bin/beeline`
-Beeline version 1.2.1.spark2 by Apache Hive
-`beeline> !connect jdbc:hive2://<_IP-ADDRESS_>:10000`
-Connecting to jdbc:hive2://<_IP-ADDRESS_>:10000
-`Enter username for jdbc:hive2://<_IP-ADDRESS_>:10000:<USERNAME-BY_DEFAULT_BLANK>`
-`Enter password for jdbc:hive2://<_IP-ADDRESS_>:10000:<PASSWORD-BY_DEFAULT_BLANK>`
-17/06/26 14:20:13 INFO jdbc.Utils: Supplied authorities: <_IP-ADDRESS_>:10000
-17/06/26 14:20:13 INFO jdbc.Utils: Resolved authority: <_IP-ADDRESS_>:10000
-17/06/26 14:20:13 INFO jdbc.HiveConnection: Will try to open client transport with JDBC Uri: jdbc:hive2://<_IP-ADDRESS_>:10000
-Connected to: Apache Hive (version 2.1.1-amzn-0)
-Driver: Hive JDBC (version 1.2.1.spark2)
-Transaction isolation: TRANSACTION_REPEATABLE_READ
-
-`0: jdbc:hive2://<_IP-ADDRESS_>:10000> show tables;`
-+-------------+
-|  tab_name   |
-+-------------+
-| records  |
-+-------------+
-1 row selected (1.703 seconds)
+### Conclusion:
+`We've looked into:`
+- Different options available for SQL-on-Hadoop frameworks and their limitations
+- How to use SPARK as Cloud-based SQL Engine to expose our data as JDBS/ODBC source via SparkThrift Server.
+- An Example walkthrough on how to register data using `spark-shell` and `spark-submit`
+- Tested our example using beeline both from localhost and remote machine
+- You can as well write your custom Java-JDBC code and connect to this data.
 
 ### References
 - [How to run queries on spark sql using JDBC via Thrift Server](https://developer.ibm.com/hadoop/2016/08/22/how-to-run-queries-on-spark-sql-using-jdbc-via-thrift-server/)
@@ -141,3 +120,12 @@ Transaction isolation: TRANSACTION_REPEATABLE_READ
 - [Configure custom Thrift Server](https://forums.databricks.com/questions/1464/how-to-configure-thrift-server-to-use-a-custom-spa.html)
 - [How to use SparkSession in ApacheSpark](https://databricks.com/blog/2016/08/15/how-to-use-sparksession-in-apache-spark-2-0.html)
 - [Use beeline to connect to Spark tables](https://community.hortonworks.com/questions/32810/spark-temporary-table-is-not-shown-in-beeline.html)
+
+### Appendix:
+I ran the example code in amazon EMR cluster. If you are doing this in a stand-alone cluster or local-node managing it manually, this is how you'll start SparkThrift Server:
+- Set SPARK_HOME to point to your spark install directory
+- Start ThriftServer in remote with proper master url "spark://_IPADDRESS_:7077" as follows:
+```markdown
+$SPARK_HOME/sbin/start-thriftserver.sh --master spark://<_IP-ADDRESS_>:7077
+starting org.apache.spark.sql.hive.thriftserver.HiveThriftServer2, logging to /Users/surthi/Downloads/spark-2.1.1-bin-hadoop2.7/logs/spark-surthi-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-1-P-Sruthi.local.out
+```
