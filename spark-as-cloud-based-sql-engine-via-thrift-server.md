@@ -126,7 +126,7 @@ This is exactly same as what we did above. Use beeline from any machine but inst
 - [Use beeline to connect to Spark tables](https://community.hortonworks.com/questions/32810/spark-temporary-table-is-not-shown-in-beeline.html)
 
 ### Appendix:
-1. I ran the example code in amazon EMR cluster. If you are doing this in a stand-alone cluster or local-node managing it manually, this is how you'll start SparkThrift Server:
+1. I ran the example code in amazon EMR cluster. If you are doing this in a stand-alone cluster or local-node managing it manually, then you will have to start Spark ThriftServer. This is how you start Spark ThriftServer:
 	- Set SPARK_HOME to point to your spark install directory
 	- Start ThriftServer in remote with proper master url "spark://_IPADDRESS_:7077" where 7077 is the default port of spark-master:
 ```markdown
