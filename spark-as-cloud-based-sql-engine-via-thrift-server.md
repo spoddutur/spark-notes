@@ -134,4 +134,4 @@ $SPARK_HOME/sbin/start-thriftserver.sh --master spark://<_IP-ADDRESS_>:7077
 starting org.apache.spark.sql.hive.thriftserver.HiveThriftServer2, logging to /Users/surthi/Downloads/spark-2.1.1-bin-hadoop2.7/logs/spark-surthi-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-1-P-Sruthi.local.out
 ```
 
-2. If you are interested in learning more details about other SQL-on-Hadoop frameworks like Hive, Cloudier Impala, Presto etc.. [this](https://blog.matthewrathbone.com/2014/06/08/sql-engines-for-hadoop.html) is a good link to refer to.
+2. If you are interested in learning more details about other SQL-on-Hadoop frameworks like Hive, Impala, Presto etc.. [this](https://blog.matthewrathbone.com/2014/06/08/sql-engines-for-hadoop.html) is a good link to refer to.
