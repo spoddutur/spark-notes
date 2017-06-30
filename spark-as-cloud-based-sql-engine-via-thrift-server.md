@@ -13,7 +13,8 @@ Using Spark as a distributed SQL engine, we can expose our data in one of the tw
 1. **In-Memory table** - scoped to the cluster. Data is stored in Hive’s in-memory columnar format (HiveContext). For faster access i.e., lower-latency, we can ask Spark to cache it in-memory.
 2. **Permanent, physical table** - Stored in S3 using the Parquet format for data
 
-Data from multiple sources can be pushed into Spark and then exposed as a table in one of the two mentioned approaches discussed above. Either ways, these tables are then made accessible as a JDBC/ODBC data source via the **Spark thrift server**.
+Data from multiple sources can be pushed into Spark and then exposed as a table in one of the two mentioned approaches discussed above. Either ways, these tables are then made accessible as a JDBC/ODBC data source via the **Spark thrift server**. We have multiple clients like Beeline CLI, JDBC, ODBC, BusinessIntelligence tools like Tableau etc available to connect to thrift server and visualize our data. Following picture illustrates the same:
+![image](https://user-images.githubusercontent.com/22542670/27733176-54b684c2-5db2-11e7-946b-5b5ef5595e43.png)
 
 ### Spark Thrift Server:
 Spark thrift server is pretty similar to HiveServer2 thrift. But, HiveServer2 submits the sql queries as Hive MapReduce job whereas Spark thrift server will use Spark SQL engine which underline uses full spark capabilities. 
@@ -60,13 +61,16 @@ There are 2 ways to run above code:
 
 2. Using spark-submit:
      - Bundle above code as a mvn project and create jar file out of it.
-     - Once your mvn project it ready, do 'mvn clean install' and build JAR file. (I'll soon share a git repository where I'll add all the needed dependencies and bundle it as a mvn project to download and run directly)
-     - Now run it with following command:
+     - Once your mvn project it ready, do 'mvn clean install' and build JAR file.
+     - I have created [cloud-based-sql-engine-using-spark](https://github.com/spoddutur/cloud-based-sql-engine-using-spark) git repository which bundled this code together with all the needed dependencies as a mvn project to download and run directly.
+     - Just download above repository and run it with following command:
 	```markdown
-	spark-submit MainClass --master yarn-cluster <JAR_FILE_NAME>
+	// <master> can be local[*] or yarn depending on where you run.
+	spark-submit MainClass --master <master> <JAR_FILE_NAME>
 	```
+     - That's it.. your data is registered with Spark!!
 
-#### Spark automatically exposes the registered tables as JDBC/ODBC source via Spark thrift server!!
+#### Once, data registration is over, you dont have to do any additional work to make this data available to outside world to query. Spark automatically exposes the registered tables as JDBC/ODBC source via Spark thrift server!!
 
 Now, that our data is registered with Spark and exposed as JDBC source via Spark Thrift Server, let's see how to access it..
 
