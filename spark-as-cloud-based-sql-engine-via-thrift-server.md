@@ -1,12 +1,12 @@
 ## Spark as cloud-based SQL Engine for BigData via ThriftServer:
-In this blog, You'll get to know how to use SPARK as Cloud-based SQL Engine and expose your big-data as a JDBC/ODBC data source via the **Spark thrift server**.
+In this blog, You'll get to know how to use SPARK as Cloud-based SQL Engine and expose your big-data as a JDBC/ODBC data source via the **Spark thrift server**. You can connect to ThriftServer using BI tools like [Tableau](https://www.tableau.com), [SQuirrel SQL Client](http://squirrel-sql.sourceforge.net) and enable interactive data visualizations 
 
 ### Little bit background on other options to do the same before jumping into Spark:
 Traditional relational Database engines like SQL had scalability problems and so evolved couple of SQL-on-Hadoop frameworks like Hive, Cloudier Impala, Presto etc. These frameworks are essentially cloud-based solutions and they all come with their own limitations as listed in the table below. Please refer to Appendix section at the end of this blog if you want to learn more on this
 
 <img width="660" src="https://user-images.githubusercontent.com/22542670/27549999-a03c529a-5abb-11e7-958b-c53f55e162f9.png">
 
-In this blog, we’ll discuss one more such Cloud-based SQL engine using SPARK..
+In this blog, we’ll discuss one more such Cloud-based SQL engine using SPARK and I'll demo how to connect to it using [Beeline CLI](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients) and as Java JDBC source with an example walkthrough.
 
 ### Cloud-based SQL Engine using SPARK
 Using Spark as a distributed SQL engine, we can expose our data in one of the two forms:
@@ -120,7 +120,8 @@ This is exactly same as what we did above. Use beeline from any machine but inst
 - How to use SPARK as Cloud-based SQL Engine to expose our data as JDBS/ODBC source via SparkThrift Server.
 - An Example walkthrough on how to register data using `spark-shell` and `spark-submit`
 - Tested our example using beeline both from localhost and remote machine
-- You can as well write your custom Java-JDBC code and connect to this data.
+- Tested using Java JDBC approach as well
+- You can connect to Thrift using BI tools like [Tableau](https://www.tableau.com), [SQuirrel SQL Client](http://squirrel-sql.sourceforge.net) and enable interactive data visualizations.
 
 ### References
 - [How to run queries on spark sql using JDBC via Thrift Server](https://developer.ibm.com/hadoop/2016/08/22/how-to-run-queries-on-spark-sql-using-jdbc-via-thrift-server/)
