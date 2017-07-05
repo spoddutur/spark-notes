@@ -9,7 +9,7 @@ Apache Spark™ is a very fast and easy-to-use big-data processing engine. It ca
 
 ## 1.0 Limited interaction:
 There are two widely adopted approaches to communicate with Spark and each of it comes with their own limitations when it comes to flexible interaction:
-1. [spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html) is a great handy script to submit spark application. Its great if you need to submit applications from command line. But, it doesnt support some other cases like submitting spark applications from other applications that too if your code snippet is not bundled as jar?
+1. [spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html) is a great handy script to submit spark application. Its great if you need to submit applications from command line. But, it doesnt support some other cases like submitting spark applications from other applications that too if your code snippet is not bundled as jar
 2. [spark-shell](https://spark.apache.org/docs/latest/quick-start.html) is a powerful tool to analyse data interactively. It lets user submit the code snippets and control the tasks executed in Spark cluster. However, unfortunately, it is not a consumable service that we could use with our applications.
 
 Please refer to Appendix section below to know some more options that spark provides to submit spark-jobs programmatically
@@ -20,8 +20,8 @@ Following are some of the use-cases where the above two mentioned approaches to 
 1. Have the trained model loaded in SparkSession and quickly predict for user given query.
 2. Monitor the data crunching that spark-streaming is handling live
 3. Access your big-data cached in spark-cluster from outside world
-5. How to spawn your spark-job interactively from a web-application
-6. Spark-as-a-Service via REST 
+4. How to spawn your spark-job interactively from a web-application
+5. Spark-as-a-Service via REST 
 ```
 ## 2. Solution:
 There are many ways one might think of interacting with Spark while solving above use-cases. I have implemented following four solutions to address above discussed usecases and shared the corresponding github repository links where you can find further details about them. Hopefully it provides some insight into how to go about building an interactive spark application that caters to your needs:
@@ -29,33 +29,34 @@ There are many ways one might think of interacting with Spark while solving abov
 ### 2.1 Access your big-data cached in spark-cluster from outside world:
 - **Git Repository:** [https://github.com/spoddutur/cloud-based-sql-engine-using-spark](https://github.com/spoddutur/cloud-based-sql-engine-using-spark) 
 - **Objective:** Use SPARK as Cloud-based SQL Engine and expose your big-data as a JDBC/ODBC data source via the Spark thrift server.
-- **Architecture:**
+- **Architecture:** Please refer to my git repository mentioned above where I explained this in-depth with a working demo
 
 <img src="https://user-images.githubusercontent.com/22542670/27733176-54b684c2-5db2-11e7-946b-5b5ef5595e43.png" width="400" />
 
 ### 2.2 Monitor the data crunching that spark-streaming is handling live:
 - **Git Repository:** [https://github.com/spoddutur/spark-streaming-monitoring-with-lightning](https://github.com/spoddutur/spark-streaming-monitoring-with-lightning)
 - **Objective:** Monitor spark application not in terms of its health (like ganglia), but in terms of the data-crunching it is doing currently. This project will demo how to have a realtime graph monitoring system using Lightning-viz where we can plot and monitor any custom parameters of the live data that spark streaming application is processing right now.
-- **Architecture:**
+- **Architecture:** Please refer to my git repository mentioned above where I explained this in-depth with a working demo
 
 <img src="https://user-images.githubusercontent.com/22542670/27772206-f161509e-5f7a-11e7-907c-9d9b971cabe1.png" width="600" />
 
 ### 2.3 How to spawn your spark-job interactively from a web-application: 
 - **Git Repository:** [https://github.com/spoddutur/spark-jetty-server](https://github.com/spoddutur/spark-jetty-server)
 - **Objective:** Embed SparkContext within a Jetty web server. This project provides a plug-and-play maven project that spawns a spark-job from a web application.
-- **Architecture:**
+- **Architecture:** Please refer to my git repository mentioned above where I explained this in-depth with a working demo
 
 <img src="https://user-images.githubusercontent.com/22542670/27729358-3131ade2-5da3-11e7-8bc0-5ff0d6ec4fa5.png" />
 
 ### 2.4 Build a REST api service on top of your ApacheSpark application:
 - **Git Repository:** [https://github.com/spoddutur/spark-as-service-using-embedded-server](https://github.com/spoddutur/spark-as-service-using-embedded-server)
 - **Objective:** The core of the application is not primarily a web-application OR browser-interaction but to have REST service performing big-data cluster-computation on ApacheSpark.
-- **Architecture:**
+- **Architecture:** Please refer to my git repository mentioned above where I explained this in-depth with a working demo
 
 <img src="https://user-images.githubusercontent.com/22542670/27823530-0b770dc8-60c7-11e7-9b22-c304fe3327fb.png" width="600"/>
 
 ## 3. Conclusion
-Hopefully, this gave a better perspective on building interactive Spark applications depending on what you need..
+
+#### Hopefully, this gave a better perspective on building interactive Spark applications depending on what you need. Feel free to run through my git repositories mentioned above for more in-depth consideration with a working demo for each usecase.
 
 ## 4. Appendix:
 I'll list two other ways that spark provides to launch spark applications programmatically:
