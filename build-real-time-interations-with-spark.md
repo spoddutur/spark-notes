@@ -54,9 +54,12 @@ There are many ways one might think of interacting with Spark while solving abov
 
 <img src="https://user-images.githubusercontent.com/22542670/27823530-0b770dc8-60c7-11e7-9b22-c304fe3327fb.png" width="600"/>
 
-## 3. Appendix:
+## 3. Conclusion
+Hopefully, you got a better perspective on building interactive Spark applications depending on what you need..
+
+## 4. Appendix:
 I'll list two other ways that spark provides to launch spark applications programmatically:
-### 3.1 SparkLauncher
+### 4.1 SparkLauncher
 SparkLauncher is an option provided by spark to launch spark jobs programmatically as shown below. Its available in ```spark-launcher``` artifact:
 ```markdown
 SparkAppHandle handle = new SparkLauncher()
@@ -72,7 +75,7 @@ SparkAppHandle handle = new SparkLauncher()
 1. Spark job you want to submit should be bundled as jar. It doesnt support execution of code snippets.
 2. To execute this on spark-cluster, we've to manually copy JAR file to all nodes
 
-### 3.2 Spark REST Api
+### 4.2 Spark REST Api
 This is another alternative provided by ApacheSpark, which is similar to SparkLauncher, to submit spark jobs in a RESTful way as shown below:
 ```markdown
 curl -X POST http://spark-cluster-ip:6066/v1/submissions/create --header "Content-Type:application/json;charset=UTF-8" --data '{
