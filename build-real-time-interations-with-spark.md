@@ -28,16 +28,16 @@ There are many ways one might think of interacting with Spark while solving abov
 ```markdown
 Access your big-data cached in spark-cluster from outside world
 ```
-- [<img src="https://user-images.githubusercontent.com/22542670/27858799-3b567bb4-6194-11e7-8b28-1280e9e0c1d1.png" alt="Git" width="100"/>](https://github.com/spoddutur/cloud-based-sql-engine-using-spark): [https://github.com/spoddutur/cloud-based-sql-engine-using-spark](https://github.com/spoddutur/cloud-based-sql-engine-using-spark) 
-- **Objective:** Use SPARK as Cloud-based SQL Engine and expose your big-data as a JDBC/ODBC data source via the Spark thrift server.[<img src="https://user-images.githubusercontent.com/22542670/27858799-3b567bb4-6194-11e7-8b28-1280e9e0c1d1.png" alt="View on Git" width="75"/>](https://github.com/spoddutur/cloud-based-sql-engine-using-spark)
+- **GitRepo Url:** [https://github.com/spoddutur/cloud-based-sql-engine-using-spark](https://github.com/spoddutur/cloud-based-sql-engine-using-spark) 
+- **Objective:** Use SPARK as Cloud-based SQL Engine and expose your big-data as a JDBC/ODBC data source via the Spark thrift server.
 - **Architecture:**
-<img src="https://user-images.githubusercontent.com/22542670/27733176-54b684c2-5db2-11e7-946b-5b5ef5595e43.png" width="600" />
+<img src="https://user-images.githubusercontent.com/22542670/27733176-54b684c2-5db2-11e7-946b-5b5ef5595e43.png" width="400" />
 
 ### 2.2 Sparkstreaming-monitoring-with-lightning: 
 ```markdown
 Monitor the data crunching that spark-streaming is handling live
 ```
-- **Git:** [https://github.com/spoddutur/spark-streaming-monitoring-with-lightning](https://github.com/spoddutur/spark-streaming-monitoring-with-lightning)
+- **GitRepo Url:** [https://github.com/spoddutur/spark-streaming-monitoring-with-lightning](https://github.com/spoddutur/spark-streaming-monitoring-with-lightning)
 - **Objective:** Monitor spark application not in terms of its health (like ganglia), but in terms of the data-crunching it is doing currently. This project will demo how to have a realtime graph monitoring system using Lightning-viz where we can plot and monitor any custom parameters of the live data that spark streaming application is processing right now.
 - **Architecture:**
 <img src="https://user-images.githubusercontent.com/22542670/27772206-f161509e-5f7a-11e7-907c-9d9b971cabe1.png" width="600" />
@@ -46,7 +46,7 @@ Monitor the data crunching that spark-streaming is handling live
 ```markdown
 How to spawn your spark-job interactively from a web-application
 ```
-- **Git:** [https://github.com/spoddutur/spark-jetty-server](https://github.com/spoddutur/spark-jetty-server)
+- **GitRepo Url:** [https://github.com/spoddutur/spark-jetty-server](https://github.com/spoddutur/spark-jetty-server)
 - **Objective:** Embed SparkContext within a Jetty web server. Git project is an end product of providing a plug-and-play maven project that spawns a spark-job from a web application.
 - **Architecture:**
 <img src="https://user-images.githubusercontent.com/22542670/27729358-3131ade2-5da3-11e7-8bc0-5ff0d6ec4fa5.png" />
@@ -55,7 +55,7 @@ How to spawn your spark-job interactively from a web-application
 ```markdown
 Build a REST api service on top of your ApacheSpark application
 ```
-- **Git:** [https://github.com/spoddutur/spark-as-service-using-embedded-server](https://github.com/spoddutur/spark-as-service-using-embedded-server)
+- **GitRepo Url:** [https://github.com/spoddutur/spark-as-service-using-embedded-server](https://github.com/spoddutur/spark-as-service-using-embedded-server)
 - **Objective:** The core of the application is not primarily a web-application OR browser-interaction but to have REST service performing big-data cluster-computation on ApacheSpark.
 - **Architecture:**
-<img src="https://user-images.githubusercontent.com/22542670/27823530-0b770dc8-60c7-11e7-9b22-c304fe3327fb.png" width="700"/>
+<img src="https://user-images.githubusercontent.com/22542670/27823530-0b770dc8-60c7-11e7-9b22-c304fe3327fb.png" width="400"/>
