@@ -55,7 +55,7 @@ There are many ways one might think of interacting with Spark while solving abov
 <img src="https://user-images.githubusercontent.com/22542670/27823530-0b770dc8-60c7-11e7-9b22-c304fe3327fb.png" width="600"/>
 
 ## 3. Conclusion
-Hopefully, you got a better perspective on building interactive Spark applications depending on what you need..
+Hopefully, this gave a better perspective on building interactive Spark applications depending on what you need..
 
 ## 4. Appendix:
 I'll list two other ways that spark provides to launch spark applications programmatically:
