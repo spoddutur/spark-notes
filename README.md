@@ -4,4 +4,4 @@ Following are the blogs that I compiled from my learnings on Spark:
 - [How to Size Executors, Cores and Memory for a Spark application running in memory](https://spoddutur.github.io/spark-notes/distribution_of_executors_cores_and_memory_for_spark_application)
 - [Task Memory Management in ApacheSpark](https://spoddutur.github.io/spark-notes/task_memory_management_in_spark)
 - [Spark as cloud-based SQL Engine for BigData via ThriftServer](https://spoddutur.github.io/spark-notes/spark-as-cloud-based-sql-engine-via-thrift-server)
-- [Building real-time interactive applications with Spark](https://github.com/spoddutur/spark-notes/blob/master/build-real-time-interations-with-spark)
+- [Building real-time interactive applications with Spark](https://spoddutur.github.io/spark-notes/build-real-time-interations-with-spark)
