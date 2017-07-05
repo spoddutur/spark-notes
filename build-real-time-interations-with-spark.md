@@ -28,7 +28,7 @@ There are many ways one might think of interacting with Spark while solving abov
 ```markdown
 Access your big-data cached in spark-cluster from outside world
 ```
-- [<img src="https://user-images.githubusercontent.com/22542670/27858799-3b567bb4-6194-11e7-8b28-1280e9e0c1d1.png" alt="Git" width="50"/>](https://github.com/spoddutur/cloud-based-sql-engine-using-spark): [https://github.com/spoddutur/cloud-based-sql-engine-using-spark](https://github.com/spoddutur/cloud-based-sql-engine-using-spark) 
+- [<img src="https://user-images.githubusercontent.com/22542670/27858799-3b567bb4-6194-11e7-8b28-1280e9e0c1d1.png" alt="Git" width="100"/>](https://github.com/spoddutur/cloud-based-sql-engine-using-spark): [https://github.com/spoddutur/cloud-based-sql-engine-using-spark](https://github.com/spoddutur/cloud-based-sql-engine-using-spark) 
 - **Objective:** Use SPARK as Cloud-based SQL Engine and expose your big-data as a JDBC/ODBC data source via the Spark thrift server.
 - **Architecture:**
 <img src="https://user-images.githubusercontent.com/22542670/27733176-54b684c2-5db2-11e7-946b-5b5ef5595e43.png" width="600" />
