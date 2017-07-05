@@ -11,7 +11,8 @@ Apache Spark™ is a very fast and easy-to-use big-data processing engine. It ca
 There are two widely adopted approaches to communicate with Spark and each of it comes with their own limitations when it comes to flexible interaction:
 1. [spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html) is a great handy script to submit spark application. Its great if you need to submit applications from command line. But, it doesnt support some other cases like submitting spark applications from other applications that too if your code snippet is not bundled as jar?
 2. [spark-shell](https://spark.apache.org/docs/latest/quick-start.html) is a powerful tool to analyse data interactively. It lets user submit the code snippets and control the tasks executed in Spark cluster. However, unfortunately, it is not a consumable service that we could use with our applications.
-Please refer to [Appendix](https://spoddutur.github.io/spark-notes/build-real-time-interations-with-spark#appendix) section below to know some more options that spark provides to submit spark-jobs programmatically
+
+Please refer to Appendix section below to know some more options that spark provides to submit spark-jobs programmatically
 
 ## 1.1. Use-cases which demand flexible interaction:
 Following are some of the use-cases where the above two mentioned approaches to communicate with Spark fall short in providing the interaction user might want:
@@ -53,10 +54,10 @@ There are many ways one might think of interacting with Spark while solving abov
 
 <img src="https://user-images.githubusercontent.com/22542670/27823530-0b770dc8-60c7-11e7-9b22-c304fe3327fb.png" width="600"/>
 
-## 3. [Appendix](#appendix):
+## 3. Appendix:
 I'll list two other ways that spark provides to launch spark applications programmatically:
 ### 3.1 SparkLauncher
-SparkLauncher is a class used to launch spark jobs programatically like this:
+SparkLauncher is an option provided by spark to launch spark jobs programmatically as shown below. Its available in ```spark-launcher``` artifact:
 ```markdown
 SparkAppHandle handle = new SparkLauncher()
     .setSparkHome(SPARK_HOME)
@@ -68,9 +69,8 @@ SparkAppHandle handle = new SparkLauncher()
     // or: .launch().waitFor()
 ```
 **Drawback:**
-1. Its not REPL.
-2. Spark job you want to submit should be bundled as jar. It doesnt support execution of code snippets.
-3. To execute this on spark-cluster, we've to manully copy JAR file to all nodes
+1. Spark job you want to submit should be bundled as jar. It doesnt support execution of code snippets.
+2. To execute this on spark-cluster, we've to manually copy JAR file to all nodes
 
 ### 3.2 Spark REST Api
 This is another alternative provided by ApacheSpark, which is similar to SparkLauncher, to submit spark jobs in a RESTful way as shown below:
