@@ -51,8 +51,7 @@ There are many ways one might think of interacting with Spark while solving abov
 - **Git Repository:** [https://github.com/spoddutur/spark-as-service-using-embedded-server](https://github.com/spoddutur/spark-as-service-using-embedded-server)
 - **Objective:** The core of the application is not primarily a web-application OR browser-interaction but to have REST service performing big-data cluster-computation on ApacheSpark.
 - **Architecture:** Please refer to my git repository mentioned above where I explained this in-depth with a working demo
-
-<img src="https://user-images.githubusercontent.com/22542670/27823530-0b770dc8-60c7-11e7-9b22-c304fe3327fb.png" width="600"/>
+<img src="https://user-images.githubusercontent.com/22542670/27865894-ee70d42a-61b1-11e7-9595-02b845a9ffae.png" width="600"/>
 
 ## 3. Conclusion
 
