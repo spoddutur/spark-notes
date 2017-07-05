@@ -50,4 +50,41 @@ There are many ways one might think of interacting with Spark while solving abov
 - **Objective:** The core of the application is not primarily a web-application OR browser-interaction but to have REST service performing big-data cluster-computation on ApacheSpark.
 - **Architecture:**
 
-<img src="https://user-images.githubusercontent.com/22542670/27823530-0b770dc8-60c7-11e7-9b22-c304fe3327fb.png" width="400"/>
+<img src="https://user-images.githubusercontent.com/22542670/27823530-0b770dc8-60c7-11e7-9b22-c304fe3327fb.png" width="600"/>
+
+## 3. Appendix:
+I'll list two other ways that spark provides to launch spark applications programmatically:
+### 3.1 SparkLauncher
+SparkLauncher is a class used to launch spark jobs programatically like this:
+```markdown
+SparkAppHandle handle = new SparkLauncher()
+    .setSparkHome(SPARK_HOME)
+    .setJavaHome(JAVA_HOME)
+    .setAppResource(pathToJARFile)
+    .setMainClass(MainClassFromJarWithJob)
+    .setMaster("MasterAddress
+    .startApplication();
+    // or: .launch().waitFor()
+```
+**Drawback:**
+1. Its not REPL.
+2. Spark job you want to submit should be bundled as jar. It doesnt support execution of code snippets.
+3. To execute this on spark-cluster, we've to manully copy JAR file to all nodes
+
+### 3.2 Spark REST Api
+This is another alternative provided by ApacheSpark, which is similar to SparkLauncher, to submit spark jobs in a RESTful way as shown below:
+```markdown
+curl -X POST http://spark-cluster-ip:6066/v1/submissions/create --header "Content-Type:application/json;charset=UTF-8" --data '{
+  "action" : "CreateSubmissionRequest",
+  "appResource" : "file:/myfilepath/spark-job-1.0.jar",
+  "clientSparkVersion" : "1.5.0",
+  "mainClass" : "com.mycompany.MyJob",
+  ...
+}'
+```
+[This](http://arturmkrtchyan.com/apache-spark-hidden-rest-api) is a good reference to know about Spark REST api in detail.
+
+**Drawbacks:**
+- Similar to SparkLauncher, it only supported submissions through jars 
+- It was lagging behind Apache Spark in terms of version support.
+
