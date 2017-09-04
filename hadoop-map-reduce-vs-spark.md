@@ -91,5 +91,5 @@ So spark threads vs MR processes for parallelism.
 - TT - TaskTracker
 
 ## 5. References:
-- !(Spark Summit East 2015 Advanced Devops Student Slides)[https://www.slideshare.net/databricks/spark-summit-east-2015-]advdevopsstudentslides
-- !(Apache Spark Training)[https://www.youtube.com/watch?v=7ooZ4S7Ay6Y]
+- [Spark Summit East 2015 Advanced Devops Student Slides](https://www.slideshare.net/databricks/spark-summit-east-2015-advdevopsstudentslides)
+- [Apache Spark Training](https://www.youtube.com/watch?v=7ooZ4S7Ay6Y)
