@@ -4,15 +4,19 @@ Its not uncommon for a beginner to think Spark as a replacement to Hadoop. But t
 <img width="411" alt="MapReduceVsSpark" src="https://user-images.githubusercontent.com/22542670/30010978-a1d0d456-9151-11e7-939a-8ed383cffab1.png">
 
 
-We will section this blog in 2 parts:
+We will section this blog in 3 parts:
 1. **Cons of MapReduce as motivation for Spark**
+    1.1 Look at the drawbacks of MapReduce
+    1.2 How Spark addressed them
 2. **How Spark works**
+    2.1 Behind the scenes of a spark application running in cluster 
+3. **Appendix**
+    3.1 MapReduce computation Engine in a Nutshell.
+    3.2 Look at other attempts like Corona done to make up for the downsides of MapReduce Engine.
 
 ## 1. Cons of Map-Reduce as motivation for Spark
 
-One can say that Spark has taken 1:1 motivation from the cons of MapReduce computation system. Let’s see the cons of MapReduce and how Spark addressed it in detail. (Please refer to Appendix section below if you want to know how MapReduce works in a nutshell)
-
-### 1.1 Cons of MapReduce
+One can say that Spark has taken 1:1 motivation from the downsides of MapReduce computation system. Let’s see the drawbacks of MapReduce computation engine and how Spark addressed them:
 
 1. **Parallelism via processes:** 
     - *MapReduce:* MapReduce doesn’t run Map and Reduce jobs as threads. They are processes which are heavyweight compared to threads.
