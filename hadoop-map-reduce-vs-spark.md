@@ -50,10 +50,11 @@ Worker JVM’s work is only to launch Executor JVM’s whenever Master tells the
 By CPU resources, We are referring to the tasks/threads running within an executor. Let’s assume that the second machine has lot many more ram and cpu resources. Can we run more threads in this second machine? You can do that by tweaking spark-env.sh file and set SPARK_WORKER_CORES to 10  and the same setting if set to 6 in other machines. Then master will launch 10 threads/tasks in that second machine and 6 in the remaining one’s. But, you could still oversubscribe in general. SPARK_WORKER_CORES tells worker JVM as to how many cores/tasks it can give out to its underlying executor JVM’s.
 
 ## 3. Conclusion: 
-Hope this gives a better understanding on:
+We've seen:
 - The initial motivation behind Spark
-- Why it evolved successfully as a strong contnder to MapReduce.
-- Why is Spark orders of magnitude faster than traditional Hadoop’s map-reduce system. 
+- Why it evolved successfully as a strong contnder to MapReduce
+- An overview of Spark application running in cluster and
+- Why is Spark orders of magnitude faster than traditional Hadoop’s map-reduce system
 
 ## 4. Appendix:
 ### 4.1. MapReduce computation in a nutshell
