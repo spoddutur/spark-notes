@@ -1,7 +1,7 @@
 # Spark as a successful contender to MapReduce
 Its not uncommon for a beginner to think Spark as a replacement to Hadoop. This blog is to better understand what motivated Spark  and why it evolved successfully as a strong contnder to MapReduce
 
-<img width="580" alt="Spark to replace MapReduce" src="https://user-images.githubusercontent.com/22542670/30011409-c0745934-9154-11e7-8c00-2ce8b7466be1.png">
+<img width="411" alt="MapReduceVsSpark" src="https://user-images.githubusercontent.com/22542670/30010978-a1d0d456-9151-11e7-939a-8ed383cffab1.png">
 
 
 Let’s try and understand how Spark is orders of magnitude faster than traditional Hadoop’s map-reduce system. For this, we will section this blog in 2 parts:
