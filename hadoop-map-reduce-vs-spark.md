@@ -1,38 +1,16 @@
-# Beginner’s myths about Spark
-Its not uncommon for a beginner to think Spark as a replacement to Hadoop. This blog is to understand what is Spark and its purpose.
-
+# Spark as a successful contender to MapReduce
+Its not uncommon for a beginner to think Spark as a replacement to Hadoop. This blog is to better understand what motivated Spark  and why it evolved successfully as a strong contnder to MapReduce
 
 <img width="580" alt="Spark to replace MapReduce" src="https://user-images.githubusercontent.com/22542670/30011409-c0745934-9154-11e7-8c00-2ce8b7466be1.png">
 
 
-Let’s try and understand how Spark is orders of magnitude faster than traditional Hadoop’s map-reduce system. For this, we will section this blog in 3 parts:
-1. **MapReduce computation in a nutshell**
-2. **Cons of MapReduce as motivation for Spark**
-3. **How Spark works**
+Let’s try and understand how Spark is orders of magnitude faster than traditional Hadoop’s map-reduce system. For this, we will section this blog in 2 parts:
+1. **Cons of MapReduce as motivation for Spark**
+2. **How Spark works**
 
-## 1. MapReduce computation in a nutshell
-I’ll not go deep into the details, but, lets see birds eye view of how Hadoop MapReduce works. Below figure shows a typical Hadoop Cluster running 2 Map-Reduce applications. Each of these application’s Map(M) and Reduce(R) jobs are marked with black and white colours respectively.
+## 1. Cons of Map-Reduce as motivation for Spark
 
-<img width="394" alt="Hadoop MapReduce" src="https://user-images.githubusercontent.com/22542670/30012789-389587e8-9160-11e7-8dcd-6d48e88dd085.png">
-
-- **NameNode and DataNode:** 
-    - NameNode + DataNodes essentially make up HDFS.
-    - NameNode only stores the metadata of HDFS i.e., it stores the list of all files in the file system (not its data), and keeps a track of them across the cluster.
-    - DataNodes store the actual data of files.
-    - NameNode JVM heart beats with DataNode JVM’s every 3secs.
-
-- **JobTracker and TaskTracker:** 
-    - JobTracker JVM is the brain of the MapReduce Engine and runs on NameNode.
-    - JobTracker creates and allocates jobs to TaskTracker which runs on DataNodes.
-    - TaskTrackers runs the task and reports task status to JobTracker.
-    - _Inside TaskTracker JVM, we have slots where we run our jobs. These slots are hardcoded to be either Map slot or Reduce slot. One cannot run a reduce job on a map slot and vice-versa._
-    - _Parallelism in MapReduce is achieved by having multiple parallel map & reduce jobs running as processes in respective TaskTracker JVM slots._
-
-- **Job execution:** In a typical MapReduce application, we chain multiple jobs of map and reduce together.  It starts execution by reading a chunk of data from HDFS, run one-phase of map-reduce computation, write results back to HDFS,  read those results into another map-reduce and write it back to HDFS again. There is usually like a loop going on there where we run this process over and over again
-
-## 2. Cons of Map-Reduce as motivation for Spark
-
-One can say that Spark has taken 1:1 motivation from the cons of MapReduce computation system. Let’s see the cons of MapReduce in detail:
+One can say that Spark has taken 1:1 motivation from the cons of MapReduce computation system. Let’s see the cons of MapReduce in detail. (Please refer to Appendix section below if you want to know how MapReduce computation works)
 
 1. **Parallelism via processes:** 
     - *MapReduce:* MapReduce doesn’t run Map and Reduce jobs as threads. They are processes which are heavyweight compared to threads.
@@ -44,8 +22,9 @@ One can say that Spark has taken 1:1 motivation from the cons of MapReduce compu
     - *MapReduce:* There is a whole lot of intermediate results which are written to HDFS and then read back by the next job from HDFS. Data handshake between the any two jobs chained together happens via reads and writes to HDFS.
     - *Spark:* Spark is an in-memory processing engine. All of the data and intermediate results are kept in-memory. This is one of the reasons that you get 10-100x faster speed because of the efficient memory leverage.
 
+#### Note: Facebook came up with Corona to address some of these cons and it did achieve 17% performance improvements on MapReduce Jobs. I've detailed it in Appendix.
 
-## 3. How Spark works:  
+## 2. How Spark works:  
 <img width="540" alt="spark-standalone-mode" src="https://user-images.githubusercontent.com/22542670/30005242-a22a0c5c-90fb-11e7-9d80-97efe540417f.png">
 
 Above picture depicts Spark cluster.
@@ -66,13 +45,37 @@ Worker JVM’s work is only to launch Executor JVM’s whenever Master tells the
 - **Distribution of CPU resources:**
 By CPU resources, We are referring to the tasks/threads running within an executor. Let’s assume that the second machine has lot many more ram and cpu resources. Can we run more threads in this second machine? You can do that by tweaking spark-env.sh file and set SPARK_WORKER_CORES to 10  and the same setting if set to 6 in other machines. Then master will launch 10 threads/tasks in that second machine and 6 in the remaining one’s. But, u could still oversubscribe in general. SPARK_WORKER_CORES tells worker JVM as to how many cores/tasks it can give out to its underlying executor JVM’s.
 
-## 4. Appendix:
+### Conclusion: 
+Hope this gives a better understanding on the initial motivation behind Spark and why it evolved successfully as a strong contnder to MapReduce.
+
+## 3. Appendix:
+### 3.1. MapReduce computation in a nutshell
+I’ll not go deep into the details, but, lets see birds eye view of how Hadoop MapReduce works. Below figure shows a typical Hadoop Cluster running 2 Map-Reduce applications. Each of these application’s Map(M) and Reduce(R) jobs are marked with black and white colours respectively.
+
+<img width="394" alt="Hadoop MapReduce" src="https://user-images.githubusercontent.com/22542670/30012789-389587e8-9160-11e7-8dcd-6d48e88dd085.png">
+
+- **NameNode and DataNode:** 
+    - NameNode + DataNodes essentially make up HDFS.
+    - NameNode only stores the metadata of HDFS i.e., it stores the list of all files in the file system (not its data), and keeps a track of them across the cluster.
+    - DataNodes store the actual data of files.
+    - NameNode JVM heart beats with DataNode JVM’s every 3secs.
+
+- **JobTracker and TaskTracker:** 
+    - JobTracker JVM is the brain of the MapReduce Engine and runs on NameNode.
+    - JobTracker creates and allocates jobs to TaskTracker which runs on DataNodes.
+    - TaskTrackers runs the task and reports task status to JobTracker.
+    - _Inside TaskTracker JVM, we have slots where we run our jobs. These slots are hardcoded to be either Map slot or Reduce slot. One cannot run a reduce job on a map slot and vice-versa._
+    - _Parallelism in MapReduce is achieved by having multiple parallel map & reduce jobs running as processes in respective TaskTracker JVM slots._
+
+- **Job execution:** In a typical MapReduce application, we chain multiple jobs of map and reduce together.  It starts execution by reading a chunk of data from HDFS, run one-phase of map-reduce computation, write results back to HDFS,  read those results into another map-reduce and write it back to HDFS again. There is usually like a loop going on there where we run this process over and over again
+
+### 3.2 Corona
 Facebook came up with Corona to address this problem & leverage more CPU%. In their hadoop cluster, when FB was running 100’s of MR jobs with lots of them already in the backlog waiting to be run because all the MR slots were full with currently running MR jobs, they noticed that their CPU utilisation was pretty low (~60%). It was weird because they thought that all the M & R slots were full & they had a whole lot of backlog waiting out there for a free slot. What they notice was that in traditional MR, once a Map finishes, then TT has to let JT know that there’s empty slot. JT will then allot this empty slot to the next job. This handshake between TT & JT is taking ~15-20secs before the next job takes up that freed up slot. This is because, Heartbeat of JT is 3secs. SO, every 3secs, it checks with TT for free slots and also, its not necessary that the next job will be assigned in the very next heartbeat. So, FB added corona which is a more aggressive job scheduler added on top of JT. MR took 66secs to fill a slot while corona took like 55 secs (~17%). Slots here are M or R process id’s.  
 With Spark, the slots inside the executor are generic. They can run M, R or join or a whole bunch of other kinds of transformations.
 We get parallelism in Spark by having different threads running inside the executor. Basically, in Spark, we have one executor JVM on each machine. Inside this executor JVM, we’ll have slots. In those slots, tasks run. 
 So spark threads vs MR processes for parallelism. 
 
-## 5. Legend: 
+### 3.3. Legend: 
 - MR - MapReduce
 - M - Map Job
 - R - Reduce Job
