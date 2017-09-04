@@ -1,10 +1,10 @@
 # Beginner’s myths about Spark
 Its not uncommon for a beginner to think Spark as a replacement to Hadoop. This blog is to understand what is Spark and its purpose.
-**Spark doesn't replace Hadoop. It is a very strong contender replacing MapReduce(MR) computation engine on top of HDFS**
-```markdown
-HADOOP = HDFS + YARN + MR
-Spark-HADOOP = HDFS + YARN + Spark-Core
-```
+
+#### So, what is Spark?
+**Spark doesn't replace Hadoop. It came in as a very strong contender to replace MapReduce(MR) computation engine on top of HDFS. Following table describes the same:**
+<img width="411" alt="MapReduceVsSpark" src="https://user-images.githubusercontent.com/22542670/30010978-a1d0d456-9151-11e7-939a-8ed383cffab1.png">
+
 
 Let’s try and understand how Spark is orders of magnitude faster than traditional Hadoop’s map-reduce system. For this, we will see:
 ```markdown
