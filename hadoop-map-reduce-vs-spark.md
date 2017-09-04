@@ -10,7 +10,9 @@ We will section this blog in 2 parts:
 
 ## 1. Cons of Map-Reduce as motivation for Spark
 
-One can say that Spark has taken 1:1 motivation from the cons of MapReduce computation system. Let’s see the cons of MapReduce and how Spark addressed it in detail. (Please refer to Appendix section below if you want to know how MapReduce computation works)
+One can say that Spark has taken 1:1 motivation from the cons of MapReduce computation system. Let’s see the cons of MapReduce and how Spark addressed it in detail. (Please refer to Appendix section below if you want to know how MapReduce works in a nutshell)
+
+### 1.1 Cons of MapReduce
 
 1. **Parallelism via processes:** 
     - *MapReduce:* MapReduce doesn’t run Map and Reduce jobs as threads. They are processes which are heavyweight compared to threads.
