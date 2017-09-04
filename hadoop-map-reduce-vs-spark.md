@@ -1,6 +1,6 @@
 # Beginner’s myths about Spark
 Its not uncommon for a beginner to think Spark as a replacement to Hadoop. This blog is to understand what is Spark and its purpose.
-**Spark doesn't replace Hadoop. It is a very strong contender replacing MR computation engine on top of HDFS**
+**Spark doesn't replace Hadoop. It is a very strong contender replacing MapReduce(MR) computation engine on top of HDFS**
 ```markdown
 HADOOP = HDFS + YARN + MR
 Spark-HADOOP = HDFS + YARN + Spark-Core
@@ -8,13 +8,12 @@ Spark-HADOOP = HDFS + YARN + Spark-Core
 
 Let’s try and understand how Spark is orders of magnitude faster than traditional Hadoop’s map-reduce system. For this, we will see:
 ```markdown
-1. How Map-Reduce works
+1. Computation in Map-Reduce system in a nutshell
 2. Disadvantages/hotspots in Map-Reduce as motivation for Spark
 3. How Spark works
 ```
 
-## 1. How Map-Reduce works
-### 1.1 Computation in Map-Reduce system in a nutshell
+## 1. Computation in Map-Reduce system in a nutshell
 I’ll not go deep into the details, but, lets see birds eye view of how Hadoop MapReduce works. Below figure shows a Hadoop cluster.
 <img width="579" alt="MR-Job-Details" src="https://user-images.githubusercontent.com/22542670/30005218-08c2d5b2-90fb-11e7-97c3-532cd8fd7417.png">
 - **NameNode and DataNode:** NameNode + DataNodes essentially make up HDFS. NameNode JVM heart beats with DataNode JVM’s every 3secs.
@@ -32,7 +31,8 @@ Parallelism in MapReduce is achieved by having multiple parallel map & reduce jo
 - **Extensive Reads and writes:** 
     - *MapReduce:* There is a whole lot of intermediate results which are written to HDFS and then read back by the next job from HDFS. Data handshake between the any two jobs chained together happens via reads and writes to HDFS.
     - *Spark:* Spark is an in-memory processing engine. All of the data and intermediate results are kept in-memory. This is one of the reasons that you get 10-100x faster speed because of the efficient memory leverage.
-As you can see, One can say that Spark has taken 1:1 motivation with the above discussed disadvantages. Let’s see the details of how Spark works..
+
+As you can see, One can say that Spark has taken 1:1 motivation with the above discussed disadvantages. Let’s see the details of how Spark works.
 
 ## 3. How Spark works:  
 <img width="540" alt="spark-standalone-mode" src="https://user-images.githubusercontent.com/22542670/30005242-a22a0c5c-90fb-11e7-9d80-97efe540417f.png">
