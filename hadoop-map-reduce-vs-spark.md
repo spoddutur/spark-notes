@@ -26,6 +26,7 @@ One can say that Spark has taken 1:1 motivation from the cons of MapReduce compu
 
 ## 2. How Spark works: 
 Now that we have seen the disadvantages with MapReduce and how Spark addressed it, its time to jump in and look at the internals of Spark briefly. In that, i'll mainly try to cover how a spark application running in a cluster looks like. Below picture depicts Spark cluster:
+
 <img width="540" alt="spark-standalone-mode" src="https://user-images.githubusercontent.com/22542670/30005242-a22a0c5c-90fb-11e7-9d80-97efe540417f.png">
 
 Let's look at differenct components shown in the above picture:
