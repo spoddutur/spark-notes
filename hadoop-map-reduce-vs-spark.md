@@ -20,12 +20,14 @@ I’ll not go deep into the details, but, lets see birds eye view of how Hadoop 
     - NameNode only stores the metadata of HDFS i.e., it stores the list of all files in the file system (not its data), and keeps a track of them across the cluster.
     - DataNodes store the actual data of files.
     - NameNode JVM heart beats with DataNode JVM’s every 3secs.
+
 1.2 **JobTracker and TaskTracker:** 
     - JobTracker JVM is the brain of the MapReduce Engine and runs on NameNode.
     - JobTracker creates and allocates jobs to TaskTracker which runs on DataNodes.
     - TaskTrackers runs the task and reports task status to JobTracker.
     - _Inside TaskTracker JVM, we have slots where we run our jobs. These slots are hardcoded to be either Map slot or Reduce slot. One cannot run a reduce job on a map slot and vice-versa._
     - _Parallelism in MapReduce is achieved by having multiple parallel map & reduce jobs running as processes in respective TaskTracker JVM slots._
+
 1.3 **Job execution:** In a typical MapReduce application, we chain multiple jobs of map and reduce together.  It starts execution by reading a chunk of data from HDFS, run one-phase of map-reduce computation, write results back to HDFS,  read those results into another map-reduce and write it back to HDFS again. There is usually like a loop going on there where we run this process over and over again
 
 ## 2. Cons of Map-Reduce as motivation for Spark
