@@ -15,7 +15,7 @@ I’ll not go deep into the details, but, lets see birds eye view of how Hadoop 
 
 <img width="394" alt="Hadoop MapReduce" src="https://user-images.githubusercontent.com/22542670/30012789-389587e8-9160-11e7-8dcd-6d48e88dd085.png">
 
-1.1 **NameNode and DataNode:** 
+- **NameNode and DataNode:** 
     - NameNode + DataNodes essentially make up HDFS.
     - NameNode only stores the metadata of HDFS i.e., it stores the list of all files in the file system (not its data), and keeps a track of them across the cluster.
     - DataNodes store the actual data of files.
