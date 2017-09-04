@@ -10,13 +10,13 @@ Let’s try and understand how Spark is orders of magnitude faster than traditio
 
 ## 1. Cons of Map-Reduce as motivation for Spark
 
-One can say that Spark has taken 1:1 motivation from the cons of MapReduce computation system. Let’s see the cons of MapReduce in detail. (Please refer to Appendix section below if you want to know how MapReduce computation works)
+One can say that Spark has taken 1:1 motivation from the cons of MapReduce computation system. Let’s see the cons of MapReduce and how Spark addressed it in detail. (Please refer to Appendix section below if you want to know how MapReduce computation works)
 
 1. **Parallelism via processes:** 
     - *MapReduce:* MapReduce doesn’t run Map and Reduce jobs as threads. They are processes which are heavyweight compared to threads.
     - *Spark:* Spark runs its jobs by spawning different threads running inside the executor.
 2. **CPU Utilization:** 
-    - *MapReduce:* Note that the slots within TaskTracker are not generic slots that can be used for either Map or Reduce jobs. How does it matter? So, when you start a MR application, initially, that MR app might just spend like hours in just the Map phase. So, during this time none of the reduce slots are going to be used. This is why if you notice, your CPU% would not be high because all these Reduce slots are sitting empty. Facebook came up with an improvement to address this a bit. If you are interested refer to the details in appendix.
+    - *MapReduce:* The slots within TaskTracker are not generic slots that can be used for either Map or Reduce jobs. How does it matter? So, when you start a MapReduce application, initially, that application might spend like hours in just the Map phase. So, during this time none of the reduce slots are going to be used. This is why if you notice, your CPU% would not be high because all these Reduce slots are sitting empty. Facebook came up with an improvement to address this a bit. If you are interested please check Appendix section below.
     - *Spark:* Similar to TaskTracker in MapReduce, Spark has Executor JVM’s on each machine. But, unlike hardcoded Map and Reduce slots in TaskTracker, these slots are generic where any task can run.
 3. **Extensive Reads and writes:** 
     - *MapReduce:* There is a whole lot of intermediate results which are written to HDFS and then read back by the next job from HDFS. Data handshake between the any two jobs chained together happens via reads and writes to HDFS.
@@ -24,10 +24,11 @@ One can say that Spark has taken 1:1 motivation from the cons of MapReduce compu
 
 #### Note: Facebook came up with Corona to address some of these cons and it did achieve 17% performance improvements on MapReduce Jobs. I've detailed it in Appendix.
 
-## 2. How Spark works:  
+## 2. How Spark works: 
+Now that we have seen the disadvantages with MapReduce and how Spark addressed it, its time to jump in and look at the internals of Spark briefly. In that, i'll mainly try to cover how a spark application running in a cluster looks like. Below picture depicts Spark cluster:
 <img width="540" alt="spark-standalone-mode" src="https://user-images.githubusercontent.com/22542670/30005242-a22a0c5c-90fb-11e7-9d80-97efe540417f.png">
 
-Above picture depicts Spark cluster.
+Let's look at differenct components shown in the above picture:
 - **Spark Master, Worker and Executor JVM’s:**
 SparkMaster and Worker JVM’s are the resource managers. All worker JVM’s will register themselves with SparkMaster. They are very small. Example: Master use like 500MB of RAM & Worker uses like 1GB RAM.
 - **Master:**
@@ -43,7 +44,7 @@ Task is the smallest unit of execution which works on a partition of our data. S
 - **Resilience:**
 Worker JVM’s work is only to launch Executor JVM’s whenever Master tells them to do so. If Executor crashes, Worker will restart it. If Worker JVM crashes, Master will start it. Master will take care of driver JVM restart as well. But then, if a driver restarts, all the Ex’s will have to restart. 
 - **Distribution of CPU resources:**
-By CPU resources, We are referring to the tasks/threads running within an executor. Let’s assume that the second machine has lot many more ram and cpu resources. Can we run more threads in this second machine? You can do that by tweaking spark-env.sh file and set SPARK_WORKER_CORES to 10  and the same setting if set to 6 in other machines. Then master will launch 10 threads/tasks in that second machine and 6 in the remaining one’s. But, u could still oversubscribe in general. SPARK_WORKER_CORES tells worker JVM as to how many cores/tasks it can give out to its underlying executor JVM’s.
+By CPU resources, We are referring to the tasks/threads running within an executor. Let’s assume that the second machine has lot many more ram and cpu resources. Can we run more threads in this second machine? You can do that by tweaking spark-env.sh file and set SPARK_WORKER_CORES to 10  and the same setting if set to 6 in other machines. Then master will launch 10 threads/tasks in that second machine and 6 in the remaining one’s. But, you could still oversubscribe in general. SPARK_WORKER_CORES tells worker JVM as to how many cores/tasks it can give out to its underlying executor JVM’s.
 
 ### Conclusion: 
 Hope this gives a better understanding on the initial motivation behind Spark and why it evolved successfully as a strong contnder to MapReduce.
@@ -70,7 +71,7 @@ I’ll not go deep into the details, but, lets see birds eye view of how Hadoop 
 - **Job execution:** In a typical MapReduce application, we chain multiple jobs of map and reduce together.  It starts execution by reading a chunk of data from HDFS, run one-phase of map-reduce computation, write results back to HDFS,  read those results into another map-reduce and write it back to HDFS again. There is usually like a loop going on there where we run this process over and over again
 
 ### 3.2 Corona
-Facebook came up with Corona to address this problem & leverage more CPU%. In their hadoop cluster, when FB was running 100’s of MR jobs with lots of them already in the backlog waiting to be run because all the MR slots were full with currently running MR jobs, they noticed that their CPU utilisation was pretty low (~60%). It was weird because they thought that all the M & R slots were full & they had a whole lot of backlog waiting out there for a free slot. What they notice was that in traditional MR, once a Map finishes, then TT has to let JT know that there’s empty slot. JT will then allot this empty slot to the next job. This handshake between TT & JT is taking ~15-20secs before the next job takes up that freed up slot. This is because, Heartbeat of JT is 3secs. SO, every 3secs, it checks with TT for free slots and also, its not necessary that the next job will be assigned in the very next heartbeat. So, FB added corona which is a more aggressive job scheduler added on top of JT. MR took 66secs to fill a slot while corona took like 55 secs (~17%). Slots here are M or R process id’s.  
+Facebook came up with Corona to address the CPU Utilization problem that MapReduce has & leverage more CPU%. In their hadoop cluster, when FB was running 100’s of MR jobs with lots of them already in the backlog waiting to be run because all the MR slots were full with currently running MR jobs, they noticed that their CPU utilisation was pretty low (~60%). It was weird because they thought that all the M & R slots were full & they had a whole lot of backlog waiting out there for a free slot. What they notice was that in traditional MR, once a Map finishes, then TT has to let JT know that there’s empty slot. JT will then allot this empty slot to the next job. This handshake between TT & JT is taking ~15-20secs before the next job takes up that freed up slot. This is because, Heartbeat of JT is 3secs. SO, every 3secs, it checks with TT for free slots and also, its not necessary that the next job will be assigned in the very next heartbeat. So, FB added corona which is a more aggressive job scheduler added on top of JT. MR took 66secs to fill a slot while corona took like 55 secs (~17%). Slots here are M or R process id’s.  
 With Spark, the slots inside the executor are generic. They can run M, R or join or a whole bunch of other kinds of transformations.
 We get parallelism in Spark by having different threads running inside the executor. Basically, in Spark, we have one executor JVM on each machine. Inside this executor JVM, we’ll have slots. In those slots, tasks run. 
 So spark threads vs MR processes for parallelism. 
