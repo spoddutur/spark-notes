@@ -4,12 +4,13 @@ Its not uncommon for a beginner to think Spark as a replacement to Hadoop. This 
 
 <img width="580" alt="Spark to replace MapReduce" src="https://user-images.githubusercontent.com/22542670/30011409-c0745934-9154-11e7-8c00-2ce8b7466be1.png">
 
-Let’s try and understand how Spark is orders of magnitude faster than traditional Hadoop’s map-reduce system. For this, we will see:
-### 1. Computation in Map-Reduce system in a nutshell
-### 2. Disadvantages/hotspots in Map-Reduce as motivation for Spark
-### 3. How Spark works
 
-## 1. Computation in Map-Reduce system in a nutshell
+Let’s try and understand how Spark is orders of magnitude faster than traditional Hadoop’s map-reduce system. For this, we will section this blog in 3 parts:
+1. **MapReduce computation in a nutshell**
+2. **Cons of MapReduce as motivation for Spark**
+3. **How Spark works**
+
+## 1. MapReduce computation in a nutshell
 I’ll not go deep into the details, but, lets see birds eye view of how Hadoop MapReduce works. Below figure shows a Hadoop cluster.
 <img width="579" alt="MR-Job-Details" src="https://user-images.githubusercontent.com/22542670/30005218-08c2d5b2-90fb-11e7-97c3-532cd8fd7417.png">
 - **NameNode and DataNode:** NameNode + DataNodes essentially make up HDFS. NameNode JVM heart beats with DataNode JVM’s every 3secs.
