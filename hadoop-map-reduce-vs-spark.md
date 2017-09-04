@@ -15,31 +15,33 @@ I’ll not go deep into the details, but, lets see birds eye view of how Hadoop 
 
 <img width="394" alt="Hadoop MapReduce" src="https://user-images.githubusercontent.com/22542670/30012789-389587e8-9160-11e7-8dcd-6d48e88dd085.png">
 
-- **NameNode and DataNode:** 
+### 1.1 **NameNode and DataNode:** 
     - NameNode + DataNodes essentially make up HDFS.
     - NameNode only stores the metadata of HDFS i.e., it stores the list of all files in the file system (not its data), and keeps a track of them across the cluster.
     - DataNodes store the actual data of files.
     - NameNode JVM heart beats with DataNode JVM’s every 3secs.
-- **JobTracker and TaskTracker:** 
+### 1.2 **JobTracker and TaskTracker:** 
     - JobTracker JVM is the brain of the MapReduce Engine and runs on NameNode.
     - JobTracker creates and allocates jobs to TaskTracker which runs on DataNodes.
     - TaskTrackers runs the task and reports task status to JobTracker.
     - _Inside TaskTracker JVM, we have slots where we run our jobs. These slots are hardcoded to be either Map slot or Reduce slot. One cannot run a reduce job on a map slot and vice-versa._
     - _Parallelism in MapReduce is achieved by having multiple parallel map & reduce jobs running as processes in respective TaskTracker JVM slots._
-- **Job execution:** In a typical MapReduce application, we chain multiple jobs of map and reduce together.  It starts execution by reading a chunk of data from HDFS, run one-phase of map-reduce computation, write results back to HDFS,  read those results into another map-reduce and write it back to HDFS again. There is usually like a loop going on there where we run this process over and over again
+### 1.3 **Job execution:** In a typical MapReduce application, we chain multiple jobs of map and reduce together.  It starts execution by reading a chunk of data from HDFS, run one-phase of map-reduce computation, write results back to HDFS,  read those results into another map-reduce and write it back to HDFS again. There is usually like a loop going on there where we run this process over and over again
 
-## 2. Disadvantages/hotspots in Map-Reduce as motivation for Spark
-- **Parallelism via processes:** 
+## 2. Cons of Map-Reduce as motivation for Spark
+
+One can say that Spark has taken 1:1 motivation from the cons of MapReduce computation system. Let’s see the cons of MapReduce in detail:
+
+1. **Parallelism via processes:** 
     - *MapReduce:* MapReduce doesn’t run Map and Reduce jobs as threads. They are processes which are heavyweight compared to threads.
     - *Spark:* Spark runs its jobs by spawning different threads running inside the executor.
-- **CPU Utilization:** 
+2. **CPU Utilization:** 
     - *MapReduce:* Note that the slots within TaskTracker are not generic slots that can be used for either Map or Reduce jobs. How does it matter? So, when you start a MR application, initially, that MR app might just spend like hours in just the Map phase. So, during this time none of the reduce slots are going to be used. This is why if you notice, your CPU% would not be high because all these Reduce slots are sitting empty. Facebook came up with an improvement to address this a bit. If you are interested refer to the details in appendix.
     - *Spark:* Similar to TaskTracker in MapReduce, Spark has Executor JVM’s on each machine. But, unlike hardcoded Map and Reduce slots in TaskTracker, these slots are generic where any task can run.
-- **Extensive Reads and writes:** 
+3. **Extensive Reads and writes:** 
     - *MapReduce:* There is a whole lot of intermediate results which are written to HDFS and then read back by the next job from HDFS. Data handshake between the any two jobs chained together happens via reads and writes to HDFS.
     - *Spark:* Spark is an in-memory processing engine. All of the data and intermediate results are kept in-memory. This is one of the reasons that you get 10-100x faster speed because of the efficient memory leverage.
 
-As you can see, One can say that Spark has taken 1:1 motivation with the above discussed disadvantages. Let’s see the details of how Spark works.
 
 ## 3. How Spark works:  
 <img width="540" alt="spark-standalone-mode" src="https://user-images.githubusercontent.com/22542670/30005242-a22a0c5c-90fb-11e7-9d80-97efe540417f.png">
