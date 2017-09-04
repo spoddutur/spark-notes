@@ -8,7 +8,6 @@ We will section this blog in 3 parts:
 1. **Cons of MapReduce as motivation for Spark**
     
     1.1 Look at the drawbacks of MapReduce
-    
     1.2 How Spark addressed them
 2. **How Spark works**
    
@@ -16,7 +15,6 @@ We will section this blog in 3 parts:
 3. **Appendix**
     
     3.1 MapReduce computation Engine in a Nutshell.
-    
     3.2 Look at other attempts like Corona done to make up for the downsides of MapReduce Engine.
 
 ## 1. Cons of Map-Reduce as motivation for Spark
