@@ -62,8 +62,8 @@ By CPU resources, We are referring to the tasks/threads running within an execut
 We've seen:
 - The initial motivation behind Spark
 - Why it evolved successfully as a strong contnder to MapReduce
-- An overview of Spark application running in cluster and
 - Why is Spark orders of magnitude faster than traditional Hadoop’s map-reduce system
+- An overview of Spark application running in cluster and
 
 ## 4. Appendix:
 ### 4.1. MapReduce computation in a nutshell
@@ -86,7 +86,7 @@ I’ll not go deep into the details, but, lets see birds eye view of how Hadoop 
 
 - **Job execution:** In a typical MapReduce application, we chain multiple jobs of map and reduce together.  It starts execution by reading a chunk of data from HDFS, run one-phase of map-reduce computation, write results back to HDFS,  read those results into another map-reduce and write it back to HDFS again. There is usually like a loop going on there where we run this process over and over again
 
-### 4.2 Corona
+### 4.2 Corona - An attempt to make up for the downsides of MapReduce and improve CPU Utilization
 Facebook came up with Corona to address the CPU Utilization problem that MapReduce has & leverage more CPU%. In their hadoop cluster, when FB was running 100’s of MR jobs with lots of them already in the backlog waiting to be run because all the MR slots were full with currently running MR jobs, they noticed that their CPU utilisation was pretty low (~60%). It was weird because they thought that all the M & R slots were full & they had a whole lot of backlog waiting out there for a free slot. What they notice was that in traditional MR, once a Map finishes, then TT has to let JT know that there’s empty slot. JT will then allot this empty slot to the next job. This handshake between TT & JT is taking ~15-20secs before the next job takes up that freed up slot. This is because, Heartbeat of JT is 3secs. SO, every 3secs, it checks with TT for free slots and also, its not necessary that the next job will be assigned in the very next heartbeat. So, FB added corona which is a more aggressive job scheduler added on top of JT. MR took 66secs to fill a slot while corona took like 55 secs (~17%). Slots here are M or R process id’s.  
 With Spark, the slots inside the executor are generic. They can run M, R or join or a whole bunch of other kinds of transformations.
 We get parallelism in Spark by having different threads running inside the executor. Basically, in Spark, we have one executor JVM on each machine. Inside this executor JVM, we’ll have slots. In those slots, tasks run. 
