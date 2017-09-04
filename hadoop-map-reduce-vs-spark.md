@@ -11,11 +11,15 @@ Let’s try and understand how Spark is orders of magnitude faster than traditio
 3. **How Spark works**
 
 ## 1. MapReduce computation in a nutshell
-I’ll not go deep into the details, but, lets see birds eye view of how Hadoop MapReduce works. Below figure shows a Hadoop cluster.
-<img width="579" alt="MR-Job-Details" src="https://user-images.githubusercontent.com/22542670/30005218-08c2d5b2-90fb-11e7-97c3-532cd8fd7417.png">
+I’ll not go deep into the details, but, lets see birds eye view of how Hadoop MapReduce works. Below figure shows a typical Hadoop Cluster running 2 Map-Reduce applications. Each of these application’s Map(M) and Reduce(R) jobs are marked with black and white colours respectively.
+
+<img width="394" alt="Hadoop MapReduce" src="https://user-images.githubusercontent.com/22542670/30012789-389587e8-9160-11e7-8dcd-6d48e88dd085.png">
+
 - **NameNode and DataNode:** NameNode + DataNodes essentially make up HDFS. NameNode JVM heart beats with DataNode JVM’s every 3secs.
-- **JobTracker and TaskTracker:** JobTracker JVM is the brain of the MapReduce Engine. TaskTracker JVM’s runs in each machine. Inside TaskTracker JVM, we have slots where we run our jobs. These slots are hardcoded to be either Map slot or Reduce slot. One cannot run a reduce job on a map slot and vice-versa.
-Parallelism in MapReduce is achieved by having multiple parallel map & reduce jobs running as processes in respective TaskTracker JVM slots.
+- **JobTracker and TaskTracker:** 
+    - JobTracker JVM is the brain of the MapReduce Engine. TaskTracker JVM’s runs in each machine. 
+    - Inside TaskTracker JVM, we have slots where we run our jobs. These slots are hardcoded to be either Map slot or Reduce slot. One cannot run a reduce job on a map slot and vice-versa.
+    - Parallelism in MapReduce is achieved by having multiple parallel map & reduce jobs running as processes in respective TaskTracker JVM slots.
 - **Job execution:** In a typical MapReduce application, we chain multiple jobs of map and reduce together.  It starts execution by reading a chunk of data from HDFS, run one-phase of map-reduce computation, write results back to HDFS,  read those results into another map-reduce and write it back to HDFS again. There is usually like a loop going on there where we run this process over and over again
 
 ## 2. Disadvantages/hotspots in Map-Reduce as motivation for Spark
