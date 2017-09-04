@@ -15,11 +15,17 @@ I’ll not go deep into the details, but, lets see birds eye view of how Hadoop 
 
 <img width="394" alt="Hadoop MapReduce" src="https://user-images.githubusercontent.com/22542670/30012789-389587e8-9160-11e7-8dcd-6d48e88dd085.png">
 
-- **NameNode and DataNode:** NameNode + DataNodes essentially make up HDFS. NameNode JVM heart beats with DataNode JVM’s every 3secs.
+- **NameNode and DataNode:** 
+    - NameNode + DataNodes essentially make up HDFS.
+    - NameNode only stores the metadata of HDFS i.e., it stores the list of all files in the file system (not its data), and keeps a track of them across the cluster.
+    - DataNodes store the actual data of files.
+    - NameNode JVM heart beats with DataNode JVM’s every 3secs.
 - **JobTracker and TaskTracker:** 
-    - JobTracker JVM is the brain of the MapReduce Engine. TaskTracker JVM’s runs in each machine. 
-    - Inside TaskTracker JVM, we have slots where we run our jobs. These slots are hardcoded to be either Map slot or Reduce slot. One cannot run a reduce job on a map slot and vice-versa.
-    - Parallelism in MapReduce is achieved by having multiple parallel map & reduce jobs running as processes in respective TaskTracker JVM slots.
+    - JobTracker JVM is the brain of the MapReduce Engine and runs on NameNode.
+    - JobTracker creates and allocates jobs to TaskTracker which runs on DataNodes.
+    - TaskTrackers run the tasks and report the status of task to JobTracker.
+    - Inside TaskTracker JVM, we have slots where we run our jobs. **These slots are hardcoded to be either Map slot or Reduce slot. One cannot run a reduce job on a map slot and vice-versa.**
+    - *Parallelism in MapReduce is achieved by having multiple parallel map & reduce jobs running as processes in respective TaskTracker JVM slots.*
 - **Job execution:** In a typical MapReduce application, we chain multiple jobs of map and reduce together.  It starts execution by reading a chunk of data from HDFS, run one-phase of map-reduce computation, write results back to HDFS,  read those results into another map-reduce and write it back to HDFS again. There is usually like a loop going on there where we run this process over and over again
 
 ## 2. Disadvantages/hotspots in Map-Reduce as motivation for Spark
