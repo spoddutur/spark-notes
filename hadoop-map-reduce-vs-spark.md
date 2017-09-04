@@ -1,10 +1,10 @@
 # Spark as a successful contender to MapReduce
-Its not uncommon for a beginner to think Spark as a replacement to Hadoop. This blog is to better understand what motivated Spark  and why it evolved successfully as a strong contnder to MapReduce
+Its not uncommon for a beginner to think Spark as a replacement to Hadoop. But the fact is that Spark came in as a very strong contender to replace MapReduce computation engine on top of Hadoop (as shown in the table below). This blog is to better understand what motivated Spark and how it evolved successfully as a strong contender to MapReduce.
 
 <img width="411" alt="MapReduceVsSpark" src="https://user-images.githubusercontent.com/22542670/30010978-a1d0d456-9151-11e7-939a-8ed383cffab1.png">
 
 
-Let’s try and understand how Spark is orders of magnitude faster than traditional Hadoop’s map-reduce system. For this, we will section this blog in 2 parts:
+We will section this blog in 2 parts:
 1. **Cons of MapReduce as motivation for Spark**
 2. **How Spark works**
 
@@ -47,11 +47,14 @@ Worker JVM’s work is only to launch Executor JVM’s whenever Master tells the
 - **Distribution of CPU resources:**
 By CPU resources, We are referring to the tasks/threads running within an executor. Let’s assume that the second machine has lot many more ram and cpu resources. Can we run more threads in this second machine? You can do that by tweaking spark-env.sh file and set SPARK_WORKER_CORES to 10  and the same setting if set to 6 in other machines. Then master will launch 10 threads/tasks in that second machine and 6 in the remaining one’s. But, you could still oversubscribe in general. SPARK_WORKER_CORES tells worker JVM as to how many cores/tasks it can give out to its underlying executor JVM’s.
 
-### Conclusion: 
-Hope this gives a better understanding on the initial motivation behind Spark and why it evolved successfully as a strong contnder to MapReduce.
+## 3. Conclusion: 
+Hope this gives a better understanding on:
+- The initial motivation behind Spark
+- Why it evolved successfully as a strong contnder to MapReduce.
+- Why is Spark orders of magnitude faster than traditional Hadoop’s map-reduce system. 
 
-## 3. Appendix:
-### 3.1. MapReduce computation in a nutshell
+## 4. Appendix:
+### 4.1. MapReduce computation in a nutshell
 I’ll not go deep into the details, but, lets see birds eye view of how Hadoop MapReduce works. Below figure shows a typical Hadoop Cluster running 2 Map-Reduce applications. Each of these application’s Map(M) and Reduce(R) jobs are marked with black and white colours respectively.
 
 <img width="394" alt="Hadoop MapReduce" src="https://user-images.githubusercontent.com/22542670/30012789-389587e8-9160-11e7-8dcd-6d48e88dd085.png">
@@ -71,13 +74,13 @@ I’ll not go deep into the details, but, lets see birds eye view of how Hadoop 
 
 - **Job execution:** In a typical MapReduce application, we chain multiple jobs of map and reduce together.  It starts execution by reading a chunk of data from HDFS, run one-phase of map-reduce computation, write results back to HDFS,  read those results into another map-reduce and write it back to HDFS again. There is usually like a loop going on there where we run this process over and over again
 
-### 3.2 Corona
+### 4.2 Corona
 Facebook came up with Corona to address the CPU Utilization problem that MapReduce has & leverage more CPU%. In their hadoop cluster, when FB was running 100’s of MR jobs with lots of them already in the backlog waiting to be run because all the MR slots were full with currently running MR jobs, they noticed that their CPU utilisation was pretty low (~60%). It was weird because they thought that all the M & R slots were full & they had a whole lot of backlog waiting out there for a free slot. What they notice was that in traditional MR, once a Map finishes, then TT has to let JT know that there’s empty slot. JT will then allot this empty slot to the next job. This handshake between TT & JT is taking ~15-20secs before the next job takes up that freed up slot. This is because, Heartbeat of JT is 3secs. SO, every 3secs, it checks with TT for free slots and also, its not necessary that the next job will be assigned in the very next heartbeat. So, FB added corona which is a more aggressive job scheduler added on top of JT. MR took 66secs to fill a slot while corona took like 55 secs (~17%). Slots here are M or R process id’s.  
 With Spark, the slots inside the executor are generic. They can run M, R or join or a whole bunch of other kinds of transformations.
 We get parallelism in Spark by having different threads running inside the executor. Basically, in Spark, we have one executor JVM on each machine. Inside this executor JVM, we’ll have slots. In those slots, tasks run. 
 So spark threads vs MR processes for parallelism. 
 
-### 3.3. Legend: 
+### 4.3. Legend: 
 - MR - MapReduce
 - M - Map Job
 - R - Reduce Job
