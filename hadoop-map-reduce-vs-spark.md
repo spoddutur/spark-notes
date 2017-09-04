@@ -59,7 +59,6 @@ It is the Worker who heartbeats with Master and launches the executors as per sc
 Executor JVM has generic slots where tasks run as threads. Also, all the data needed to run a task is cached within Executor memory.
 - **Driver:**
 When we start our spark application with spark submit command, a driver will start wherever we do spark-submit and that driver will contact spark master to launch executors and run the tasks. Basically, Driver is a representative of our application and does all the communication with Spark.
-<img width="473" alt="spark" src="https://user-images.githubusercontent.com/22542670/30005254-084b8f2e-90fc-11e7-8488-90033e632cc5.png">
 - **Task:**
 Task is the smallest unit of execution which works on a partition of our data. Spark actually calls them cores. —executor-cores setting defines number of tasks that run within the Executor. For example, if we have set —executor-cores to six, then we have six can run simultaneous threads within the executor JVM.
 - **Resilience:**
