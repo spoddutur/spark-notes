@@ -48,7 +48,7 @@ Next, I represented the same data as RDF triplets of linked data. The only diffe
 
 **Schema:**
 
-![image](https://user-images.githubusercontent.com/22542670/31138389-edefd58e-a88b-11e7-9f11-e97963793765.png)
+![image](https://user-images.githubusercontent.com/22542670/31139686-ec1dfb1a-a88f-11e7-9895-a518f812cbbf.png)
 
 ```markdown
 Query by CountryId response time: 25014ms
@@ -57,11 +57,12 @@ Query by CountryId response time: 25014ms
 ### 2.4 Graph Frames
 The last attempt that I tried was to structure the data as graph with vertices, edges, and attributes. Below picture gives an idea of how country info looks like in this approach:
 
-![image](https://user-images.githubusercontent.com/22542670/31138409-ff0178f0-a88b-11e7-8ca9-8b7306b60278.png)
+![image](https://user-images.githubusercontent.com/22542670/31139648-d9e108ca-a88f-11e7-91c9-a1baa66386af.png)
 
 **Schema:**
 
-![image](https://user-images.githubusercontent.com/22542670/31138431-16117fea-a88c-11e7-95d4-bdea35e3ed84.png)
+![image](https://user-images.githubusercontent.com/22542670/31139714-026644fe-a890-11e7-828a-acb7a5e2e0c2.png)
+
 
 ```markdown
 Number of Vertices: 4278235
