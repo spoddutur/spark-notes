@@ -7,6 +7,7 @@ This blog is to better understand what motivated Spark and how it evolved succes
 
 We will section this blog in 3 parts:
 1. **MapReduce computation Engine in a Nutshell**
+
 2. **Cons of MapReduce as motivation for Spark**
     - Look at the drawbacks of MapReduce
     - How Spark addressed them
@@ -16,7 +17,7 @@ We will section this blog in 3 parts:
    - Look at other attempts like Corona done to make up for the downsides of MapReduce Engine.
 
 ## 1. MapReduce (MR) computation in a nutshell
-I’ll not go deep into the details, but, lets see birds eye view of how Hadoop MapReduce works. Below figure shows a typical Hadoop Cluster running 2 Map-Reduce applications. Each of these application’s Map(M) and Reduce(R) jobs are marked with black and white colours respectively.
+I’ll not go deep into the details, but, lets see birds eye view of how Hadoop MapReduce works. Below figure shows a typical Hadoop Cluster running two Map-Reduce applications. Each of these application’s Map(M) and Reduce(R) jobs are marked with black and white colours respectively.
 
 <img width="394" alt="Hadoop MapReduce" src="https://user-images.githubusercontent.com/22542670/30012789-389587e8-9160-11e7-8dcd-6d48e88dd085.png">
 
