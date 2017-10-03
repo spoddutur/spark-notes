@@ -1,6 +1,7 @@
 # Spark as a successful contender to MapReduce
 Its not uncommon for a beginner to think Spark as a replacement to Hadoop. But the fact is that Spark came in as a very strong contender to replace MapReduce computation engine on top of Hadoop. 
 <img width="411" alt="MapReduceVsSpark" src="https://user-images.githubusercontent.com/22542670/30010978-a1d0d456-9151-11e7-939a-8ed383cffab1.png">
+
 This blog is to better understand what motivated Spark and how it evolved successfully as a strong contender to MapReduce.
 
 We will section this blog in 3 parts:
