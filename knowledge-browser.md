@@ -32,7 +32,7 @@ Query by CountryId response time: 100ms
 
 ### 2.2 RDF Triplets
 Next, I represented the data as ![RDF triplets](https://en.wikipedia.org/wiki/RDF_Schema). In this approach, we basically, take each row and convert it into triplets of ```Subject, Predicate and Object``` as shown in the table below:
-![image](https://user-images.githubusercontent.com/22542670/31138372-d8b7ade0-a88b-11e7-9056-ef7612282ed3.png)
+<img width="300" src="https://user-images.githubusercontent.com/22542670/31138372-d8b7ade0-a88b-11e7-9056-ef7612282ed3.png">
 
 **Schema:**
 
