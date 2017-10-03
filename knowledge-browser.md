@@ -24,7 +24,7 @@ The very first attempt to structure the data was naturally the simplest of all  
 
 **Schema:**
 
-<img width="300" src="https://user-images.githubusercontent.com/22542670/31138340-bccdb67e-a88b-11e7-9063-e49fb4cde06a.png">
+![image](https://user-images.githubusercontent.com/22542670/31139612-b5093522-a88f-11e7-8b7d-65ad7e68c5f3.png)
 
 ```markdown
 Query by CountryId response time: 100ms
