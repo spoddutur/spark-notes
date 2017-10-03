@@ -1,15 +1,13 @@
 # Knowledge Browser
-
-## Problem Statement:
-#### Despite being the first class citizen in Spark holding the key corporate asset (i.e., data), Datasets are not getting enough attention it needs in terms of making them searchable.
+#### Problem Statement: Despite being the first class citizen in Spark holding the key corporate asset (i.e., data), Datasets are not getting enough attention it needs in terms of making them searchable.
 
 I wrote this blog to help my self understand how to make datasets available for outside world a.k.a how to make them searchable. I hope it helps you as much it helped me. In this blog post, we’ll see:
-1. How can we make datasets searchable 
+1. **How can we make datasets searchable** 
   - esp. without using any search engine
-2. Same data, different representations
+2. **Same data, different representations**
   - Rearrange the same data in different schema’s 
   - Understand the impact of data schema on search time.
-3. Conclusion - Performance testing
+3. **Conclusion - Performance testing**
 - Evaluate each of these approaches and see which is more appropriate way to structure the datasets when it comes to making them searchable.
 
 ## 1. How can we make datasets searchable
@@ -25,27 +23,36 @@ I've used ~4 million (100MB) countries profile information as knowledge base fro
 The very first attempt to structure the data was naturally the simplest of all  i.e., DataFrames, where all the information of the country is in one row.
 
 **Schema:**
+
 ![image](https://user-images.githubusercontent.com/22542670/31138340-bccdb67e-a88b-11e7-9063-e49fb4cde06a.png)
 
-#### Query by CountryId response time: 100ms
+```markdown
+Query by CountryId response time: 100ms
+```
 
 ### 2.2 RDF Triplets
 Next, I represented the data as ![RDF triplets](https://en.wikipedia.org/wiki/RDF_Schema). In this approach, we basically, take each row and convert it into triplets of ```markdown Subject, Predicate and Object``` as shown in the table below:
 ![image](https://user-images.githubusercontent.com/22542670/31138372-d8b7ade0-a88b-11e7-9056-ef7612282ed3.png)
 
 **Schema:**
+
 ![image](https://user-images.githubusercontent.com/22542670/31138377-dd382ef8-a88b-11e7-82bf-56d243e618c3.png)
 
-#### Query by CountryId search: 6501ms
+```markdown
+Query by CountryId search: 6501ms
+```
 
 ### 2.3 RDF Triplets as linked data
 Next, I represented the same data as RDF triplets of linked data. The only difference between earlier approach and this one is that, the Subject here is linked to a unique id which inturn holds the actual info as shown below:
 ![image](https://user-images.githubusercontent.com/22542670/31138384-e7386940-a88b-11e7-91a1-e44fa2c4ee60.png)
 
 **Schema:**
+
 ![image](https://user-images.githubusercontent.com/22542670/31138389-edefd58e-a88b-11e7-9f11-e97963793765.png)
 
-#### Query by country id search: 25014ms
+```markdown
+Query by country id search: 25014ms
+```
 
 ### 2.4 Graph Frames
 Next I tried to structure the data as graph with vertices, edges, and attributes. Below pic gives an idea of how country info looks like in this approach:
@@ -53,11 +60,14 @@ Next I tried to structure the data as graph with vertices, edges, and attributes
 ![image](https://user-images.githubusercontent.com/22542670/31138409-ff0178f0-a88b-11e7-8ca9-8b7306b60278.png)
 
 **Schema:**
+
 ![image](https://user-images.githubusercontent.com/22542670/31138431-16117fea-a88c-11e7-95d4-bdea35e3ed84.png)
 
-#### Number of Vertices: 4278235
-#### Number of Edges:15357957
-#### Query by countryId response time - 7637ms
+```markdown
+Number of Vertices: 4278235
+Number of Edges:15357957
+Query by countryId response time - 7637ms
+```
 
 ## 3. Observations:
 - Lesser the links, better the performance
