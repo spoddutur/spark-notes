@@ -71,13 +71,12 @@ The last attempt that I tried was to structure the data as graph with vertices, 
 ## 3. Conclusion:
 I wrote this blog to help my self understand how to make datasets searchable and the impact of data schema on search response time. For this, I tried different ways to structure the data and evaluated its performance. I hope it helps you as much it helped me.
 
-### 3.1 Observations:
+### 3.1 Key takeouts:
 - When the nature of your data is homogenous, capturing all the information of a record in a single row gives the best performance in terms of search time.
 - If you are dealing with heterogenous data, where all the entities cannot share a generic schema, then simple RDF triplets yields better response times compared to [LinkedData RDF Triplets](http://linkeddata.org/) representation.
 - Though higher response time is a downside of [LinkedData](http://linkeddata.org/), it is the recommended approach to connect, expose and make your data available for semantic search.
 - GraphFrames is very intuitive for user to structure the data in many cases. Its response times are comparable to RDF triplets search and they also open up doors to exploit graph algorithms like triangle count, connected commonents, BFS etc
 
-### 3.2 Key Takeout:
-- The search query here, essentially filters the datasets and returns the results i.e., it is a filter() transformation applied on data. So, the observed response times per schema not only applies to search but it also applies to any transformations that we apply on spark data. 
-- This experiment definetely tells us how big is the impact of dataschema on the performance of your spark application. 
-- I hope, this blog gives you a better perspective in structuring your data.
+### 3.2 Note:
+The search query here, essentially filters the datasets and returns the results i.e., it is a filter() transformation applied on data. So, the observed response times per schema not only applies to search but it also applies to any transformations that we apply on spark data. This experiment definetely tells us how big is the impact of dataschema on the performance of your spark application. 
+I hope, this blog gives you a better perspective in structuring your data.
