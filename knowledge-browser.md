@@ -1,7 +1,7 @@
 # Knowledge Browser
-**Problem Statement:** Despite being the first class citizen in Spark holding the key corporate asset (i.e., data), Datasets are not getting enough attention it needs in terms of making them searchable.
+**Problem Statement:** Despite being the first class citizen in Spark, holding the key corporate asset i.e., data, Datasets are not getting enough attention it needs in terms of making them searchable.
 
-I wrote this blog to help my self understand how to make datasets searchable. I hope it helps you as much it helped me. I'll cover following items:
+In this blog we'll look at following items:
 1. **How can we make datasets searchable** 
   - esp. without using any search engine
 2. **Same data, different representations**
@@ -60,7 +60,7 @@ Query by CountryId response time: 25014ms
 ### 2.4 Graph Frames
 The last attempt that I tried was to structure the data as graph with vertices, edges, and attributes. Below picture gives an idea of how country info looks like in this approach:
 
-![image](https://user-images.githubusercontent.com/22542670/31139648-d9e108ca-a88f-11e7-91c9-a1baa66386af.png)
+![image](https://user-images.githubusercontent.com/22542670/31138409-ff0178f0-a88b-11e7-8ca9-8b7306b60278.png)
 
 **Schema:**
 
@@ -73,10 +73,11 @@ Number of Edges:15357957
 Query by CountryId response time - 7637ms
 ```
 
-## 3. Observations:
-- Lesser the links, better the performance
+## 3. Conclusion:
+I wrote this blog to help my self understand how to make datasets searchable and the impact of data schema on search response time. For this, I tried different ways to structure the data and evaluated its performance. I hope it helps you as much it helped me.
+
+### 3.1 Observations:
 - When the nature of your data is homogenous, capturing all the information of a record in a single row gives the best performance in terms of search time.
-- If you are dealing with heterogenous data, where all the entities cannot share a generic schema, then simple RDF triplets yields better response times compared to LinkedData RDF triplets representation.
+- If you are dealing with heterogenous data, where all the entities cannot share a generic schema, then simple RDF triplets yields better response times compared to [LinkedData RDF Triplets](http://linkeddata.org/) representation.
 - Though higher response time is a downside of [LinkedData](http://linkeddata.org/), it is the recommended approach to connect, expose and make your data available for semantic search.
 - GraphFrames is very intuitive for user to structure the data in many cases. Its response times are comparable to RDF triplets search and they also open up doors to exploit graph algorithms like triangle count, connected commonents, BFS etc
-
