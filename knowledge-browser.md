@@ -40,7 +40,7 @@ Next, I represented the data as ![RDF triplets](https://en.wikipedia.org/wiki/RD
 
 **Schema:**
 
-<img width="300" src="https://user-images.githubusercontent.com/22542670/31138377-dd382ef8-a88b-11e7-82bf-56d243e618c3.png>
+<img width="300" src="https://user-images.githubusercontent.com/22542670/31138377-dd382ef8-a88b-11e7-82bf-56d243e618c3.png">
 
 **Query by CountryId response time:** 6501ms
 
@@ -62,7 +62,7 @@ The last attempt that I tried was to structure the data as graph with vertices, 
 
 **Schema:**
 
-<img width="300" src="https://user-images.githubusercontent.com/22542670/31139714-026644fe-a890-11e7-828a-acb7a5e2e0c2.png>
+<img width="300" src="https://user-images.githubusercontent.com/22542670/31139714-026644fe-a890-11e7-828a-acb7a5e2e0c2.png">
 
 - **Number of Vertices:** 4278235
 - **Number of Edges:** 15357957
