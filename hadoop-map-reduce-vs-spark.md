@@ -80,7 +80,7 @@ We've seen:
 - The initial motivation behind Spark
 - Why it evolved successfully as a strong contnder to MapReduce
 - Why is Spark orders of magnitude faster than traditional Hadoop’s map-reduce system
-- An overview of Spark application running in cluster and
+- An overview of Spark application running in cluster
 
 ## 4. Appendix:
 ### 4.1 Corona - An attempt to make up for the downsides of MapReduce and improve CPU Utilization
