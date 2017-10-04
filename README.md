@@ -6,3 +6,4 @@ Following are the blogs that I compiled from my learnings on Spark:
 - [Task Memory Management in ApacheSpark](https://spoddutur.github.io/spark-notes/task_memory_management_in_spark)
 - [Spark as cloud-based SQL Engine for BigData via ThriftServer](https://spoddutur.github.io/spark-notes/spark-as-cloud-based-sql-engine-via-thrift-server)
 - [Building real-time interactive applications with Spark](https://spoddutur.github.io/spark-notes/build-real-time-interations-with-spark)
+- [Spark as Knowledge Browser and the impact of DataSchema on performance](https://spoddutur.github.io/spark-notes/knowledge-browser)
