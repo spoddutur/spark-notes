@@ -1,11 +1,11 @@
 # Knowledge Browser
 **Problem Statement:** Despite being the first class citizen in Spark, holding the key corporate asset i.e., data, Datasets are not getting enough attention it needs in terms of making them searchable.
-<hr/>
 
-### CoverPoints:
+### Cover Points:
 In this blog, we'll look at following items:
 1. **How can we make datasets searchable** 
   - esp. without using any search engine
+  - SQL like queries for search
 2. **Same data, different representations**
   - Rearrange the same data in different schema’s 
   - Understand the impact of data schema on search time.
@@ -13,7 +13,7 @@ In this blog, we'll look at following items:
 - Evaluate each of these approaches and see which is more appropriate way to structure the datasets when it comes to making them searchable.
 
 ## 1. How can we make datasets searchable
-Please refer to my git repository [here](https://github.com/spoddutur/graph-knowledge-browser) where I’ve provided a working example of how to make your knowledge searchable on top of ApacheSpark.
+Please refer to my git repository [here](https://github.com/spoddutur/graph-knowledge-browser), where I’ve implemented a working sample application to `query spark real-time using SQL-like queries and visualise it as graph using d3`.
 
 ## 2. Same data, different representations:
 I've used ~4 million (100MB) countries profile information as knowledge base from [world bank open data](http://data.worldbank.org) in this project. Following table displays some sample rows:
