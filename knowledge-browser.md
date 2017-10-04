@@ -1,7 +1,9 @@
 # Knowledge Browser
 **Problem Statement:** Despite being the first class citizen in Spark, holding the key corporate asset i.e., data, Datasets are not getting enough attention it needs in terms of making them searchable.
+<hr/>
 
-In this blog we'll look at following items:
+### CoverPoints:
+In this blog, we'll look at following items:
 1. **How can we make datasets searchable** 
   - esp. without using any search engine
 2. **Same data, different representations**
