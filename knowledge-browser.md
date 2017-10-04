@@ -29,7 +29,7 @@ The very first attempt to structure the data was naturally the simplest of all  
 
 ![image](https://user-images.githubusercontent.com/22542670/31139612-b5093522-a88f-11e7-8b7d-65ad7e68c5f3.png)
 
-**Query by CountryId response time: 100ms**
+**Query by CountryId response time:** 100ms
 
 ### 2.2 RDF Triplets
 Next, I represented the data as ![RDF triplets](https://en.wikipedia.org/wiki/RDF_Schema). In this approach, we basically, take each row and convert it into triplets of ```Subject, Predicate and Object``` as shown in the table below:
@@ -40,19 +40,19 @@ Next, I represented the data as ![RDF triplets](https://en.wikipedia.org/wiki/RD
 
 **Schema:**
 
-![image](https://user-images.githubusercontent.com/22542670/31138377-dd382ef8-a88b-11e7-82bf-56d243e618c3.png)
+<img width="300" src="https://user-images.githubusercontent.com/22542670/31138377-dd382ef8-a88b-11e7-82bf-56d243e618c3.png>
 
-**Query by CountryId response time: 6501ms**
+**Query by CountryId response time:** 6501ms
 
 ### 2.3 RDF Triplets as LinkedData
 Next, I represented the same data as RDF triplets of linked data. The only difference between earlier approach and this one is that, the Subject here is linked to a unique id which inturn holds the actual info as shown below:
-<img width="500" src="https://user-images.githubusercontent.com/22542670/31138384-e7386940-a88b-11e7-91a1-e44fa2c4ee60.png">
+<img width="600" src="https://user-images.githubusercontent.com/22542670/31138384-e7386940-a88b-11e7-91a1-e44fa2c4ee60.png">
 
 **Schema:**
 
-![image](https://user-images.githubusercontent.com/22542670/31139686-ec1dfb1a-a88f-11e7-9895-a518f812cbbf.png)
+<img width="300" src="https://user-images.githubusercontent.com/22542670/31139686-ec1dfb1a-a88f-11e7-9895-a518f812cbbf.png>
 
-**Query by CountryId response time: 25014ms**
+**Query by CountryId response time:** 25014ms
 
 ### 2.4 Graph Frames
 The last attempt that I tried was to structure the data as graph with vertices, edges, and attributes. Below picture gives an idea of how country info looks like in this approach:
@@ -61,14 +61,11 @@ The last attempt that I tried was to structure the data as graph with vertices, 
 
 **Schema:**
 
-![image](https://user-images.githubusercontent.com/22542670/31139714-026644fe-a890-11e7-828a-acb7a5e2e0c2.png)
+<img width="300" src="https://user-images.githubusercontent.com/22542670/31139714-026644fe-a890-11e7-828a-acb7a5e2e0c2.png>
 
-
-**
-- Number of Vertices: 4278235
-- Number of Edges:15357957
-- Query by CountryId response time: 7637ms
-**
+- **Number of Vertices:** 4278235
+- **Number of Edges:** 15357957
+- **Query by CountryId response time:** 7637ms
 
 ## 3. Conclusion:
 I wrote this blog to help my self understand how to make datasets searchable and the impact of data schema on search response time. For this, I tried different ways to structure the data and evaluated its performance. I hope it helps you as much it helped me.
