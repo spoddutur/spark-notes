@@ -46,11 +46,12 @@ Next, I represented the data as ![RDF triplets](https://en.wikipedia.org/wiki/RD
 
 ### 2.3 RDF Triplets as LinkedData
 Next, I represented the same data as RDF triplets of linked data. The only difference between earlier approach and this one is that, the Subject here is linked to a unique id which inturn holds the actual info as shown below:
+
 <img width="600" src="https://user-images.githubusercontent.com/22542670/31138384-e7386940-a88b-11e7-91a1-e44fa2c4ee60.png">
 
 **Schema:**
 
-<img width="300" src="https://user-images.githubusercontent.com/22542670/31139686-ec1dfb1a-a88f-11e7-9895-a518f812cbbf.png>
+<img width="300" src="https://user-images.githubusercontent.com/22542670/31139686-ec1dfb1a-a88f-11e7-9895-a518f812cbbf.png">
 
 **Query by CountryId response time:** 25014ms
 
