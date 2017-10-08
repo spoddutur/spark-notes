@@ -13,7 +13,16 @@ In this blog, we'll look at following items:
 - Evaluate each of these approaches and see which is more appropriate way to structure the datasets when it comes to making them searchable.
 
 ## 1. How can we make datasets searchable
-Please refer to my git repository [here](https://github.com/spoddutur/graph-knowledge-browser), where I’ve implemented a working sample application to *query spark real-time using SQL-like queries and visualise it as graph using d3*.
+I’ve implemented a working sample application using worldbank open data that does the following:
+- A UI Dashboard built on top of Spark to browse knowledge (a.k.a data) 
+- Real-time query spark and visualise it as graph.
+- Supports SQL query syntax.
+- This is just a sample application to get an idea on how to go about building any kind of analytics dashboard on top of the data that Spark processed. One can customize it according to their needs.
+
+## Demo
+![out](https://user-images.githubusercontent.com/22542670/28935434-31a77148-78a2-11e7-97d6-3267f3cd2b16.gif)
+
+Please refer to my git repository [here](https://github.com/spoddutur/graph-knowledge-browser) for further details. 
 
 ## 2. Same data, different representations:
 I've used ~4 million (100MB) countries profile information as knowledge base from [world bank open data](http://data.worldbank.org) in this project. Following table displays some sample rows:
