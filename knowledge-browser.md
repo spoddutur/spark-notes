@@ -81,6 +81,7 @@ The last attempt that I tried was to structure the data as graph with vertices, 
 I wrote this blog to demonstrate:
 - **How to make datasets searchable** and
 - **The impact of data schema on search response time.** 
+
 For this, I tried different ways to structure the data and evaluated its performance. I hope it helps you and gives a better perspective in structuring your data for your Spark application.
 
 ### 3.1 Key takeouts:
