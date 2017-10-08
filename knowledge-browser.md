@@ -25,7 +25,7 @@ I’ve implemented a working sample application using worldbank open data that d
 Please refer to my git repository [here](https://github.com/spoddutur/graph-knowledge-browser) for further details. 
 
 ## 2. Same data, different representations:
-I've used ~4 million (100MB) countries profile information as knowledge base from [world bank open data](http://data.worldbank.org) in this project. Following table displays some sample rows:
+I've used ~4 million countries profile information as knowledge base from [world bank open data](http://data.worldbank.org) in this project. Following table displays some sample rows:
 <img width="873" alt="screen shot 2017-08-03 at 11 45 41 pm" src="https://user-images.githubusercontent.com/22542670/28936625-e4cf32e4-78a5-11e7-99f6-cdec6b93ce71.png">
 
 I tried different ways to structure this data and evaluated their performance using simple *```search by country id```* query.
@@ -41,7 +41,7 @@ The very first attempt to structure the data was naturally the simplest of all  
 **Query by CountryId response time:** 100ms
 
 ### 2.2 RDF Triplets
-Next, I represented the data as ![RDF triplets](https://en.wikipedia.org/wiki/RDF_Schema). In this approach, we basically, take each row and convert it into triplets of ```Subject, Predicate and Object``` as shown in the table below:
+Next, I represented the same data as ![RDF triplets](https://en.wikipedia.org/wiki/RDF_Schema). In this approach, we basically, take each row and convert it into triplets of ```Subject, Predicate and Object``` as shown in the table below:
 
 
 <img width="500" src="https://user-images.githubusercontent.com/22542670/31138372-d8b7ade0-a88b-11e7-9056-ef7612282ed3.png">
@@ -73,12 +73,15 @@ The last attempt that I tried was to structure the data as graph with vertices, 
 
 <img width="300" src="https://user-images.githubusercontent.com/22542670/31139714-026644fe-a890-11e7-828a-acb7a5e2e0c2.png">
 
-- **Number of Vertices:** 4278235
-- **Number of Edges:** 15357957
+- **Number of Vertices:** 4,278,235
+- **Number of Edges:** 15,357,957
 - **Query by CountryId response time:** 7637ms
 
 ## 3. Conclusion:
-I wrote this blog to help my self understand how to make datasets searchable and the impact of data schema on search response time. For this, I tried different ways to structure the data and evaluated its performance. I hope it helps you as much it helped me.
+I wrote this blog to demonstrate:
+- **How to make datasets searchable** and
+- **The impact of data schema on search response time.** 
+For this, I tried different ways to structure the data and evaluated its performance. I hope it helps you and gives a better perspective in structuring your data for your Spark application.
 
 ### 3.1 Key takeouts:
 - When the nature of your data is homogenous, capturing all the information of a record in a single row gives the best performance in terms of search time.
