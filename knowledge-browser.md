@@ -90,5 +90,4 @@ For this, I tried different ways to structure the data and evaluated its perform
 - GraphFrames is very intuitive for user to structure the data in many cases. Its response times are comparable to RDF triplets search and they also open up doors to exploit graph algorithms like triangle count, connected commonents, BFS etc
 
 ### 3.2 Note:
-The search query here, essentially filters the datasets and returns the results i.e., it is a filter() transformation applied on data. So, the observed response times per schema not only applies to search but it also applies to any transformations that we apply on spark data. This experiment definetely tells us how big is the impact of dataschema on the performance of your spark application. 
-I hope, this blog gives you a better perspective in structuring your data.
+The search query here, essentially filters the datasets and returns the results i.e., it is a filter() transformation applied on data. So, the observed response times per schema not only applies to search but it also applies to any transformations that we apply on spark data. **This experiment definetely tells us how big is the impact of dataschema on the performance of your spark application. Happy data structuring !!**
