@@ -38,7 +38,7 @@ I’ll not go deep into the details, but, lets see birds eye view of how Hadoop 
 
 ## 2. Cons of Map-Reduce as motivation for Spark
 
-One can say that Spark has taken 1:1 motivation from the downsides of MapReduce computation system. Let’s see the drawbacks of MapReduce computation engine and how Spark addressed them:
+One can say that Spark has taken direct motivation from the downsides of MapReduce computation system. Let’s see the drawbacks of MapReduce computation engine and how Spark addressed them:
 
 1. **Parallelism via processes:** 
     - *MapReduce:* MapReduce doesn’t run Map and Reduce jobs as threads. They are processes which are heavyweight compared to threads.
@@ -69,16 +69,16 @@ Executor JVM has generic slots where tasks run as threads. Also, all the data ne
 - **Driver:**
 When we start our spark application with spark submit command, a driver will start and that driver will contact spark master to launch executors and run the tasks. Basically, Driver is a representative of our application and does all the communication with Spark.
 - **Task:**
-Task is the smallest unit of execution which works on a partition of our data. Spark actually calls them cores. —executor-cores setting defines number of tasks that run within the Executor. For example, if we have set —executor-cores to six, then we have six can run simultaneous threads within the executor JVM.
+Task is the smallest unit of execution which works on a partition of our data. Spark actually calls them cores. —executor-cores setting defines number of tasks that run within the Executor. For example, if we have set —executor-cores to six, then we can run six simultaneous threads within the executor JVM.
 - **Resilience:**
 Worker JVM’s work is only to launch Executor JVM’s whenever Master tells them to do so. If Executor crashes, Worker will restart it. If Worker JVM crashes, Master will start it. Master will take care of driver JVM restart as well. But then, if a driver restarts, all the Ex’s will have to restart. 
 - **Flexible Distribution of CPU resources:**
-By CPU resources, We are referring to the tasks/threads running within an executor. Let’s assume that the second machine in the cluster has lot many more ram and cpu resources. Can we run more threads in this second machine? Yes! You can do that by tweaking spark-env.sh file and set SPARK_WORKER_CORES to 10 in the second machine. The same setting if set to 6 in other machines, then master will launch 10 threads/tasks in that second machine and 6 in the remaining one’s. But, you could still oversubscribe in general. SPARK_WORKER_CORES tells worker JVM as to how many cores/tasks it can give out to its underlying executor JVM’s.
+By CPU resources, We are referring to the tasks/threads running within an executor. Let’s assume that the second machine in the cluster has lot more ram and cpu resources. Can we run more threads in this second machine? Yes! You can do that by tweaking spark-env.sh file and set SPARK_WORKER_CORES to 10 in the second machine. The same setting if set to 6 in other machines, then master will launch 10 threads/tasks in that second machine and 6 in the remaining one’s. But, you could still oversubscribe in general. SPARK_WORKER_CORES tells worker JVM as to how many cores/tasks it can give out to its underlying executor JVM’s.
 
 ## 3. Conclusion: 
 We've seen:
 - The initial motivation behind Spark
-- Why it evolved successfully as a strong contnder to MapReduce
+- Why it evolved successfully as a strong contender to MapReduce
 - Why is Spark orders of magnitude faster than traditional Hadoop’s map-reduce system
 - An overview of Spark application running in cluster
 
