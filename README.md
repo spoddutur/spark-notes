@@ -1,4 +1,3 @@
-<meta name="og:image" content="https://spoddutur.github.io/spark-notes/avatar.png"/>
 Following are the blogs that I compiled from my learnings on Spark:
 - [Where does Spark fit in Hadoop ecosystem?](https://spoddutur.github.io/spark-notes/hadoop-map-reduce-vs-spark)
 - [How to Size Executors, Cores and Memory for a Spark application running in memory](https://spoddutur.github.io/spark-notes/distribution_of_executors_cores_and_memory_for_spark_application)
