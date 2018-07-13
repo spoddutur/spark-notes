@@ -1,8 +1,10 @@
 ### Did you ever thought of updating or re-broadcasting a broadcast variable?
 
 ## Why would we need this?
-You have a stream of objects that you would like to filter based on some reference data.
-This reference data will keep changing periodically
+- You have a stream of objects that you would like to filter based on some reference data.
+- This reference data will keep changing periodically.
+- One would typically think of broadcasting the reference data. But then, how to handle periodical updates to this? This is where perhaps the thought of having an updatable broadcast gets instilled in user's mind.
+
 Dealing with such streaming applications which need a way to weave (filter, lookup etc) the streaming data using a changing reference data (from DB, files etc) has become a relatively common use-case.
 
 ## Is it only a relatively-common use-case?
