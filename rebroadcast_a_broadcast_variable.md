@@ -106,7 +106,7 @@ partitionCorpusDf.groupBy($”key”)
 - Phrase mining workload is shared beautifully across all the executors.
 - Essentially, every time we receive a new batch of input data points, the reference data i.e., phrases gets updated only at one place i.e., driver node. Also, at the same time, the job of mining phrases is computed in a distributed way.
 
-### Some Apprehensions with this approach
+### FAQ
 1. **Why are we collecting reference-data at the driver?**
 	- One might have apprehensions on collecting the reference-data at the driver.
 	- But note that, in these usecases, the reference data being collected at driver is a small cache.
