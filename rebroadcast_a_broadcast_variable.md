@@ -107,10 +107,21 @@ partitionCorpusDf.groupBy($”key”)
 - Essentially, every time we receive a new batch of input data points, the reference data i.e., phrases gets updated only at one place i.e., driver node. Also, at the same time, the job of mining phrases is computed in a distributed way.
 
 ### Some Apprehensions with this approach
-- One might have apprehensions on collecting the reference-data at the driver.
-- But note that, in these usecases, the reference data being collected at driver is a small cache.
-- Also, every time we are collecting only a small set of new data to be added to this cache.
-- Just make sure that the driver machine has enough memory to hold the reference data. That's it!! 
+1. **Why are we collecting reference-data at the driver?**
+	- One might have apprehensions on collecting the reference-data at the driver.
+	- But note that, in these usecases, the reference data being collected at driver is a small cache.
+	- Also, every time we are collecting only a small set of new data to be added to this cache.
+	- Just make sure that the driver machine has enough memory to hold the reference data. That's it!! 
+
+2. **Why have globalCorpus in driver. Cant we maintain this using an in-memory alternatives like Redis?**
+	- Yes one use an in-memory cache for this purpose.
+	- But, be mindful that with spark distributed computing, every partition run by every executor will update its local count simultaneously. 
+	- So, if you want to take this route, then make sure up the additional responsibility of lock-based or synchronous updates to cache.
+	
+3. **Why not use Accumulators for globalCorpus?**
+	- Accumulators work fine for mutable distributed cache.
+	- But, Spark natively supports accumulators of numeric types.
+	- The onus is on programmers to add support for new types by subclassing [AccumulatorV2](https://spark.apache.org/docs/2.2.0/api/scala/index.html#org.apache.spark.util.AccumulatorV2) as shown [here](https://spark.apache.org/docs/2.2.0/rdd-programming-guide.html#accumulators).
 
 ### Key Takeouts
 Hopefully, this article gave you a perspective to:
