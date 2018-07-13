@@ -123,8 +123,22 @@ partitionCorpusDf.groupBy($”key”)
 	- But, Spark natively supports accumulators of numeric types.
 	- The onus is on programmers to add support for new types by subclassing [AccumulatorV2](https://spark.apache.org/docs/2.2.0/api/scala/index.html#org.apache.spark.util.AccumulatorV2) as shown [here](https://spark.apache.org/docs/2.2.0/rdd-programming-guide.html#accumulators).
 
+4. **Will the strategy to cache reference-data remain same for both spark-batch and spark-streaming job?**
+	- For batch job, the collect statement will happen only once at the driver because there's only one batch. So, we can maybe just write the collected corpus into a file directly instead of a global corpus.
+	```
+	partitionCorpusDf.groupBy($”key”)
+		.agg(sum($”value”))
+		.collect()
+		.foreach(x => {
+			// write x to file
+		})
+		```
+	- For a streaming job, the collect will happen once per every new incoming batch of data. So, there's a need to merge the batch-wise counts in the global corpus. Saving the globalCorpus can be done by a shutdown hook where we save it into some backend or file right before shutting down.
+
 ### Key Takeouts
 Hopefully, this article gave you a perspective to:
 - Not think about updating broadcast variable
 - Instead, think of collecting the changes to reference data at one place and compute it in a distributed fashion.
+
+Part2 will continue discussing about how to weave this reference-data with input stream..
 
