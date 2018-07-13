@@ -75,14 +75,14 @@ val partitionCorpusDf = sentencesDf.mapPartitions(**sentencesInthisPartitionIter
      
      // 2. iterate over each sentence in this partition
      while (sentencesInPartitionIter.hasNext) {
-	
+     
 	val sentence = sentencesInPartitionIter.next()
+     
+        // 3. mine phrases in this sentence 
+        val sentenceCorpus: HashMap[String, Int] = Phrases.learnVocab(sentence)
 
-	// 3. mine phrases in this sentence 
-	val sentenceCorpus: HashMap[String, Int] = Phrases.learnVocab(sentence)
-	
-	// 4. merge sentence corpus with partition corpus
-	sentenceCorpus.foreach(x => partitionCorpus.put(x._1, x._2))	
+        // 4. merge sentence corpus with partition corpus
+        sentenceCorpus.foreach(x => partitionCorpus.put(x._1, x._2))	
      }
 })
 
