@@ -61,14 +61,14 @@ Notice `phrasesBc.value.updateVocab()` code written above. This is trying to upd
 ### Code
 ```markdown
 val sentencesDf = spark.read
-   			      .format("text")
-			      .load(“/tmp/gensim-input”).as[String]
+   		       .format("text")
+		       .load(“/tmp/gensim-input”).as[String]
 
 // word and its term frequencies
 val globalCorpus = new HashMap[String, Int]()
 
 // learn local corpus per partition
-val partitionCorpusDf = sentencesDf.mapPartitions(**sentencesInthisPartitionIterator** => {
+val partitionCorpusDf = sentencesDf.mapPartitions(sentencesInthisPartitionIterator => {
       
      // 1. local partition corpus
      val partitionCorpus = new HashMap[String, Int]() 
@@ -88,7 +88,15 @@ val partitionCorpusDf = sentencesDf.mapPartitions(**sentencesInthisPartitionIter
 
 // 5. aggregate partition-wise corpus into one and collect it at the driver.
 // 6. finally, update global corpus with the collected info.
-partitionCorpusDf.groupBy($”key”).agg(sum($”value”)).collect().foreach(x => globalCorpus.put(x))
+partitionCorpusDf.groupBy($”key”)
+		.agg(sum($”value”))
+		.collect()
+		.foreach(x => {
+			// merge x with global corpus
+			val globalCount = globalCorpus.get(x.word)
+			val localCount = x.count
+			globalCorpus.put(x.word, globalCount+localCount)
+		})
 ```
 
 ### What did we achieve by this
