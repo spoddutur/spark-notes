@@ -93,9 +93,20 @@ partitionCorpusDf.groupBy($”key”).agg(sum($”value”)).collect().foreach(x
 
 ### What did we achieve by this
 - Driver machine is the only place where we maintain a cumulative corpus of phrases learnt
-- At the same time, this approach doesnt overload driver with periodic updates one per record.
+- At the same time, this approach doesnt overload driver with updates of one per record.
 - Driver copy will get updated only once per batch.
 - Phrase mining workload is shared beautifully across all the executors.
-- This way, every time we receive a new batch of input data points, the reference data i.e., phrases gets updated only at one place i.e., driver node and at the same time learning corpus is done in a distributed way.
+- Essentially, every time we receive a new batch of input data points, the reference data i.e., phrases gets updated only at one place i.e., driver node. Also, at the same time, the job of mining phrases is computed in a distributed way.
 
+### Appendix
+- One might have apprehensions on collecting the reference-data at the driver.
+- But note that, in these usecases, the reference data being collected at driver is a small cache.
+- Also, every time we are collecting only a small set of new data to be added to this cache.
+- Just make sure that the driver machine has enough memory to hold the reference data. That's it!! 
+
+### Key Takeouts
+Hopefully, this article gave you a perspective to:
+- Not think about updating broadcast variable
+- Instead, think of collecting the changes to reference data at one place and compute it in a distributed fashion.
+- 
 
