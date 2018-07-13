@@ -13,20 +13,20 @@ I believe that this is more than just being a relatively-common use-case in the 
   - Update cluster centroids with new centres.
   - Reassign new cluster ids to input data-points based on new cluster centroids.
 - **Example2:** Similarly, consider another example of phrase mining which aims at extracting quality phrases from a text corpus. A streaming application that is trying to do phrase-mining would want to have:
-- Cache of the `<mined phrases, their-term-frequency>` across the worker nodes.
-- Be able to update this cache as more phrases are mined.
+	- Cache of the `<mined-phrases, their-term-frequency>` across the worker nodes.
+	- Be able to update this cache as more phrases are mined.
 
 ## What is common in both these cases?
 The reference data, be it the cluster centroids or the phrases mined, in both the tasks would need to: 
 1. Broadcast it to have a local cached copy per executor and 
 2. Iteratively keep refining this broadcasted cache.
 
-#### For the cases discussed above, one would think that we want a way to broadcast our periodically updateng reference data.  But is it really needed? Let’s see alternative perspectives in which we can think to handle such cases.
+#### For the cases discussed above, one would think that we want a way to broadcast our periodically changing reference data.  But is it really needed? Let’s see alternative perspectives in which we can think to handle such cases.
 
 ## Why should we not think of workarounds to update broadcast variable?
-Before going further into alternative perspectives, please do note that the Broadcast object is not Serializable and needs to be final. So, stop thinking about or searching for a solution to update broadcast variable.
+Before going further into alternative perspectives, please do note that the Broadcast object is not Serializable and needs to be final. So, stop thinking about or searching for a solution to update it.
 
-## Demo time: Right perspective/approach ot handle it:
+## Demo time: Right perspective/approach to handle it:
 Now, hopefully, you are also in the same page as me to stop thinking of modifying a broadcast variable. Let's explore the right approach to handle such cases. Enough of talk. Let's see the code to demo the same.
 
 ### Demo:
@@ -34,13 +34,16 @@ Consider phrase mining streaming application. We want to cache mined-phrases and
 
 ### Common mistake:
 ```markdown
+    # init phrases corpus as broadcast variable
     val phrasesBc = spark.sparkContext.broadcast(phrases)
+    
+    # load input data as dataframe
     val sentencesDf = spark.read
    			      .format("text")
 			      .load("/tmp/gensim-input").as[String]
 
-    // foreach sentence, update vocal corpus.
-    sentencesDf.foreach(sentence => phrasesBc.value.addVocab(sentence))
+    # foreach sentence, mine phrases and update phrases vocabulary.
+    sentencesDf.foreach(sentence => phrasesBc.value.updateVocab(sentence))
 ```
 
 ### Above code will run fine in local, but not in cluster..
