@@ -41,18 +41,18 @@ Consider phrase mining streaming application. We want to cache mined-phrases and
     val sentencesDf = spark.read
    			      .format("text")
 			      .load("/tmp/gensim-input").as[String]
-
+			      
     # foreach sentence, mine phrases and update phrases vocabulary.
     sentencesDf.foreach(sentence => phrasesBc.value.updateVocab(sentence))
 ```
 
 ### Above code will run fine in local, but not in cluster..
-Notice `phrasesBc.value.addVocab()` code written above. This is trying to update broadcasted variable which will run fine in local run. But, in cluster, this doesn’t work because:
+Notice `phrasesBc.value.updateVocab()` code written above. This is trying to update broadcasted variable which will run fine in local run. But, in cluster, this doesn’t work because:
 - The `phrasesBc` broadcasted value is not a shared variable across the executors running in different nodes of the cluster.  
 - One has to be mindful of the fact that `phrasesBc` is indeed a local copy one in  each of the cluster’s worker nodes where executors are running. 
 - Therefore, changes done to `phrasesBc` by one executor will be local to it and are not visible to other executors.
 
-### One solution am proposing:
+### How to solve this without broadcast?:
 - Our streaming input data is split into multiple partitions and passed over to multiple executor nodes.
 - Mine `<phrase, phrase-count>` info as RDD's or Dataframes locally for each partitioned block (i.e., locally within that executor).
 - Combine the mined rdd phrases per partition using `aggregateByKey or combineByKey` to sum up the `phrase-count's`.
@@ -65,20 +65,30 @@ val sentencesDf = spark.read
 			      .load(“/tmp/gensim-input”).as[String]
 
 // word and its term frequencies
-val minedPhrases = new HashMap[String, Int]()
+val globalCorpus = new HashMap[String, Int]()
 
-sentencesDf.mapPartitions(sentencesInthisPartitionIterator => {
+// learn local corpus per partition
+val partitionCorpusDf = sentencesDf.mapPartitions(**sentencesInthisPartitionIterator** => {
       
-     // word and its count map
+     // 1. local partition corpus
      val partitionCorpus = new HashMap[String, Int]() 
-      while (sentencesInPartitionIter.hasNext) {
+     
+     // 2. iterate over each sentence in this partition
+     while (sentencesInPartitionIter.hasNext) {
+	
 	val sentence = sentencesInPartitionIter.next()
+
+	// 3. mine phrases in this sentence 
 	val sentenceCorpus: HashMap[String, Int] = Phrases.learnVocab(sentence)
 	
-	// merge sentence corpus with partition corpus
+	// 4. merge sentence corpus with partition corpus
 	sentenceCorpus.foreach(x => partitionCorpus.put(x._1, x._2))	
-       }
-}).groupBy($”key”).agg(sum($”value”)).collect().foreach(x => minedPhrases.put(x))
+     }
+})
+
+// 5. aggregate partition-wise corpus into one and collect it at the driver.
+// 6. finally, update global corpus with the collected info.
+partitionCorpusDf.groupBy($”key”).agg(sum($”value”)).collect().foreach(x => globalCorpus.put(x))
 ```
 
 ### What did we achieve by this
