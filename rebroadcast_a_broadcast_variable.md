@@ -98,7 +98,7 @@ partitionCorpusDf.groupBy($”key”).agg(sum($”value”)).collect().foreach(x
 - Phrase mining workload is shared beautifully across all the executors.
 - Essentially, every time we receive a new batch of input data points, the reference data i.e., phrases gets updated only at one place i.e., driver node. Also, at the same time, the job of mining phrases is computed in a distributed way.
 
-### Appendix
+### Some Apprehensions with this approach
 - One might have apprehensions on collecting the reference-data at the driver.
 - But note that, in these usecases, the reference data being collected at driver is a small cache.
 - Also, every time we are collecting only a small set of new data to be added to this cache.
@@ -108,5 +108,4 @@ partitionCorpusDf.groupBy($”key”).agg(sum($”value”)).collect().foreach(x
 Hopefully, this article gave you a perspective to:
 - Not think about updating broadcast variable
 - Instead, think of collecting the changes to reference data at one place and compute it in a distributed fashion.
-- 
 
