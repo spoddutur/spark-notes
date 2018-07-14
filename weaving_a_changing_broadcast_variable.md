@@ -1,11 +1,11 @@
 
 
-### Do you have a requirement to weave a periodically changing reference-data/cached-data with your streaming application?
+### How to weave a periodically changing cached-data with your streaming application?
 
 ## Naive thoughts to handle this:
 I've noticed people thinking of crazy ideas such as:
-- Move the reference data lookup into a forEachPartition or forEachRdd so that it resides entirely on the workers. However the reference data lives beind a REST API so I would also need to somehow store a timer / counter to stop the remote being accessed for every element in the stream.
 - Restart the Spark Context every time the refdata changes, with a new Broadcast Variable.
+- Host the refdata behind a REST api and look-it-up foreachRDD or forEachPartition.
 
 Before reading any further, Its importance to check with yourself if your requirement is:
 - Having a need to track and hold-on to the updates on reference-data (VS)
