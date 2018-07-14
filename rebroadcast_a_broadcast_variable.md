@@ -9,9 +9,9 @@ Dealing with such streaming applications which need a way to weave (filter, map 
 
 ## Is this requirement only a relatively-common use-case?
 I believe that this is more than just being a relatively-common use-case in the world of `Machine Learning` applications or `Active Learning` systems. Let me illustrate the situations which will help us understand this necessity:
-- **Example1:** Consider a task of training k-means model given a set of data-points. After each iteration, one would want to update two things:
-  - Update cluster centroids with new centres.
-  - Reassign new cluster ids to input data-points based on new cluster centroids.
+- **Example1:** Consider a task of training k-means model given a set of data-points. After each iteration, one would want to have:
+	- Cache cluster-centroids 
+	- Be able to update this cached centroids after each iteration
 - **Example2:** Similarly, consider another example of phrase mining which aims at extracting quality phrases from a text corpus. A streaming application that is trying to do phrase-mining would want to have:
 	- Cache of the `<mined-phrases, their-term-frequency>` across the worker nodes.
 	- Be able to update this cache as more phrases are mined.
@@ -20,8 +20,9 @@ I believe that this is more than just being a relatively-common use-case in the 
 The reference data, be it the cluster centroids or the phrases mined, in both the tasks would need to: 
 1. Broadcast it to have a local cached copy per executor and 
 2. Iteratively keep refining this broadcasted cache.
+3. Most importantly, the reference-data that we are learning/mining is very small.
 
-#### For the cases discussed above, one would think that we want a way to broadcast our periodically changing reference data.  But is it really needed? Let’s see alternative perspectives in which we can think to handle such cases.
+#### For the cases discussed above, one would think that we want a way to broadcast our periodically changing reference data.  But, given that such cases have very small sized reference data, is it really needed to have a local copy per executor? Let’s see alternative perspectives in which we can think to handle such cases.
 
 ## Why should we not think of workarounds to update broadcast variable?
 Before going further into alternative perspectives, please do note that the Broadcast object is not Serializable and needs to be final. So, stop thinking about or searching for a solution to update it.
@@ -114,9 +115,9 @@ partitionCorpusDf.groupBy($”key”)
 	- Just make sure that the driver machine has enough memory to hold the reference data. That's it!! 
 
 2. **Why have globalCorpus in driver. Cant we maintain this using an in-memory alternatives like Redis?**
-	- Yes one use an in-memory cache for this purpose.
-	- But, be mindful that with spark distributed computing, every partition run by every executor will update its local count simultaneously. 
-	- So, if you want to take this route, then make sure up the additional responsibility of lock-based or synchronous updates to cache.
+	- Yes! One use an in-memory cache for this purpose.
+	- But, be mindful that with spark distributed computing, every partition run by every executor will try to update its local count simultaneously. 
+	- So, if you want to take this route, then make sure to take up the additional responsibility of lock-based or synchronous updates to cache.
 	
 3. **Why not use Accumulators for globalCorpus?**
 	- Accumulators work fine for mutable distributed cache.
@@ -124,21 +125,20 @@ partitionCorpusDf.groupBy($”key”)
 	- The onus is on programmers to add support for new types by subclassing [AccumulatorV2](https://spark.apache.org/docs/2.2.0/api/scala/index.html#org.apache.spark.util.AccumulatorV2) as shown [here](https://spark.apache.org/docs/2.2.0/rdd-programming-guide.html#accumulators).
 
 4. **Will the strategy to cache reference-data remain same for both spark-batch and spark-streaming job?**
-	- For batch job, the collect statement will happen only once at the driver because there's only one batch. So, we can maybe just write the collected corpus into a file directly instead of a global corpus.
+	- For batch job, the collect statement will happen only once at the driver because there's only one batch. So, we can maybe just write the aggregated corpus into a file directly instead of collecting it as a global corpus as shown below:
 	```
 	partitionCorpusDf.groupBy($”key”)
 		.agg(sum($”value”))
-		.collect()
 		.foreach(x => {
 			// write x to file
 		})
 		```
-	- For a streaming job, the collect will happen once per every new incoming batch of data. So, there's a need to merge the batch-wise counts in the global corpus. Saving the globalCorpus can be done by a shutdown hook where we save it into some backend or file right before shutting down.
+	- For a streaming job, the collect will happen once per every new incoming batch of data. So, there's a need to merge the batch-wise counts in the global corpus. Saving the globalCorpus into S3 or some database using a shutdown hook right before our streaming application shuts down.
 
 ### Key Takeouts
 Hopefully, this article gave you a perspective to:
 - Not think about updating broadcast variable
-- Instead, think of collecting the changes to reference data at one place and compute it in a distributed fashion.
+- Instead, think of collecting changes to the reference data at one place i.e., at driver node and compute it in a distributed fashion.
 
-Part2 will continue discussing about how to weave this reference-data with input stream..
+You still have a requirement to use the update reference-data? Check out Part-2 where am going to demo ways to weave updated reference-data with input-stream..
 
