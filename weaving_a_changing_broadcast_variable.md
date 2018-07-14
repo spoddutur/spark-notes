@@ -59,7 +59,9 @@ def updateInput(inputRdd, broadcastedRefData): updatedRdd {
 ## Alternatives:
 One can also think of converting the Reference Data to an RDD, then join it with input streams using either join() or zip() in such a way that we now have streaming Pair<MyObject, RefData>. 
 
-References: 
+[My HomePage on ApacheSpark related blogs can be found here](https://spoddutur.github.io/spark-notes/)
+
+## References: 
 - [Spark's Torrent Broadcast](https://github.com/apache/spark/pull/2217)
 - [Spark ML-Lib streaming kmeans implementation using collect at driver approach](https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/clustering/StreamingKMeans.scala)
 - [Demo on weaving changing cluster centroids with input datapoints in kmeans](https://github.com/derrickburns/generalized-kmeans-clustering)
