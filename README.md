@@ -7,3 +7,5 @@ Following are the blogs that I compiled from my learnings on Spark:
 - [Spark as cloud-based SQL Engine for BigData via ThriftServer](https://spoddutur.github.io/spark-notes/spark-as-cloud-based-sql-engine-via-thrift-server)
 - [Building real-time interactive applications with Spark](https://spoddutur.github.io/spark-notes/build-real-time-interations-with-spark)
 - [Spark as Knowledge Browser and the impact of DataSchema on performance](https://spoddutur.github.io/spark-notes/knowledge-browser)
+- [Rebroadcasting a Broadcast Variable](https://spoddutur.github.io/spark-notes/rebroadcast_a_broadcast_variable)
+- [How to weave a periodically changing cached-data with your streaming application?](https://spoddutur.github.io/spark-notes/weaving_a_changing_broadcast_variable)
