@@ -24,7 +24,7 @@ Am proposing two approaches to handle this case in much more sensible manner com
 2. Per every batch, we can unpersist the broadcast variable, update it and then rebroadcast it to send the new reference data to the executors
 
 ## DEMO time:
-
+**How do we do this?**
 ```diff
 def withBroadcast[T: ClassTag, Q](refData: T)(f: Broadcast[T] => Q)(implicit sc: SparkContext): Q = {
     val broadcast = sc.broadcast(refData)
@@ -32,19 +32,7 @@ def withBroadcast[T: ClassTag, Q](refData: T)(f: Broadcast[T] => Q)(implicit sc:
     broadcast.unpersist()
     result
 }
-```
-Let's discuss what we did in the above code?
-- We created a helper function withBroadcast() that does:
-  - Takes in an refData of type `T`.
-  - Broadcast refData.
-  - Transforms input using `f: Broadcast[T] => Q)` and get the result `Q`.
-  - Once the transformation is done, we remove or unpersist the broadcasted refData
-  - Finally, return the result
-  - Essentially, as every new batch of input comes in, this helper function is transforming it using latest refData.
-  
-Let's see how to use it?
-```diff
-+ use withBroadcast() to broadcast refData inorder to transform input rdd
+
 val updatedRdd = withBroadcast(refData) { broadcastedRefData =>
   updateInput(inputRdd, broadcastedRefData))
 }
@@ -54,9 +42,11 @@ def updateInput(inputRdd, broadcastedRefData): updatedRdd {
    // access broadcasted refData to change input
   })
 }
+
 ```
 - Here, we wanted to transform inputRdd into updatedRdd but using periodically changing refData
 - For this, we declared an updateInput() def where inputRdd is transformed into updatedRdd using inputRdd.mapPartition(..)
 - Now, invoke withBroadcast() using updateInput() as f(), refData and inputRdd params.
 - That's it.. every new batch of inputRdd's in your streaming application will be transformed using the latest uptodate refData. This is because, we unpersist old refData as soon as the current batch of inputRdd is transformed.
 
+#### Essentially, as every new batch of input comes in, this helper function is transforming it using latest refData.
