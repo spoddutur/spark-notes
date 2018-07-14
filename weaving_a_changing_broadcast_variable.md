@@ -26,27 +26,21 @@ Am proposing two approaches to handle this case in much more sensible manner com
 ## DEMO time:
 
 ```diff
-def withBroadcast[T: ClassTag, Q](v: T)(f: Broadcast[T] => Q)(implicit sc: SparkContext): Q = {
-    - broadcast "v" 
-    val broadcast = sc.broadcast(v)
-
-    - apply f() and get result
+def withBroadcast[T: ClassTag, Q](refData: T)(f: Broadcast[T] => Q)(implicit sc: SparkContext): Q = {
+    val broadcast = sc.broadcast(refData)
     val result = f(broadcast)
-    
-    - unpersist broacasted "v"
     broadcast.unpersist()
-    
-    - return result
     result
 }
 ```
 Let's discuss what we did in the above code?
 - We created a helper function withBroadcast() that does:
-  - Takes in an refData of type `T`
-  - Broadcasts it
-  - applies transformation f() using broadcasted refData
-  - removes or unpersists the broadcasted data
-  - return the result of f()
+  - Takes in an refData of type `T`.
+  - Broadcast refData.
+  - Transforms input using `f: Broadcast[T] => Q)` and get the result `Q`.
+  - Once the transformation is done, we remove or unpersist the broadcasted refData
+  - Finally, return the result
+  - Essentially, as every new batch of input comes in, this helper function is transforming it using latest refData.
   
 Let's see how to use it?
 ```diff
