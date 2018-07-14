@@ -142,5 +142,4 @@ Hopefully, this article gave you a perspective to:
 
 You still have a requirement to use the changing reference-data with your input stream? THen, check out my blog on [Weaving a changing broadcast variable with input stream](https://spoddutur.github.io/spark-notes/weaving_a_changing_broadcast_variable) where am going to demo ways to do it..
 
-[My HomePage on ApacheSpark related blogs can be found here](https://spoddutur.github.io/spark-notes/)
-
+[My HomePage](https://spoddutur.github.io/spark-notes/)
