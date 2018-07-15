@@ -65,5 +65,6 @@ One can also think of converting the Reference Data to an RDD, then join it with
 - [Spark's Torrent Broadcast](https://github.com/apache/spark/pull/2217)
 - [Spark ML-Lib streaming kmeans implementation using collect at driver approach](https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/clustering/StreamingKMeans.scala)
 - [Demo on weaving changing cluster centroids with input datapoints in kmeans](https://github.com/derrickburns/generalized-kmeans-clustering)
+- [Spark thread on rebroadcating](http://apache-spark-user-list.1001560.n3.nabble.com/Broadcast-variables-can-be-rebroadcast-td22908.html)
 
     
