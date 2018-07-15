@@ -141,6 +141,6 @@ Hopefully, this article gave you a perspective to:
 - Not think about updating broadcast variable
 - Instead, think of collecting changes to the reference data at one place i.e., at driver node and compute it in a distributed fashion.
 
-You still have a requirement to use the changing reference-data with your input stream? THen, check out my blog on [Weaving a changing broadcast variable with input stream](https://spoddutur.github.io/spark-notes/weaving_a_changing_broadcast_variable) where am going to demo ways to do it..
+So far, we've seen how to keep track of changing reference-data. Now, Do you still have a requirement to use this changing reference-data with your input stream? Then, check out my blog on [Weaving a changing broadcast variable with input stream](https://spoddutur.github.io/spark-notes/weaving_a_changing_broadcast_variable) where am going to demo ways to do it..
 
 [My HomePage](https://spoddutur.github.io/spark-notes/)
