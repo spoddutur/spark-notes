@@ -81,9 +81,10 @@ val partitionCorpusDf = sentencesDf.mapPartitions(sentencesInthisPartitionIterat
      
         // 3. mine phrases in this sentence 
         val sentenceCorpus: HashMap[String, Int] = Phrases.learnVocab(sentence)
-
-        // 4. merge sentence corpus with partition corpus
-        sentenceCorpus.foreach(x => partitionCorpus.put(x._1, x._2))	
+	
+	// 4. merge sentence corpus with partition corpus
+	val partitionCount = partitionCorpus.getOrElse(x._1, 0)
+	sentenceCorpus.foreach(x => partitionCorpus.put(x._1, partitionCount + x._2))	
      }
 })
 
@@ -94,7 +95,7 @@ partitionCorpusDf.groupBy($”key”)
 		.collect()
 		.foreach(x => {
 			// merge x with global corpus
-			val globalCount = globalCorpus.get(x.word)
+			val globalCount = globalCorpus.getOrElse(x.word, 0)
 			val localCount = x.count
 			globalCorpus.put(x.word, globalCount+localCount)
 		})
