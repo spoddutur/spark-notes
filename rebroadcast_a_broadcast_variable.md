@@ -134,7 +134,7 @@ partitionCorpusDf.groupBy($”key”)
 			// write x to file
 		})
 	```
-	- Above code is writing the aggregated counts to file. But, note that this is writing aggregated counts per batch. So, if we receive the word `apache spark` once in batch1 and later once more in batch2, then this approach will write `<"apache spark", 1>` entry in the file twice. This approach is basically agnostic of the counts aggregated in earlier batches.
+	- Above code is writing the aggregated counts to file. But, note that this is writing aggregated counts per batch. So, if we receive the word `"apache spark"` once in batch1 and later once more in batch2, then this approach will write `<"apache spark", 1>` entry in the file twice. This approach is basically agnostic of the counts aggregated in earlier batches.
 	- So, there's a need to merge the batch-wise counts in the global corpus.
 	- Save the globalCorpus into a file or some database using a shutdown hook right before our streaming application shuts down.
 
