@@ -123,6 +123,8 @@ This is exactly same as what we did above. Use beeline from any machine but inst
 - Tested using Java JDBC approach as well
 - You can connect to Thrift using BI tools like [Tableau](https://www.tableau.com), [SQuirrel SQL Client](http://squirrel-sql.sourceforge.net) and enable interactive data visualizations.
 
+[My HomePage](https://spoddutur.github.io/spark-notes/)
+
 ### References
 - [How to run queries on spark sql using JDBC via Thrift Server](https://developer.ibm.com/hadoop/2016/08/22/how-to-run-queries-on-spark-sql-using-jdbc-via-thrift-server/)
 - [Apache Spark as a distributed sql engine](https://medium.com/@anicolaspp/apache-spark-as-a-distributed-sql-engine-4373e254e0f9) 
