@@ -82,6 +82,8 @@ We've seen:
 - Why is Spark orders of magnitude faster than traditional Hadoop’s map-reduce system
 - An overview of Spark application running in cluster
 
+[My HomePage](https://spoddutur.github.io/spark-notes/)
+
 ## 4. Appendix:
 ### 4.1 Corona - An attempt to make up for the downsides of MapReduce and improve CPU Utilization
 Facebook came up with Corona to address the CPU Utilization problem that MapReduce has. In their hadoop cluster, when Facebook was running 100’s of (MapReduce) MR jobs with lots of them already in the backlog waiting to be run because all the MR slots were full with currently running MR jobs, they noticed that their CPU utilisation was pretty low (~60%). It was weird because they thought that all the Map (M) & Reduce (R) slots were full and they had a whole lot of backlog waiting out there for a free slot. What they noticed was that in traditional MR, once a Map Job finishes, then TaskTracker has to let JobTracker know that there is an empty slot. JobTracker will then allot this empty slot to the next job. This handshake between TaskTracker & JobTracker is taking ~15-20secs before the next job takes up that freed up slot. This is because, heartbeat of JobTracker is 3secs. So, it checks with TaskTracker for free slots once in every 3secs and it is not necessary that the next job will be assigned in the very next heartbeat. So, FaceBook added Corona which is a more aggressive job scheduler added on top of JobTracker. MapReduce took 66secs to fill a slot while Corona took like 55 secs (~17%). Slots here are M or R process id’s. 
