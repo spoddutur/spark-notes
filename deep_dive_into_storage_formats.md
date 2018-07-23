@@ -237,6 +237,8 @@ As per our discussions so far, Spark 1.x used row-based storage format for Datas
 - Dataset Benefits: lesser serialisation/deserialisation, less GC, less object creation and possible In-place transformations for simpler cases.
 - Spark introduced support for columnar data using a new technique called Vectorization in spark 2.x to better leverage the advancements of Modern CPU’s and hardware like loop-unrolling, SIMD etc.
 
+[My HomePage](https://spoddutur.github.io/spark-notes/)
+
 ## References
 - [Spark Memory Management](https://www.youtube.com/watch?v=dPHrykZL8Cg)
 - [Deep Dive into Project Tungsten](https://www.youtube.com/watch?v=5ajs8EIPWGI)
