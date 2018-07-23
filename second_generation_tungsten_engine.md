@@ -194,12 +194,13 @@ Above example clearly illustrates how data availability is very critical to perf
 - **Conclusion:** Whole stage code generation has done decent job in combining the functionality of general-purpose execution engine. Vectorization is a good alternative for  the cases that are not handled by Whole-stage code-generation.
 - **Downside of Vectorization:** Like we discussed in VolcanoIteratorModel, all the Intermediate results will be written to main memory. Because of this extensive memory access, where ever possible, Spark does **WholeStageCodeGeneration first.**
 
+[My HomePage](https://spoddutur.github.io/spark-notes/)
+
 ## References: 
 - [Spark Summit 2016 Talk on SparkPerformance](https://www.youtube.com/watch?v=RlbBPrWJEEM)
 - [Vectorization](http://www.cac.cornell.edu/education/training/ParallelFall2012/Vectorization.pdf) 
 - [Databricks blog on Apache Spark as a Compiler: Joining a Billion Rows per Second on a Laptop](https://databricks.com/blog/2016/05/23/apache-spark-as-a-compiler-joining-a-billion-rows-per-second-on-a-laptop.html)
 - [Loop Pipelining & Loop Unrolling](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2015_2/sdsoc_doc/topics/calling-coding-guidelines/concept_pipelining_loop_unrolling.html)
-
 
 ## Appendix:
 This is additional content (optional) which complements and adds some more details on different Optimization techniques which follow this key idea to improve throughput:
