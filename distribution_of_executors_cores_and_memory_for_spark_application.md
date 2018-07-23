@@ -92,3 +92,5 @@ We've seen:
    3. Recommended approach - Right balance between Tiny _(Vs)_ Fat **coupled** with the recommendations.
 
 `--num-executors`, `--executor-cores` and `--executor-memory`.. these three params play a very important role in spark performance as they control the amount of CPU & memory your spark application gets. This makes it very crucial for users to understand the right way to configure them. Hope this blog helped you in getting that perspective...
+
+[My HomePage](https://spoddutur.github.io/spark-notes/)
