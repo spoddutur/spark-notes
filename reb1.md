@@ -7,7 +7,7 @@ How to _learn and eventually persist a periodically changing reference-data or g
 
 ### Solution:
 This blog takes you through the solution to above problem statement in the following order:
-1. **Demo:** The first section will demo a spark-native solution (along with common-mistake) to track of a changing reference-data without re-broadcasting.
+1. **Demo:** The first section will demo a spark-native solution (along with common-mistake) to track a changing reference-data without re-broadcasting.
 2. **Theory:** In the next section, I'll discuss the theory to understand the workings behind this spark-native solution better
 3. **FAQ**
 4. **Conclusion:** Lastly, I'll cover key take-outs of this solution.
