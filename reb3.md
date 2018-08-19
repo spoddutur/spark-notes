@@ -11,7 +11,7 @@ But, all these approaches seem more or less like compromised work-arounds given 
 - Any data loaded in spark is either an RDD or Broadcast Variable or Accumulator.
 - RDD and Broadcast variable are immutable.
 - Accumulator are mutable. However, Spark natively supports only numeric type accumulators.
-- So, any spark-native-solution attempting to hold mutable cache is more-or-less a workaround.
+- So, any spark-native-solution attempting to hold mutable cache in RDD or Broadcast form is more-or-less a workaround.
 
 ## ApacheIgnite - A non-spark-native solution:
 
