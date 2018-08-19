@@ -1,12 +1,15 @@
 # Caching a periodically changing reference-data in Spark
 
-#### Continuation from [part1](https://spoddutur.github.io/spark-notes/reb)
+#### Continuation from [part1](https://spoddutur.github.io/spark-notes/reb)...
 
-In this blog, I've discussed:
-1. **Demo:** Discuss a spark-native solution (along with common-mistake) to track of a changing reference-data without re-broadcasting
-2. **Theory:** Discuss the theory to undestand the workings behind this spark-native solution better
+### Problem Statement:
+How to track a periodically changing reference-data using a spark-native solution?
+
+In this blog, am going to discuss the solution to above problem statement like this:
+1. **Demo:** The first section will demo a spark-native solution (along with common-mistake) to track of a changing reference-data without re-broadcasting.
+2. **Theory:** In the next section, I'll discuss the theory to understand the workings behind this spark-native solution better
 3. **FAQ**
-4. **Conclusion:** Key TakeOuts of this approach
+4. **Conclusion:** Lastly, I'll cover key take-outs of this solution.
 
 ### 1. Demo:
 Consider phrase mining streaming application. We want to cache mined-phrases and keep refining it periodically. How do we do it at large scale?
