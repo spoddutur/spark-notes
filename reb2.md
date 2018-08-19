@@ -61,6 +61,8 @@ val updatedRdd = withBroadcast(refData) { broadcastedRefData =>
 - If the requirement is to use the changing refData with your inputStream, then we now know how to handle this case bearing stale data for a maximum duration of one batch-interval. We've seen how the latest refData changes will be pulled once per every new batch of input points flowing into the system..
 - Hopefully, this blog gave you a good insight into dealing with changing datapoints in your spark streaming pipeline.
 
+So far, we looked at spark-native solutions to address the issue. Now, let's widen the horizon and look outside spark [here](https://spoddutur.github.io/spark-notes/reb3)
+
 ## Alternatives:
 One can also think of converting the Reference Data to an RDD, then join it with input streams using either join() or zip() in such a way that we now have streaming Pair<MyObject, RefData>. 
 
