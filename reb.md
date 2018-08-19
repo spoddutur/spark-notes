@@ -27,6 +27,8 @@ The reference data, be it the cluster centroids or the phrases mined, in both th
 ## Why should we not think of workarounds to update broadcast variable?
 Before going further into alternative perspectives, please do note that the Broadcast object is not Serializable and needs to be final. So, stop thinking about or searching for a solution to update it.
 
+#### Now, hopefully, you are also in the same page as me to stop thinking of modifying a broadcast variable. Let’s explore the right approaches to handle such cases..
+
 ## Solutions:
 In this blog, am going to discuss how to handle following listed requirements:
 1. How to keep track of periodically changing ref-data as more and more data is seen.
