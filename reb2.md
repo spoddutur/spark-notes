@@ -18,7 +18,7 @@ Am proposing a spark-native solution to handle this case in much more sensible m
 1. **Core idea:** Short briefing of the solution
 2. **Demo:** Implementation of the solution
 3. **Theory:** Discuss the theory to understand the workings behind this spark-native solution better.
-4. **Conclusion:** Lastly, I’ll conclude with some key take-outs of the spark-native solutions discussed in [part1](https://spoddutur.github.io/spark-notes/reb1) and [part2](https://spoddutur.github.io/spark-notes/reb2).
+4. **Conclusion:** Lastly, I’ll conclude with some key take-outs of the spark-native solutions discussed in [part2](https://spoddutur.github.io/spark-notes/reb1) and [part3](https://spoddutur.github.io/spark-notes/reb2).
 
 ## 1. Core Idea:
 Per every batch, we can unpersist the broadcast variable, update input and then rebroadcast it to send the new reference data to the executors.
