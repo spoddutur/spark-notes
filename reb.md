@@ -34,10 +34,10 @@ In this blog, am going to discuss how to handle following listed requirements:
 1. How to keep track of periodically changing ref-data as more and more data is seen.
 2. How to keep track of periodically changing ref-data + weave it with our streaming application.
 
-I've categorized and discussed the solutions for the above listed requirements here: 
+I've discussed two completely contrasting solutions covering this spectrum as listed below: 
 ### 1. Spark-Native Solutions:
-Here, I'll demo how to handle the two problems at hand within Spark.
+I've discussed how to handle the two problems at hand within Spark [@Part1](https://spoddutur.github.io/spark-notes/reb1) and [@Part2](https://spoddutur.github.io/spark-notes/reb2)
 ### 2. Outside-Spark Solutions:
-Here, We'll make use of external services outside spark to achive the same.
+I've also discussed how to make use of external services outside spark to achive the same [@Part3](https://spoddutur.github.io/spark-notes/reb3)
 
 Hope this helps!!
