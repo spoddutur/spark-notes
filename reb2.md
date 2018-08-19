@@ -14,7 +14,7 @@ I've noticed people thinking of crazy ideas such as:
 - Host the refdata behind a REST api and look-it-up via `foreachRDD or forEachPartition`.
 
 ## Spark-Native Solution:
-Am proposing a spark-native solution to handle this case in much more sensible manner compared to the naive approaches mentioned above like this:
+I've proposed a spark-native solution to handle this case in much more sensible manner compared to the naive approaches mentioned above. Below TableOfContents walks you through the solution:
 1. **Core idea:** Short briefing of the solution
 2. **Demo:** Implementation of the solution
 3. **Theory:** Discuss the theory to understand the workings behind this spark-native solution better.
