@@ -15,10 +15,10 @@ I've noticed people thinking of crazy ideas such as:
 
 ## Spark-Native Solution:
 Am proposing a spark-native solution to handle this case in much more sensible manner compared to the naive approaches mentioned above like this:
-1. **Core idea:** One line briefing of the solution
+1. **Core idea:** Short briefing of the solution
 2. **Demo:** Implementation of the solution
-3. **Theory:** In the next section, I’ll discuss the theory to understand the workings behind this spark-native solution better
-4. **Conclusion:** Lastly, I’ll cover key take-outs of this solution.
+3. **Theory:** Discuss the theory to understand the workings behind this spark-native solution better.
+4. **Conclusion:** Lastly, I’ll conclude with some key take-outs of the spark-native solutions discussed in [part1](https://spoddutur.github.io/spark-notes/reb1) and [part2](https://spoddutur.github.io/spark-notes/reb2).
 
 ## 1. Core Idea:
 Per every batch, we can unpersist the broadcast variable, update input and then rebroadcast it to send the new reference data to the executors.
