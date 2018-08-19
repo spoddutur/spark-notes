@@ -21,7 +21,7 @@ I've proposed a spark-native solution to handle this case in much more sensible 
 4. **Conclusion:** Lastly, I’ll conclude with some key take-outs of the spark-native solutions discussed in [part2](https://spoddutur.github.io/spark-notes/reb1) and [part3](https://spoddutur.github.io/spark-notes/reb2).
 
 ## 1. Core Idea:
-Per every batch, we can unpersist the broadcast variable, update input and then rebroadcast it to send the new reference data to the executors.
+Per every batch, we can broadcast the cached-data, update our input using the latest cached-data and then unpersist/remove  the broadcasted cache.
 
 ## Demo:
 **How do we do this?**
