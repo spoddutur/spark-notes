@@ -3,7 +3,7 @@
 #### Continuation from [part1](https://spoddutur.github.io/spark-notes/reb)...
 
 ### Problem Statement:
-How to track a periodically changing reference-data using a spark-native solution?
+How to _learn and eventually persist a periodically changing reference-data or global-dictionary that keeps on evolving_ as we see more and more data like in active learning systems using a _spark-native solution_? 
 
 In this blog, am going to discuss the solution to above problem statement like this:
 1. **Demo:** The first section will demo a spark-native solution (along with common-mistake) to track of a changing reference-data without re-broadcasting.
