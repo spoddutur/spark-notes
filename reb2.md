@@ -12,13 +12,20 @@ I've noticed people thinking of crazy ideas such as:
 - Host the refdata behind a REST api and look-it-up via `foreachRDD or forEachPartition`.
 
 ## Spark-Native Solution:
-Am proposing a spark-native solution to handle this case in much more sensible manner compared to the naive approaches mentioned above.
+Am proposing a spark-native solution to handle this case in much more sensible manner compared to the naive approaches mentioned above like this:
+1. **Core idea:** One line briefing of the solution
+2. **Demo:** Implementation of the solution
+3. **Theory:** In the next section, I’ll discuss the theory to understand the workings behind this spark-native solution better
+4. **Conclusion:** Lastly, I’ll cover key take-outs of this solution.
 
-## DEMO time: Solution1
+## 1. Core Idea:
 Per every batch, we can unpersist the broadcast variable, update input and then rebroadcast it to send the new reference data to the executors.
 
+## Demo:
 **How do we do this?**
 ```diff
+
+// Generic function that broadcasts refData, invokes `f()` and unpersists refData.
 def withBroadcast[T: ClassTag, Q](refData: T)(f: Broadcast[T] => Q)(implicit sc: SparkContext): Q = {
     val broadcast = sc.broadcast(refData)
     val result = f(broadcast)
@@ -26,15 +33,18 @@ def withBroadcast[T: ClassTag, Q](refData: T)(f: Broadcast[T] => Q)(implicit sc:
     result
 }
 
-val updatedRdd = withBroadcast(refData) { broadcastedRefData =>
-  updateInput(inputRdd, broadcastedRefData))
-}
-
+// transforming inputRdd using refData
 def updateInput(inputRdd, broadcastedRefData): updatedRdd {
   inputRdd.mapPartition(input => {
    // access broadcasted refData to change input
   })
 }
+
+// invoking `updateInput()` using withBroadcast()
+val updatedRdd = withBroadcast(refData) { broadcastedRefData =>
+  updateInput(inputRdd, broadcastedRefData))
+}
+
 ```
 - Here, we wanted to transform `inputRdd` into `updatedRdd` but using periodically changing `refData`.
 - For this, we declared an `updateInput() def where inputRdd is transformed into updatedRdd using inputRdd.mapPartition(..)`
