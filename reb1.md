@@ -6,7 +6,7 @@
 How to _learn and eventually persist a periodically changing reference-data or global-dictionary that keeps on evolving_ as we see more and more data like in active learning systems using a _spark-native solution_? 
 
 ### Solution:
-In this blog, am going to discuss the solution to above problem statement like this:
+This blog takes you through the solution to above problem statement in the following order:
 1. **Demo:** The first section will demo a spark-native solution (along with common-mistake) to track of a changing reference-data without re-broadcasting.
 2. **Theory:** In the next section, I'll discuss the theory to understand the workings behind this spark-native solution better
 3. **FAQ**
