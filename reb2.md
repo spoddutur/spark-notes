@@ -1,4 +1,6 @@
 
+#### Continuation from (part2)[https://spoddutur.github.io/spark-notes/reb1]...
+
 # Weaving a periodically changing cached-data with your streaming application...
 
 ### Problem Statement
