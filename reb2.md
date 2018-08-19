@@ -4,7 +4,7 @@
 # Weaving a periodically changing cached-data with your streaming application...
 
 ### Problem Statement
-How to track a periodical changing cached-data and weave it (i.e., apply filter, map transformations) with the input of your streaming application?
+In [part2](https://spoddutur.github.io/spark-notes/reb1), We saw how to keep-track of periodically changing cached-data. Now, we not only want to track it but also weave it (i.e., apply filter, map transformations) with the input of your streaming application?
 
 #### Nomenclature: I've coined cached-data alternatively as refdata or reference-data in this blog.
 
