@@ -79,7 +79,7 @@ igniteWordsRDD.groupBy(“phrase”).agg(sum($”count”))
 - **No data collection is happening at the driver.**
 This could potentially impose the amount of data one can cache i.e., ideally, `collect()` on big datasets is not recommended.
 
-- **Real-time active cached RDD is now available for any down-stream dependent applications**
+- **Real-time latest cached RDD is now available for any down-stream dependent applications**
 	- Another big perk with ignite solution is that, as our phrase mining application is learning new phrases and saving them in ignite real-time, any other down stream applications that needs this phrases vocabulary can get the latest cached vocab seamlessly
 	- Just register igniteContext and load the cache. That's it!!
 
