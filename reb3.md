@@ -79,9 +79,18 @@ igniteWordsRDD.groupBy(“phrase”).agg(sum($”count”))
 - **No data collection is happening at the driver.**
 This could potentially impose the amount of data one can cache i.e., ideally, `collect()` on big datasets is not recommended.
 
-- **Real-time latest cached RDD is now available for any down-stream dependent applications**
+- **Cross-Application sharing of the cache in real-time*
 	- Another big perk with ignite solution is that, as our phrase mining application is learning new phrases and saving them in ignite real-time, any other down stream applications that needs this phrases vocabulary can get the latest cached vocab seamlessly
 	- Just register igniteContext and load the cache. That's it!!
+
+Key Takeouts:
+1. Now, hopefully, you would agree with me and stop thinking of modifying a broadcast variable.
+2. Categorize your need to broadcast into 
+	1. Only collecting cache data as we see more and more batches
+	2. Collect cache data nd also use the latest cached data within our application.
+3. We saw how to solve solutions to both the above scenarios without relying any external service.
+4. Spark-native appraoches are simple for cases where cache-size is small or its some quick POC todo
+5. Else, as we have seen in this article, using an external service like ApacheIgnite eases user off quite some payload and brings on table some other benefits like seamless weaving with RDD's and cross-application cache sharing
 
 ## References
 - https://github.com/apache/ignite/blob/master/examples/src/main/java/org/apache/ignite/examples/datagrid/CacheQueryExample.java
