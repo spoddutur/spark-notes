@@ -9,22 +9,6 @@ Following are the consolidated steps that helped me in successfully installing s
 ```markdown
 source activate jupyter
 ```
-3. Installation part:
-```markdown
- conda install -c conda-forge nb_conda
- $ git clone https://github.com/alexarchambault/jupyter-scala.git
- $ cd jupyter-scala
- $ sbt publishLocal
-./jupyter-scala --id scala-develop --name "Scala (develop)" --force
-=====================================
-output: Run jupyter console with this kernel with
-  jupyter console --kernel scala-develop
-
-Use this kernel from Jupyter notebook, running
-  jupyter notebook
-and selecting the "Scala (develop)" kernel.
-=====================================
-```
 4. Let's verify installation. For this, list kernels and we should see the following three: 
 ```markdown
 jupyter kernelspec list
@@ -32,6 +16,7 @@ scala-develop    /Users/surthi/Library/Jupyter/kernels/scala-develop
 python3          /Users/surthi/miniconda3/envs/jupyter/share/jupyter/kernels/python3
 python2          /usr/local/share/jupyter/kernels/python2
 ```
+
 5. That's it!! Open Jupyter and create spark session. I've used spark 2.1.0 below.
 
 ```markdown
