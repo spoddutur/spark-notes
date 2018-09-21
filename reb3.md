@@ -74,11 +74,9 @@ igniteWordsRDD.groupBy(“phrase”).agg(sum($”count”))
 
 - **No collecting at the driver.**
 
-- **Real-time active-learning based upto-date cache is available as its actively learning more and more vocab
-**Another big perk with ignite solution is that as our phrase mining application is learning new phrases and saving them in ignite real-time.
-- So, any other down stream applications that needs this phrases vocabulary can get the latest cached vocab seamlessly**
-- Any dependent 
-- 
+- **Real-time active cached RDD is now available for any down-stream dependent applications**
+	- Another big perk with ignite solution is that, as our phrase mining application is learning new phrases and saving them in ignite real-time, any other down stream applications that needs this phrases vocabulary can get the latest cached vocab seamlessly
+	- Just register igniteContext and load the cache. That's it!!
 
 ## References
 - https://github.com/apache/ignite/blob/master/examples/src/main/java/org/apache/ignite/examples/datagrid/CacheQueryExample.java
