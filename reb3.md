@@ -37,7 +37,7 @@ Ignite Streamers are streaming components, that ingest data in the fastest way p
 
 ## Demo: 
 Here, I'll demo how to mine phrases in a spark streaming application and keep track of changing cache in ignite.
-Note that, we saw solution for the same in part2 where we have not used any external service.
+Note that, we saw solution for the same in part2 without using any external service.
 
 ```markdown
 val sentencesDf = spark.read
@@ -58,10 +58,14 @@ igniteWordsRDD.groupBy(“phrase”).agg(sum($”count”))
 
 ## Conclusion: Analysis and Advantages:
 - **Still thinking as to how above solution is easing user off any burden compared to spark-native solutions?**
-  - In Spark native solution to keep track of mined phrases, we maintained a global cache at driver and collected the new mined phrases after every batch in this global cache.
-  - Its all happening so seamlessly here in 2 steps:
-      1. Save new phrases learnt per batch in ignite using `saveValues()`. It basically saves values from given RDD into Ignite and a unique key will be generated for each value of the given RDD.
-      2. Aggregating phrase counts within ignite. That's it!!
+  - In Spark native solution to keep track of mined phrases:
+  	1. We maintained a global cache at driver
+	2. We also maintained a per partition cache and collected the new mined phrases per partition in every batch here
+	3. Merge partition cache's into our global cache at driver.
+  - Its all happening so seamlessly here in 2 steps - `igniteRDD.saveValue() and igniteRDD.groupBy("phrase").agg(..)`:
+      - The first step is to save new phrases learnt per batch in ignite using `saveValues()`.
+      - It basically saves values from given RDD into Ignite and generates a unique key for each value of the given RDD.
+      - The second step is to aggregating phrase counts within ignite. That's it!!
   
 - **Weaving has also become easy**
   - Because our ignite cache is an RDD, to weave the phrases vocab with our input rdd's is so much easier. It feels like home for spark where-in it boiled down to rdd-to-rdd weaving!!! 
@@ -72,7 +76,7 @@ igniteWordsRDD.groupBy(“phrase”).agg(sum($”count”))
   - IgniteRDD maintains index. Hence, any query here will be done much faster!!!
   - Moreover, imagine if we load data bigger than our memory, it'll naturally spill to disk. Consequently, any queries on such big SparkRDD's will constantly have to do **data-spill-to-and-from-memory-and-disk inorder to scan the entire RDD**.
 
-- **No collecting at the driver.**
+- **No data collection is happening at the driver.**
 
 - **Real-time active cached RDD is now available for any down-stream dependent applications**
 	- Another big perk with ignite solution is that, as our phrase mining application is learning new phrases and saving them in ignite real-time, any other down stream applications that needs this phrases vocabulary can get the latest cached vocab seamlessly
