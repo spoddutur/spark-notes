@@ -7,11 +7,11 @@ We’ve discussed in [part-2](https://spoddutur.github.io/spark-notes/reb1) and 
 1. Hold the cache as globalCorpus at the driver which gets updated once per batch aggregating the localCorpus learnt from the current batch received.
 2. Hold this cache as broadcast variable and Re-broadcast it periodically as it keeps changing.
 
-But, all these approaches seem more or less like compromised work-arounds given the fact that RDD’s in spark are immutable. Let me elaborate more on this:
+But, both these approaches seem more or less like compromised work-arounds given the fact that RDD’s in spark are immutable. Let me elaborate more on this:
 - Any data loaded in spark is either an RDD or Broadcast Variable or Accumulator.
 - RDD and Broadcast variable are immutable.
-- Accumulator are mutable. However, Spark natively supports only numeric type accumulators.
 - So, any spark-native-solution attempting to hold mutable cache in RDD or Broadcast form is more-or-less a workaround.
+- Accumulators are mutable. However, Spark natively supports only numeric type accumulators.
 
 ## ApacheIgnite - A non-spark-native solution:
 
@@ -35,9 +35,50 @@ Ignite data can be exposed as mutable [IgniteRDD](https://github.com/apache/igni
 **How does Updates/Ingestion happen to IgniteRDD:**
 Ignite Streamers are streaming components, that ingest data in the fastest way possible into apache ignite. Hence, any streaming real-time cache-data updates/inserts happens fast.
 
-## Demo: TODO
+## Demo: 
+Here, I'll demo how to mine phrases in a spark streaming application and keep track of changing cache in ignite.
+Note that, we saw solution for the same in part2 where we have not used any external service.
 
-## Conclusion: TODO
+```markdown
+val sentencesDf = spark.read
+   		       .format("text")
+		       .load(“/tmp/gensim-input”).as[String]
+
+val igniteWordsRDD = new IgniteContext[String, Int](sc, () => new IgniteConfiguration()).fromCache(“igniteWordsRDD")
+
+// learn phrases from input
+val phrasesRdd = sentencesDf.flatMap(sentence => Phrases.learnVocab(sentence))
+
+// saving the phrase counts to ignite cache
+igniteWordsRDD.saveValues(phrasesRdd)
+
+// transform values in ignite cache - merge old phraseRecords and new phraseRecords
+igniteWordsRDD.groupBy(“phrase”).agg(sum($”count”))
+```
+
+## Conclusion: Analysis and Advantages:
+- **Still thinking as to how above solution is easing user off any burden compared to spark-native solutions?**
+  - In Spark native solution to keep track of mined phrases, we maintained a global cache at driver and collected the new mined phrases after every batch in this global cache.
+  - Its all happening so seamlessly here in 2 steps:
+      1. Save new phrases learnt per batch in ignite using `saveValues()`. It basically saves values from given RDD into Ignite and a unique key will be generated for each value of the given RDD.
+      2. Aggregating phrase counts within ignite. That's it!!
+  
+- **Weaving has also become easy**
+  - Because our ignite cache is an RDD, to weave the phrases vocab with our input rdd's is so much easier. It feels like home for spark where-in it boiled down to rdd-to-rdd weaving!!! 
+
+- **Better performant scans than spark**
+  - Any query on igniteRdd's will be faster than spark scans.
+  - SparkRDD is not indexed. Consequently, any queries on it will scan the entire data. 
+  - IgniteRDD maintains index. Hence, any query here will be done much faster!!!
+  - Moreover, imagine if we load data bigger than our memory, it'll naturally spill to disk. Consequently, any queries on such big SparkRDD's will constantly have to do **data-spill-to-and-from-memory-and-disk inorder to scan the entire RDD**.
+
+- **No collecting at the driver.**
+
+- **Real-time active-learning based upto-date cache is available as its actively learning more and more vocab
+**Another big perk with ignite solution is that as our phrase mining application is learning new phrases and saving them in ignite real-time.
+- So, any other down stream applications that needs this phrases vocabulary can get the latest cached vocab seamlessly**
+- Any dependent 
+- 
 
 ## References
 - https://github.com/apache/ignite/blob/master/examples/src/main/java/org/apache/ignite/examples/datagrid/CacheQueryExample.java
