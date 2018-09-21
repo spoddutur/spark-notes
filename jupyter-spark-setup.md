@@ -2,17 +2,19 @@
 
 Following are the consolidated steps that helped me in successfully installing spark with jupyter:
 1. Create venv named `jupyter` using conda (I always maintain separate virtual env's for every different setup):
-`~/miniconda3/bin/conda create --name jupyter python=3.4`
+```markdown
+~/miniconda3/bin/conda create --name jupyter python=3.4
+```
 2. Activate that environment and start installing our stuff there
 ```markdown
 source activate jupyter
 ```
 3. Installation part:
 ```markdown
-conda install -c conda-forge nb_conda
+ conda install -c conda-forge nb_conda
  $ git clone https://github.com/alexarchambault/jupyter-scala.git
-$ cd jupyter-scala
-sbt publishLocal
+ $ cd jupyter-scala
+ $ sbt publishLocal
 ./jupyter-scala --id scala-develop --name "Scala (develop)" --force
 =====================================
 output: Run jupyter console with this kernel with
