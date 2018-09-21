@@ -88,9 +88,10 @@ Key Takeouts:
 2. Categorize your need to broadcast into 
 	1. Only collecting cache data as we see more and more batches
 	2. Collect cache data nd also use the latest cached data within our application.
-3. We saw how to solve solutions to both the above scenarios without relying any external service.
-4. Spark-native appraoches are simple for cases where cache-size is small or its some quick POC todo
-5. Else, as we have seen in this article, using an external service like ApacheIgnite eases user off quite some payload and brings on table some other benefits like seamless weaving with RDD's and cross-application cache sharing
+3. We saw how to solve solutions to both the above scenarios without relying any external service. It does computation in a distributed fashion and collects changes at one place i.e., driver.
+4. Spark-native approaches are simple for cases where cache-size is small or its some quick POC todo
+5. Else, as we have seen in this article, using an external service like ApacheIgnite eases user off quite some payload and brings on table some other benefits like seamless weaving with RDD's and cross-application cache sharing.
+6. With Ignite, we saw how both computation and storage is happening in a distributed fashion.
 
 ## References
 - https://github.com/apache/ignite/blob/master/examples/src/main/java/org/apache/ignite/examples/datagrid/CacheQueryExample.java
