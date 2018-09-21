@@ -4,7 +4,7 @@
 # Weaving a periodically changing cached-data with your streaming application...
 
 ### Problem Statement
-In [part2](https://spoddutur.github.io/spark-notes/reb1), We saw how to keep-track of periodically changing cached-data. Now, we not only want to track it but also weave it (i.e., apply filter, map transformations) with the input of your streaming application?
+In [part2](https://spoddutur.github.io/spark-notes/reb1), We saw how to keep-track of periodically changing cached-data. Now, we not only want to track it but also weave it (i.e., apply filter, map transformations) with our input dataframes or rdd's of our streaming application?
 
 #### Nomenclature: I've coined cached-data alternatively as refdata or reference-data in this blog.
 
@@ -21,7 +21,11 @@ I've proposed a spark-native solution to handle this case in much more sensible 
 4. **Conclusion:** Lastly, I’ll conclude with some key take-outs of the spark-native solutions discussed in [part2](https://spoddutur.github.io/spark-notes/reb1) and [part3](https://spoddutur.github.io/spark-notes/reb2).
 
 ## 1. Core Idea:
-Per every batch, we can broadcast the cached-data, update our input using the latest cached-data and then unpersist/remove  the broadcasted cache.
+Per every batch:
+a. We can broadcast the cached-data with any latest changes to it
+b. Update our input using this broadcasted (latest) cached-data and 
+c. Lastly unpersist/remove the broadcasted cache (not the cached data - but the braodcasted cache).
+Repeat steps a through c per every batch
 
 ## Demo:
 **How do we do this?**
@@ -56,8 +60,9 @@ val updatedRdd = withBroadcast(refData) { broadcastedRefData =>
 #### Essentially, as every new batch of input comes in, this helper function is transforming it using latest refData.
 
 ## Conclusion:
+Some key takeouts of part1 and part2 solutions which are primarily spark-native (i.e., not using any external service):
 -  Broadcast object is not Serializable and needs to be final. So, stop thinking about or searching for a solution to update it.
-- So, Instead of thinking about updating a broadcasted refData, think of collecting changes to the reference data at one place i.e., at driver node and compute it in a distributed fashion.
+- So, **instead of thinking about updating a broadcasted refData, think of collecting changes to the reference data at one place i.e., at driver node and compute it in a distributed fashion.**
 - If the requirement is to use the changing refData with your inputStream, then we now know how to handle this case bearing stale data for a maximum duration of one batch-interval. We've seen how the latest refData changes will be pulled once per every new batch of input points flowing into the system..
 - Hopefully, this blog gave you a good insight into dealing with changing datapoints in your spark streaming pipeline.
 
