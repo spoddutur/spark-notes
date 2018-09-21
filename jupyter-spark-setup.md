@@ -17,6 +17,7 @@ source activate jupyter
  git clone https://github.com/alexarchambault/jupyter-scala.git
  cd jupyter-scala
  sbt publishLocal
+ ./jupyter-scala --id scala-develop --name "Scala (develop)" --force
 ```
 
 4. Let's verify installation. For this, list kernels and we should see the following three: 
