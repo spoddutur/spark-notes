@@ -77,6 +77,7 @@ igniteWordsRDD.groupBy(“phrase”).agg(sum($”count”))
   - Moreover, imagine if we load data bigger than our memory, it'll naturally spill to disk. Consequently, any queries on such big SparkRDD's will constantly have to do **data-spill-to-and-from-memory-and-disk inorder to scan the entire RDD**.
 
 - **No data collection is happening at the driver.**
+This could potentially impose the amount of data one can cache i.e., ideally, `collect()` on big datasets is not recommended.
 
 - **Real-time active cached RDD is now available for any down-stream dependent applications**
 	- Another big perk with ignite solution is that, as our phrase mining application is learning new phrases and saving them in ignite real-time, any other down stream applications that needs this phrases vocabulary can get the latest cached vocab seamlessly
