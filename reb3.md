@@ -97,3 +97,5 @@ Key Takeouts:
 - https://github.com/apache/ignite/blob/master/examples/src/main/java/org/apache/ignite/examples/datagrid/CacheQueryExample.java
 - https://ignite.apache.org/features/datagrid.html
 - https://ignite.apache.org/use-cases/caching/database-caching.html
+- https://github.com/apache/ignite/blob/master/modules/spark/src/main/scala/org/apache/ignite/spark/IgniteRDD.scala
+https://github.com/apache/ignite/blob/b461cb47882861356ede58775bd9e253dcf26202/examples/src/main/scala/org/apache/ignite/scalar/examples/spark/ScalarSharedRDDExample.scala
