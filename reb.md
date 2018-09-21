@@ -36,8 +36,11 @@ In this blog, am going to discuss how to handle following listed requirements:
 
 I've discussed two completely contrasting solutions covering this spectrum as listed below: 
 ### 1. Spark-Native Solutions:
-I've discussed how to handle the two problems at hand within Spark [@Part1 - Caching a periodically changing reference-data in Spark](https://spoddutur.github.io/spark-notes/reb1) and [@Part2 - Weaving a periodically changing cached-data with your streaming application](https://spoddutur.github.io/spark-notes/reb2)
+I've discussed how to handle the two problems at hand within Spark:
+- [@Part1 - Caching a periodically changing reference-data in Spark](https://spoddutur.github.io/spark-notes/reb1) and 
+- [@Part2 - Weaving a periodically changing cached-data with your streaming application](https://spoddutur.github.io/spark-notes/reb2)
 ### 2. Outside-Spark Solutions:
-I've also discussed how to make use of external services outside spark to achive the same [@Part3 - Apache Ignite to hold data that needs rebroadcasting](https://spoddutur.github.io/spark-notes/reb3)
+I've also discussed how to make use of external services outside spark to achieve the same 
+- [@Part3 - Apache Ignite to hold data that needs rebroadcasting](https://spoddutur.github.io/spark-notes/reb3)
 
 Hope this helps!!
