@@ -18,16 +18,18 @@ source activate jupyter
  cd jupyter-scala
  sbt publishLocal
  ./jupyter-scala --id scala-develop --name "Scala (develop)" --force
-= = = = = = = = = = = = = = = = = = = = = = = = = = = =
+ ```
+
+4. Installation is over. You should see an output that looks something like this after running the last command:
+```markdown
  output: Run jupyter console with this kernel with
  jupyter console --kernel scala-develop
  Use this kernel from Jupyter notebook, running
    jupyter notebook
 and selecting the "Scala (develop)" kernel.
-= = = = = = = = = = = = = = = = = = = = = = = = = = = =
 ```
 
-4. Let's verify installation. For this, list kernels and we should see the following three: 
+5. Let's verify installation. For this, list kernels and we should see the following three: 
 ```markdown
 jupyter kernelspec list
 scala-develop    /Users/surthi/Library/Jupyter/kernels/scala-develop
@@ -35,7 +37,7 @@ python3          /Users/surthi/miniconda3/envs/jupyter/share/jupyter/kernels/pyt
 python2          /usr/local/share/jupyter/kernels/python2
 ```
 
-5. That's it!! Open Jupyter and create spark session. I've used spark 2.1.0 below.
+6. That's it!! Open Jupyter and create spark session. I've used spark 2.1.0 below.
 
 ```markdown
 jupiter notebook
