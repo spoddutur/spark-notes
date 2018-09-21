@@ -29,7 +29,7 @@ source activate jupyter
 and selecting the "Scala (develop)" kernel.
 ```
 
-5. Let's verify installation. For this, list kernels and we should see the following three: 
+5. Let's verify installation. For this, list kernels and it should show `scala-develop` kernel: 
 ```markdown
 jupyter kernelspec list
 scala-develop    /Users/surthi/Library/Jupyter/kernels/scala-develop
@@ -56,7 +56,7 @@ import jupyter.spark.session._
 val sparkSession = JupyterSparkSession.builder() // important - call this rather than SparkSession.builder()
   .jupyter() // this method must be called straightaway after builder()
   // .yarn("/etc/hadoop/conf") // optional, for Spark on YARN - argument is the Hadoop conf directory
-  // .emr("2.6.4") // on AWS ElasticMapReduce, this adds aws-related to the spark jar list
+  // .emr("2.6.4") // on AWS ElasticMapReduce, this adds aws-related dependencies to spark jars list
   // .master("local") // change to "yarn-client" on YARN
   // .config("spark.executor.instances", "10")
   // .config("spark.executor.memory", "3g")
