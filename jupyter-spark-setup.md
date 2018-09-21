@@ -12,19 +12,21 @@ source activate jupyter
 ```
 
 3. Installation part:
-` conda install -c conda-forge nb_conda`<br/>
-` $ git clone https://github.com/alexarchambault/jupyter-scala.git`<br/>
-` $ cd jupyter-scala`<br/>
-` $ sbt publishLocal`<br/>
-`./jupyter-scala --id scala-develop --name "Scala (develop)" --force`<br/>
-`=====================================`<br/>
-`output: Run jupyter console with this kernel with`<br/>
-`  jupyter console --kernel scala-develop`<br/>
+```markdown
+ conda install -c conda-forge nb_conda
+ git clone https://github.com/alexarchambault/jupyter-scala.git
+ cd jupyter-scala
+ sbt publishLocal
+ ./jupyter-scala --id scala-develop --name "Scala (develop)" --force
+
+=====================================
+output: Run jupyter console with this kernel with
+  jupyter console --kernel scala-develop
 <br/>
-`Use this kernel from Jupyter notebook, running`<br/>
-`  jupyter notebook`<br/>
-`and selecting the "Scala (develop)" kernel.`<br/>
-`=====================================`
+Use this kernel from Jupyter notebook, running
+  jupyter notebook
+and selecting the "Scala (develop)" kernel.
+=====================================`
 
 4. Let's verify installation. For this, list kernels and we should see the following three: 
 ```markdown
