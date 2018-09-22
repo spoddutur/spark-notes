@@ -11,7 +11,7 @@ Following are the consolidated steps that helped me in successfully installing s
 source activate jupyter
 ```
 
-3. Installation part:
+3. Installation part - install `scala-develop` kernel:
 ```markdown
  conda install -c conda-forge nb_conda
  git clone https://github.com/alexarchambault/jupyter-scala.git
@@ -20,7 +20,7 @@ source activate jupyter
  ./jupyter-scala --id scala-develop --name "Scala (develop)" --force
  ```
 
-4. Installation is over. You should see an output that looks something like this after running the last command:
+4. Installation is over. You should see an output that looks something like this after running the last command where it mentions setting up of `scala-develop kernel`:
 ```markdown
  output: Run jupyter console with this kernel with
  jupyter console --kernel scala-develop
