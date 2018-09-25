@@ -1,4 +1,4 @@
-# Why one should avoid filesystem as source in spark?
+# Insight into the notable troubles of using filesystem as source in spark...
 
 I was experimenting to compare the usage of filesystem (like s3, hdfs) VS a queue (like kafka or kinesis) as data source of spark i.e.,
 ```markdown
